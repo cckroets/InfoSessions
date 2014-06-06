@@ -36,8 +36,9 @@ public interface JSONable {
         }
 
         public ArrayList<T> createFromJSONArray(JSONArray arr) throws JSONException {
+            if (arr == null) return null;
             int len = arr.length();
-            ArrayList<T> result = new ArrayList<T>();
+            ArrayList<T> result = new ArrayList<T>(len);
             for (int i = 0; i < len; i++) {
                 result.add(createFromJSONObject(arr.getJSONObject(i)));
             }

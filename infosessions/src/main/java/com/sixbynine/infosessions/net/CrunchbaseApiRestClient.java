@@ -14,11 +14,12 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * General REST client to make GET calls to the Waterloo API
+ * General REST client to make GET calls to the Crunchbase API
  */
-public class WaterlooApiRestClient {
+public class CrunchbaseApiRestClient {
 
-    private static final String API_ROOT = "https://api.uwaterloo.ca/v2";
+
+    private static final String API_ROOT = "http://api.crunchbase.com/v/2";
 
     public interface Callback {
         public void onSuccess(JSONObject obj);
@@ -44,17 +45,17 @@ public class WaterlooApiRestClient {
     }
 
     /**
-     * Makes a get call to the Waterloo API.  You do not need to supply the API key as this will be added to list of parameters regardless.
+     * Makes a get call to the Crunchbase API.  You do not need to supply the API key as this will be added to list of parameters regardless.
      *
-     * @param page     the API resource you wish to access, e.g. /resources/infosessions
+     * @param page     the API resource you wish to access, e.g. /organizations
      * @param params   the list of any parameters to add on to the get request, can be null
      * @param callback a listener that the get response can call back to, cannot be null
      */
     public static void get(String page, Map<String, String> params, Callback callback) {
         StringBuilder requestURL = new StringBuilder(API_ROOT);
         requestURL.append(page)
-                .append(".json?key=")
-                .append(Keys.API_KEY_WATERLOO);
+                .append("?user_key=")
+                .append(Keys.API_KEY_CRUNCHBASE);
         if (params != null && params.size() > 0) {
             Iterator<Map.Entry<String, String>> paramsIter = params.entrySet().iterator();
             while (paramsIter.hasNext()) {
@@ -85,5 +86,4 @@ public class WaterlooApiRestClient {
         }
 
     }
-
 }
