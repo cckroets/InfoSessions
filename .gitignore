@@ -1,4 +1,6 @@
 .gradle
 /local.properties
 /.idea/workspace.xml
+/
 .DS_Store
+/src/main/java/com/sixbynine/infosessions/new/Keys.java
