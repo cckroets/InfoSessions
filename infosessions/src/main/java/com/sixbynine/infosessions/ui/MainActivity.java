@@ -1,5 +1,6 @@
 package com.sixbynine.infosessions.ui;
 
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.sixbynine.infosessions.R;
+import com.sixbynine.infosessions.database.WebData;
 import com.sixbynine.infosessions.net.InfoSessionUtil;
 import com.sixbynine.infosessions.object.InfoSessionDAO;
 
@@ -47,10 +49,12 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void initInfoSessions() {
+        final Context context = getApplicationContext();
         InfoSessionUtil.getInfoSessions(new InfoSessionUtil.InfoSessionsCallback() {
             @Override
             public void onSuccess(List<InfoSessionDAO> infoSessions) {
                 mInfoSessions = infoSessions;
+                WebData.saveSessionsToDB(context,infoSessions);
             }
 
             @Override

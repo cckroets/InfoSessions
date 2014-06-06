@@ -20,5 +20,6 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
+    compile 'org.testng:testng:6.8.8'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

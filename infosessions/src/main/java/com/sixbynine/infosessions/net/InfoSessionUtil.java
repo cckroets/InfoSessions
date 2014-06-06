@@ -1,6 +1,7 @@
 package com.sixbynine.infosessions.net;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.sixbynine.infosessions.object.InfoSessionDAO;
 
@@ -8,8 +9,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -51,7 +55,6 @@ public class InfoSessionUtil {
                     JSONObject raw = data.getJSONObject(i);
                     InfoSessionDAO infoSession = new InfoSessionDAO(raw.getInt("id"));
                     infoSession.setEmployer(raw.getString("employer"));
-
                     Calendar date = parseDate(raw.getString("date"));
 
                     long startTime = parseTime(raw.getString("start_time"));
@@ -100,7 +103,21 @@ public class InfoSessionUtil {
         }
     }
 
+    private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMMM d, yyyy");
+
     private static Calendar parseDate(String date) {
+        Date d;
+        try {
+          d = DATE_FORMAT.parse(date);
+        } catch (ParseException e) {
+          throw new IllegalStateException("Date not formatted properly: " + date);
+        }
+
+        Calendar cal = new GregorianCalendar();
+        cal.setTime(d);
+        return cal;
+
+      /*
         String[] parts = date.split(",");
         String[] monthDay = parts[0].split(" ");
         int year = Integer.parseInt(parts[1].trim());
@@ -136,7 +153,7 @@ public class InfoSessionUtil {
         }
 
         return new GregorianCalendar(year, month, day);
-
+    */
 
     }
 
