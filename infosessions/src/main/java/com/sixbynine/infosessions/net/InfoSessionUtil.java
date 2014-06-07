@@ -2,7 +2,7 @@ package com.sixbynine.infosessions.net;
 
 import android.os.AsyncTask;
 
-import com.sixbynine.infosessions.object.InfoSessionDAO;
+import com.sixbynine.infosessions.object.InfoSessionWaterlooApiDAO;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,7 +22,7 @@ public class InfoSessionUtil {
     private static AsyncInfoSessionFetcher sAsyncInfoSessionFetcher;
 
     public interface InfoSessionsCallback {
-        public void onSuccess(List<InfoSessionDAO> infoSessions);
+        public void onSuccess(List<InfoSessionWaterlooApiDAO> infoSessions);
 
         public void onFailure(Throwable e);
     }
@@ -46,10 +46,10 @@ public class InfoSessionUtil {
             try {
                 JSONArray data = obj.getJSONArray("data");
                 int len = data.length();
-                List<InfoSessionDAO> result = new ArrayList<InfoSessionDAO>(len);
+                List<InfoSessionWaterlooApiDAO> result = new ArrayList<InfoSessionWaterlooApiDAO>(len);
                 for (int i = 0; i < len; i++) {
                     JSONObject raw = data.getJSONObject(i);
-                    InfoSessionDAO infoSession = new InfoSessionDAO(raw.getInt("id"));
+                    InfoSessionWaterlooApiDAO infoSession = new InfoSessionWaterlooApiDAO(raw.getInt("id"));
                     infoSession.setEmployer(raw.getString("employer"));
 
                     Calendar date = parseDate(raw.getString("date"));

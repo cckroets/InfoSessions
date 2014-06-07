@@ -6,16 +6,23 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.flurry.android.FlurryAgent;
 import com.sixbynine.infosessions.R;
+import com.sixbynine.infosessions.net.CompanyDataUtil;
+import com.sixbynine.infosessions.net.CrunchbaseApiRestClient;
 import com.sixbynine.infosessions.net.InfoSessionUtil;
-import com.sixbynine.infosessions.object.InfoSessionDAO;
+import com.sixbynine.infosessions.net.Keys;
+import com.sixbynine.infosessions.object.InfoSession;
+import com.sixbynine.infosessions.object.InfoSessionCrunchbaseApiDAO;
+import com.sixbynine.infosessions.object.InfoSessionWaterlooApiDAO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
 
-    private List<InfoSessionDAO> mInfoSessions;
+    private List<InfoSession> mInfoSessions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +32,17 @@ public class MainActivity extends ActionBarActivity {
         initInfoSessions();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FlurryAgent.onStartSession(this, Keys.API_KEY_FLURRY);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        FlurryAgent.onEndSession(this);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -49,8 +67,28 @@ public class MainActivity extends ActionBarActivity {
     private void initInfoSessions() {
         InfoSessionUtil.getInfoSessions(new InfoSessionUtil.InfoSessionsCallback() {
             @Override
-            public void onSuccess(List<InfoSessionDAO> infoSessions) {
-                mInfoSessions = infoSessions;
+            public void onSuccess(List<InfoSessionWaterlooApiDAO> infoSessions) {
+                for (InfoSessionWaterlooApiDAO waterlooApiDAO : infoSessions) {
+                    CompanyDataUtil.getCompanyData(waterlooApiDAO, new CompanyDataUtil.CompanyDataUtilCallback() {
+                        @Override
+                        public void onSuccess(InfoSessionWaterlooApiDAO infoSessionWaterlooApiDAO, InfoSessionCrunchbaseApiDAO crunchbaseApiDAO) {
+                            if (mInfoSessions == null) {
+                                mInfoSessions = new ArrayList<InfoSession>();
+                            }
+                            InfoSession infoSession = new InfoSession();
+                            infoSession.waterlooApiDAO = infoSessionWaterlooApiDAO;
+                            infoSession.crunchbaseApiDAO = crunchbaseApiDAO;
+                            mInfoSessions.add(infoSession);
+
+                        }
+
+                        @Override
+                        public void onFailure(Throwable e) {
+
+                        }
+                    });
+                }
+
             }
 
             @Override
@@ -60,5 +98,6 @@ public class MainActivity extends ActionBarActivity {
             }
         });
     }
+
 
 }

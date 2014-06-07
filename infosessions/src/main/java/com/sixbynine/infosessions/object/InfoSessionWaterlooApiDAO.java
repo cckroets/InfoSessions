@@ -2,9 +2,7 @@ package com.sixbynine.infosessions.object;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
-import com.sixbynine.infosessions.BuildConfig;
 import com.sixbynine.infosessions.interfaces.JSONable;
 
 import org.json.JSONArray;
@@ -20,7 +18,7 @@ import java.util.List;
  * Data Access Object to hold the information about an Info Session that
  * was retrieved from the UW API
  */
-public class InfoSessionDAO implements JSONable, Parcelable {
+public class InfoSessionWaterlooApiDAO implements JSONable, Parcelable {
     private int id;
     private String employer;
     private Calendar startTime;
@@ -32,7 +30,7 @@ public class InfoSessionDAO implements JSONable, Parcelable {
     private List<String> programs;
     private String description;
 
-    public InfoSessionDAO(int id) {
+    public InfoSessionWaterlooApiDAO(int id) {
         this.id = id;
     }
 
@@ -159,13 +157,13 @@ public class InfoSessionDAO implements JSONable, Parcelable {
         return obj;
     }
 
-    public static final JSONable.Creator<InfoSessionDAO> JSON_CREATOR = new JSONable.Creator<InfoSessionDAO>() {
+    public static final JSONable.Creator<InfoSessionWaterlooApiDAO> JSON_CREATOR = new JSONable.Creator<InfoSessionWaterlooApiDAO>() {
 
         @Override
-        public InfoSessionDAO createFromJSONObject(JSONObject obj)
+        public InfoSessionWaterlooApiDAO createFromJSONObject(JSONObject obj)
                 throws JSONException {
             int id = obj.getInt("id");
-            InfoSessionDAO infoSession = new InfoSessionDAO(id);
+            InfoSessionWaterlooApiDAO infoSession = new InfoSessionWaterlooApiDAO(id);
             infoSession.setDescription(obj.getString("description"));
             infoSession.setEmployer(obj.getString("employer"));
 
@@ -194,8 +192,8 @@ public class InfoSessionDAO implements JSONable, Parcelable {
         }
 
         @Override
-        public InfoSessionDAO[] newArray(int size) {
-            return new InfoSessionDAO[size];
+        public InfoSessionWaterlooApiDAO[] newArray(int size) {
+            return new InfoSessionWaterlooApiDAO[size];
         }
     };
 
@@ -230,11 +228,11 @@ public class InfoSessionDAO implements JSONable, Parcelable {
         parcel.writeString(description);
     }
 
-    public static final Parcelable.Creator<InfoSessionDAO> CREATOR = new Parcelable.Creator<InfoSessionDAO>() {
+    public static final Parcelable.Creator<InfoSessionWaterlooApiDAO> CREATOR = new Parcelable.Creator<InfoSessionWaterlooApiDAO>() {
         @Override
-        public InfoSessionDAO createFromParcel(Parcel parcel) {
+        public InfoSessionWaterlooApiDAO createFromParcel(Parcel parcel) {
             int id = parcel.readInt();
-            InfoSessionDAO infoSession = new InfoSessionDAO(id);
+            InfoSessionWaterlooApiDAO infoSession = new InfoSessionWaterlooApiDAO(id);
             infoSession.setEmployer(parcel.readString());
 
             Calendar startTime = GregorianCalendar.getInstance();
@@ -261,8 +259,8 @@ public class InfoSessionDAO implements JSONable, Parcelable {
         }
 
         @Override
-        public InfoSessionDAO[] newArray(int size) {
-            return new InfoSessionDAO[size];
+        public InfoSessionWaterlooApiDAO[] newArray(int size) {
+            return new InfoSessionWaterlooApiDAO[size];
         }
     };
 
