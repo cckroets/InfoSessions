@@ -1,15 +1,15 @@
 package com.sixbynine.infosessions.ui;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.flurry.android.FlurryAgent;
 import com.sixbynine.infosessions.R;
+import com.sixbynine.infosessions.database.WebData;
 import com.sixbynine.infosessions.net.CompanyDataUtil;
-import com.sixbynine.infosessions.net.CrunchbaseApiRestClient;
 import com.sixbynine.infosessions.net.InfoSessionUtil;
 import com.sixbynine.infosessions.net.Keys;
 import com.sixbynine.infosessions.object.InfoSession;
@@ -68,6 +68,8 @@ public class MainActivity extends ActionBarActivity {
         InfoSessionUtil.getInfoSessions(new InfoSessionUtil.InfoSessionsCallback() {
             @Override
             public void onSuccess(List<InfoSessionWaterlooApiDAO> infoSessions) {
+                WebData.saveSessionsToDB(MainActivity.this, infoSessions);
+
                 for (InfoSessionWaterlooApiDAO waterlooApiDAO : infoSessions) {
                     CompanyDataUtil.getCompanyData(waterlooApiDAO, new CompanyDataUtil.CompanyDataUtilCallback() {
                         @Override
