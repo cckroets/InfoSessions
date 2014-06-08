@@ -3,12 +3,24 @@ package com.sixbynine.infosessions.object.company;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sixbynine.infosessions.interfaces.JSONable;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 /**
- * Created by stevenkideckel on 2014-06-08.
+ * Subclass of ArrayList.  Should be used instead of ArrayList to hold lists of {@link com.sixbynine.infosessions.object.company.Website} objects
+ * <p/>
+ * Benefits:
+ * <ul>
+ * <li>1. Implements {@link android.os.Parcelable}</li>
+ * <li>2. Has special access methods to search websites by social media type</li>
+ * </ul>
  */
-public class WebsiteCatalogue extends ArrayList<Website> implements Parcelable {
+public class WebsiteCatalogue extends ArrayList<Website> implements Parcelable, JSONable {
     public static final int HOMEPAGE = 0;
     public static final int FACEBOOK = 1;
     public static final int LINKEDIN = 2;
@@ -77,7 +89,7 @@ public class WebsiteCatalogue extends ArrayList<Website> implements Parcelable {
         }
     }
 
-    public static final Creator<WebsiteCatalogue> CREATOR = new Creator<WebsiteCatalogue>() {
+    public static final Parcelable.Creator<WebsiteCatalogue> CREATOR = new Parcelable.Creator<WebsiteCatalogue>() {
         @Override
         public WebsiteCatalogue createFromParcel(Parcel parcel) {
             int len = parcel.readInt();
@@ -94,4 +106,34 @@ public class WebsiteCatalogue extends ArrayList<Website> implements Parcelable {
             return new WebsiteCatalogue[0];
         }
     };
+
+    public JSONObject toJSON() throws JSONException {
+        JSONObject obj = new JSONObject();
+        JSONArray arr = new JSONArray();
+        int len = size();
+        for (int i = 0; i < len; i++) {
+            arr.put(get(i).toJSON());
+        }
+        obj.put("catalogue", arr);
+        return obj;
+    }
+
+    public static final JSONable.Creator<WebsiteCatalogue> JSON_CREATOR = new JSONable.Creator<WebsiteCatalogue>() {
+        @Override
+        public WebsiteCatalogue createFromJSONObject(JSONObject obj) throws JSONException {
+            JSONArray arr = obj.getJSONArray("catalogue");
+            WebsiteCatalogue websites = new WebsiteCatalogue(arr.length());
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject jsonWebsite = arr.getJSONObject(i);
+                websites.add(Website.JSON_CREATOR.createFromJSONObject(jsonWebsite));
+            }
+            return websites;
+        }
+
+        @Override
+        public WebsiteCatalogue[] newArray(int size) {
+            return new WebsiteCatalogue[size];
+        }
+    };
+
 }

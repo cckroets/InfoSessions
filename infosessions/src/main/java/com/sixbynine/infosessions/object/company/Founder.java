@@ -3,10 +3,15 @@ package com.sixbynine.infosessions.object.company;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sixbynine.infosessions.interfaces.JSONable;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
- * Created by stevenkideckel on 2014-06-08.
+ * Corresponds to the data values found in the Founders tags
  */
-public class Founder implements Parcelable {
+public class Founder implements Parcelable, JSONable {
 
     private String mName;
     private String mPath;
@@ -30,7 +35,7 @@ public class Founder implements Parcelable {
         parcel.writeStringArray(data);
     }
 
-    public static final Creator<Founder> CREATOR = new Creator<Founder>() {
+    public static final Parcelable.Creator<Founder> CREATOR = new Parcelable.Creator<Founder>() {
         @Override
         public Founder createFromParcel(Parcel parcel) {
             String[] data = new String[2];
@@ -41,6 +46,26 @@ public class Founder implements Parcelable {
         @Override
         public Founder[] newArray(int i) {
             return new Founder[i];
+        }
+    };
+
+    @Override
+    public JSONObject toJSON() throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("name", mName);
+        obj.put("path", mPath);
+        return obj;
+    }
+
+    public static final JSONable.Creator<Founder> JSON_CREATOR = new JSONable.Creator<Founder>() {
+        @Override
+        public Founder createFromJSONObject(JSONObject obj) throws JSONException {
+            return new Founder(obj.getString("name"), obj.getString("path"));
+        }
+
+        @Override
+        public Founder[] newArray(int size) {
+            return new Founder[size];
         }
     };
 }

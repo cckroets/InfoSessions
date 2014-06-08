@@ -3,14 +3,19 @@ package com.sixbynine.infosessions.object.company;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sixbynine.infosessions.interfaces.JSONable;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
- * Created by stevenkideckel on 2014-06-08.
+ * Corresponds to the data found in the "news" tag
  */
-public class NewsItem implements Parcelable {
+public class NewsItem implements Parcelable, JSONable {
 
     private String mUrl;
     private String mTitle;
@@ -125,6 +130,40 @@ public class NewsItem implements Parcelable {
         @Override
         public NewsItem[] newArray(int i) {
             return new NewsItem[i];
+        }
+    };
+
+    @Override
+    public JSONObject toJSON() throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("url", mUrl);
+        obj.put("title", mTitle);
+        obj.put("author", mAuthor);
+        obj.put("type", mType);
+        if (mPostDate != null) {
+            obj.put("postDate", mPostDate.getTimeInMillis());
+        }
+        return obj;
+
+    }
+
+    public static final JSONable.Creator<NewsItem> JSON_CREATOR = new JSONable.Creator<NewsItem>() {
+        @Override
+        public NewsItem createFromJSONObject(JSONObject obj) throws JSONException {
+            NewsItem newsItem = new NewsItem();
+            newsItem.setUrl(obj.getString("url"));
+            newsItem.setTitle(obj.getString("title"));
+            newsItem.setAuthor(obj.getString("author"));
+            newsItem.setType(obj.getString("type"));
+            if (obj.has("postDate")) {
+                newsItem.setPostDate(obj.getLong("postDate"));
+            }
+            return newsItem;
+        }
+
+        @Override
+        public NewsItem[] newArray(int size) {
+            return new NewsItem[size];
         }
     };
 }
