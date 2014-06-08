@@ -3,16 +3,12 @@ package com.sixbynine.infosessions.net;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.sixbynine.infosessions.object.InfoSessionCrunchbaseApiDAO;
+import com.sixbynine.infosessions.object.company.Company;
 import com.sixbynine.infosessions.object.InfoSessionWaterlooApiDAO;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 /**
  * Created by stevenkideckel on 2014-06-06.
@@ -22,7 +18,7 @@ public class CompanyDataUtil {
     private static AsyncCompanyDataFetcher sAsyncCompanyDataFetcher;
 
     public interface CompanyDataUtilCallback {
-        public void onSuccess(InfoSessionWaterlooApiDAO waterlooApiDAO, InfoSessionCrunchbaseApiDAO crunchbaseApiDAO);
+        public void onSuccess(InfoSessionWaterlooApiDAO waterlooApiDAO, Company crunchbaseApiDAO);
 
         public void onFailure(Throwable e);
     }
@@ -50,6 +46,7 @@ public class CompanyDataUtil {
             Log.d("InfoSessions", obj.toString());
             try {
                 JSONArray data = obj.getJSONArray("data");
+
 
             } catch (JSONException e) {
                 callback.onFailure(e);

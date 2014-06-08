@@ -18,7 +18,6 @@ import java.util.Map;
  */
 public class CrunchbaseApiRestClient {
 
-
     private static final String API_ROOT = "http://api.crunchbase.com/v/2";
 
     public interface Callback {
@@ -28,7 +27,6 @@ public class CrunchbaseApiRestClient {
     }
 
     private static String getWebPage(String url) throws IllegalStateException, IOException {
-        String response = "";
         DefaultHttpClient client = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(url);
         HttpResponse execute = client.execute(httpGet);
@@ -37,7 +35,7 @@ public class CrunchbaseApiRestClient {
         BufferedReader buffer = new BufferedReader(
                 new InputStreamReader(content));
         StringBuilder sb = new StringBuilder();
-        String s = "";
+        String s;
         while ((s = buffer.readLine()) != null) {
             sb.append(s);
         }
@@ -57,8 +55,8 @@ public class CrunchbaseApiRestClient {
                 .append("?user_key=")
                 .append(Keys.API_KEY_CRUNCHBASE);
         if (params != null && params.size() > 0) {
-            Iterator<Map.Entry<String, String>> paramsIter = params.entrySet().iterator();
-            while (paramsIter.hasNext()) {
+
+            for (Iterator<Map.Entry<String, String>> paramsIter = params.entrySet().iterator(); paramsIter.hasNext(); ) {
                 requestURL.append("&");
                 Map.Entry<String, String> entry = paramsIter.next();
                 requestURL.append(entry.getKey());

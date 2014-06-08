@@ -12,8 +12,8 @@ import com.sixbynine.infosessions.database.WebData;
 import com.sixbynine.infosessions.net.CompanyDataUtil;
 import com.sixbynine.infosessions.net.InfoSessionUtil;
 import com.sixbynine.infosessions.net.Keys;
+import com.sixbynine.infosessions.object.company.Company;
 import com.sixbynine.infosessions.object.InfoSession;
-import com.sixbynine.infosessions.object.InfoSessionCrunchbaseApiDAO;
 import com.sixbynine.infosessions.object.InfoSessionWaterlooApiDAO;
 
 import java.util.ArrayList;
@@ -73,13 +73,13 @@ public class MainActivity extends ActionBarActivity {
                 for (InfoSessionWaterlooApiDAO waterlooApiDAO : infoSessions) {
                     CompanyDataUtil.getCompanyData(waterlooApiDAO, new CompanyDataUtil.CompanyDataUtilCallback() {
                         @Override
-                        public void onSuccess(InfoSessionWaterlooApiDAO infoSessionWaterlooApiDAO, InfoSessionCrunchbaseApiDAO crunchbaseApiDAO) {
+                        public void onSuccess(InfoSessionWaterlooApiDAO infoSessionWaterlooApiDAO, Company crunchbaseApiDAO) {
                             if (mInfoSessions == null) {
                                 mInfoSessions = new ArrayList<InfoSession>();
                             }
                             InfoSession infoSession = new InfoSession();
                             infoSession.waterlooApiDAO = infoSessionWaterlooApiDAO;
-                            infoSession.crunchbaseApiDAO = crunchbaseApiDAO;
+                            infoSession.companyInfo = crunchbaseApiDAO;
                             mInfoSessions.add(infoSession);
 
                         }
