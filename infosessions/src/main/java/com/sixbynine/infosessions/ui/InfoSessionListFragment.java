@@ -1,6 +1,7 @@
 package com.sixbynine.infosessions.ui;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -37,7 +38,18 @@ public class InfoSessionListFragment extends ListFragment {
 
         ListAdapter adapter = new InfoSessionListAdapter(sessions);
         setListAdapter(adapter);
+
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ListView listView = getListView();
+        listView.setDivider(null);
+        listView.setDividerHeight(10);
+        listView.setBackgroundColor(Color.LTGRAY);
+        listView.setPadding(15,15,15,15);
     }
 
     @Override
