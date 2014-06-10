@@ -48,7 +48,7 @@ public class CompanyImageLoader {
         String root = Environment.getExternalStorageDirectory().toString();
         File myDir = new File(root + "/infosessions");
         myDir.mkdirs();
-        File file = new File (myDir, url);
+        File file = new File (myDir, url.split("/")[4]);
         if (file.exists ()){
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;

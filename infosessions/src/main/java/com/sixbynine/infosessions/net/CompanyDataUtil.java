@@ -269,7 +269,7 @@ public class CompanyDataUtil {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return permalink;
+            return waterlooApiDAO.getEmployer();
         }
     }
 }

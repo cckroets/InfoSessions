@@ -2,4 +2,5 @@
 <resources>
     
     <color name="info_sessions_fragment_bg">#E6E6E6</color>
+    <color name="shadow_color">#caa7a7a7</color>
 </resources>

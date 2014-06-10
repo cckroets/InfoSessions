@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:com.sixbynine.infosessions="http://schemas.android.com/apk/res-auto">
 
     <item android:state_pressed="true"
           android:drawable="@drawable/info_session_focused" /> <!-- pressed -->
@@ -8,6 +9,10 @@
           android:drawable="@drawable/info_session_focused" /> <!-- focused -->
     <item android:state_hovered="true"
           android:drawable="@drawable/info_session_focused" /> <!-- hovered -->
+    <item com.sixbynine.infosessions:state_last_of_category="true"
+          android:drawable="@drawable/info_session_end" />
     <item android:drawable="@drawable/info_session_normal" /> <!-- default -->
+
+
 
 </selector>

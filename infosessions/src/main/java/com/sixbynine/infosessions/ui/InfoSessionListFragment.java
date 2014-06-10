@@ -1,11 +1,14 @@
 package com.sixbynine.infosessions.ui;
 
+import android.app.ActionBar;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -50,10 +53,12 @@ public class InfoSessionListFragment extends ListFragment {
         super.onViewCreated(view, savedInstanceState);
         ListView listView = getListView();
         listView.setDivider(null);
-        listView.setDividerHeight(10);
+        listView.setDividerHeight(0);
         listView.setBackgroundResource(R.color.info_sessions_fragment_bg);
-        listView.setBackgroundColor(Color.rgb(230,230,230));
         listView.setPadding(15,0,15,0);
+        View footer = new View(getActivity());
+        footer.setLayoutParams(new AbsListView.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, 30));
+        listView.addFooterView(footer);
     }
 
     @Override
@@ -76,12 +81,18 @@ public class InfoSessionListFragment extends ListFragment {
             for (InfoSession session : sessions) {
                 Calendar calendar = session.waterlooApiDAO.getStartTime();
                 int day = calendar.get(Calendar.DAY_OF_YEAR);
-                if (lastDay == -1 || lastDay < day) {
+                if (lastDay < day) {
+                    if (lastDay != -1) {
+                        InfoSessionRow sessionRow = (InfoSessionRow) rows.get(rows.size()-1);
+                        sessionRow.setIsLast(true);
+                    }
                     rows.add(new DateHeader(calendar.getTime()));
                     lastDay = day;
                 }
                 rows.add(new InfoSessionRow(session));
             }
+            InfoSessionRow sessionRow = (InfoSessionRow) rows.get(rows.size()-1);
+            sessionRow.setIsLast(true);
         }
 
         @Override
@@ -173,6 +184,7 @@ public class InfoSessionListFragment extends ListFragment {
         private static final DateFormat dateFormat = new SimpleDateFormat("EEE MMM d, h:mma");
 
         private InfoSession infoSession;
+        private boolean isLast = false;
 
         public InfoSessionRow(InfoSession infoSession) {
             this.infoSession = infoSession;
@@ -189,6 +201,9 @@ public class InfoSessionListFragment extends ListFragment {
                 view = inflater.inflate(R.layout.info_session, viewGroup, false);
             }
 
+            InfoSessionCardLayout layout = (InfoSessionCardLayout) view;
+            layout.setLastCategory(isLast);
+
             UIUtil.setTextForView(R.id.companyName, view, infoSession.waterlooApiDAO.getEmployer());
             UIUtil.setTextForView(R.id.startTime, view, dateFormat.format(infoSession.waterlooApiDAO.getStartTime().getTime()));
             UIUtil.setTextForView(R.id.location, view, infoSession.waterlooApiDAO.getLocation());
@@ -200,8 +215,11 @@ public class InfoSessionListFragment extends ListFragment {
                 logo.setImageBitmap(null);
             }
 
-
             return view;
+        }
+
+        public void setIsLast(boolean val) {
+            this.isLast = val;
         }
     }
 
