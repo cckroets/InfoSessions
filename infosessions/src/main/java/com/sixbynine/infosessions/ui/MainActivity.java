@@ -1,6 +1,8 @@
 package com.sixbynine.infosessions.ui;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -67,30 +69,43 @@ public class MainActivity extends ActionBarActivity {
     private void initInfoSessions() {
         InfoSessionUtil.getInfoSessions(new InfoSessionUtil.InfoSessionsCallback() {
             @Override
-            public void onSuccess(List<InfoSessionWaterlooApiDAO> infoSessions) {
+            public void onSuccess(final List<InfoSessionWaterlooApiDAO> infoSessions) {
                 WebData.saveSessionsToDB(MainActivity.this, infoSessions);
 
                 for (InfoSessionWaterlooApiDAO waterlooApiDAO : infoSessions) {
+                    if (mInfoSessions == null) {
+                        mInfoSessions = new ArrayList<InfoSession>();
+                    }
+                    final InfoSession infoSession = new InfoSession();
+                    infoSession.waterlooApiDAO = waterlooApiDAO;
+                    infoSession.companyInfo = null;
+                    mInfoSessions.add(infoSession);
+
                     CompanyDataUtil.getCompanyData(waterlooApiDAO, new CompanyDataUtil.CompanyDataUtilCallback() {
                         @Override
                         public void onSuccess(InfoSessionWaterlooApiDAO infoSessionWaterlooApiDAO, Company crunchbaseApiDAO) {
-                            if (mInfoSessions == null) {
-                                mInfoSessions = new ArrayList<InfoSession>();
-                            }
-                            InfoSession infoSession = new InfoSession();
-                            infoSession.waterlooApiDAO = infoSessionWaterlooApiDAO;
                             infoSession.companyInfo = crunchbaseApiDAO;
-                            mInfoSessions.add(infoSession);
-
                         }
 
                         @Override
                         public void onFailure(Throwable e) {
-
+                            Log.e("MA", "Did not load companyInfo: " +
+                                    infoSession.waterlooApiDAO.getEmployer());
+                            e.printStackTrace();
                         }
                     });
                 }
-
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        /* TODO: Use a bundle to pass arguments instead of mInfoSessions */
+                        Fragment infoSessionsFragment = new InfoSessionListFragment(mInfoSessions);
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container, infoSessionsFragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+                });
             }
 
             @Override

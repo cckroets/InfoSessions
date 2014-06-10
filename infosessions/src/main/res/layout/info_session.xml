@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:layout_margin="20dp"
+                android:background="@drawable/info_session_card">
+
+    <ImageView
+        android:id="@+id/companyLogo"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_launcher"
+        />
+
+    <TextView
+        android:id="@+id/companyName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="23dp"
+        android:layout_marginTop="2dp"
+        android:layout_toRightOf="@+id/companyLogo"
+        android:textAppearance="@style/InfoSessionCompanyName"
+        android:text="Google"
+        android:scrollHorizontally="true"
+        android:ellipsize="end"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/startTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/companyName"
+        android:layout_above="@+id/location"
+        android:text="June 6th, 5:00pm"
+        android:textColor="#ff747474"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/companyName"
+        android:layout_alignBottom="@+id/companyLogo"
+        android:text="TC 2022"
+        android:textColor="#ff747474"
+        android:textSize="16sp" />
+
+</RelativeLayout>
