@@ -91,6 +91,7 @@ public class MainActivity extends ActionBarActivity {
                         public void onFailure(Throwable e) {
                             Log.e("MA", "Did not load companyInfo: " +
                                     infoSession.waterlooApiDAO.getEmployer());
+                            e.printStackTrace();
                         }
                     });
                 }

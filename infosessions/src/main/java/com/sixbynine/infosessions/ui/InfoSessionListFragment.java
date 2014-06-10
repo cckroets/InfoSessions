@@ -1,9 +1,7 @@
 package com.sixbynine.infosessions.ui;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +9,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.object.InfoSession;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,12 +26,13 @@ import java.util.List;
 */
 public class InfoSessionListFragment extends ListFragment {
 
-    private static final DateFormat dateFormat = new SimpleDateFormat("EEE MMM d, h:mma");
 
     private List<InfoSession> sessions;
 
+    // TODO: Use Bundle instead of raw type
     public InfoSessionListFragment(List<InfoSession> sessions) {
         this.sessions = sessions;
+        Collections.sort(sessions);
     }
 
     @Override
@@ -48,8 +50,8 @@ public class InfoSessionListFragment extends ListFragment {
         ListView listView = getListView();
         listView.setDivider(null);
         listView.setDividerHeight(10);
-        listView.setBackgroundColor(Color.LTGRAY);
-        listView.setPadding(15,15,15,15);
+        listView.setBackgroundColor(Color.rgb(230,230,230));
+        listView.setPadding(15,0,15,0);
     }
 
     @Override
@@ -62,20 +64,32 @@ public class InfoSessionListFragment extends ListFragment {
      */
     public class InfoSessionListAdapter extends BaseAdapter {
 
-        List<InfoSession> infoSessions;
+        List<Row> rows;
 
         public InfoSessionListAdapter(List<InfoSession> sessions) {
-            this.infoSessions = sessions;
+
+            this.rows = new ArrayList<Row>(sessions.size());
+            int lastDay = -1;
+
+            for (InfoSession session : sessions) {
+                Calendar calendar = session.waterlooApiDAO.getStartTime();
+                int day = calendar.get(Calendar.DAY_OF_YEAR);
+                if (lastDay == -1 || lastDay < day) {
+                    rows.add(new DateHeader(calendar.getTime()));
+                    lastDay = day;
+                }
+                rows.add(new InfoSessionRow(session));
+            }
         }
 
         @Override
         public int getCount() {
-            return infoSessions.size();
+            return rows.size();
         }
 
         @Override
         public Object getItem(int i) {
-            return infoSessions.get(i);
+            return rows.get(i);
         }
 
         @Override
@@ -86,32 +100,99 @@ public class InfoSessionListFragment extends ListFragment {
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
 
+            LayoutInflater inflater = InfoSessionListFragment.this.getLayoutInflater(null);
+            view = rows.get(i).getView(inflater,view,viewGroup);
+            return view;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return rows.get(position).getType();
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return Row.NUM_TYPES;
+        }
+
+    }
+
+    /**
+     * A Row represents a single list item in the InfoSessionListFragment.
+     * It is one of:
+     * * A DateHeader - Separator to segregate info sessions that happen of different days
+     * * An InfoSessionRow - An InfoSession card with some information
+     *
+     * @author curtiskroetsch
+     */
+    public interface Row {
+
+        public int getType();
+        public View getView(LayoutInflater inflater, View view, ViewGroup viewGroup);
+
+        public static int TYPE_INFO_SESSION = 0;
+        public static int TYPE_HEADER = 1;
+        public static int NUM_TYPES = 2;
+    }
+
+    /**
+     * DateHeader - A single text field that displays the day of the year
+     * for the following info sessions
+     */
+    public static class DateHeader implements Row {
+
+        private static DateFormat DAY_FORMAT = new SimpleDateFormat("EEEE MMM d, yyyy");
+
+        private Date date;
+
+        public DateHeader(Date date) {
+            this.date = date;
+        }
+
+        public int getType() {
+            return TYPE_HEADER;
+        }
+
+        @Override
+        public View getView(LayoutInflater inflater, View view, ViewGroup viewGroup) {
             if (view == null) {
-                LayoutInflater inflater = InfoSessionListFragment.this.getLayoutInflater(null);
-                view = inflater.inflate(R.layout.info_session, viewGroup, false);
+                view = inflater.inflate(R.layout.info_session_date, viewGroup, false);
             }
-
-            InfoSession session = infoSessions.get(i);
-            setTextForView(R.id.companyName, view, session.waterlooApiDAO.getEmployer());
-            setTextForView(R.id.startTime, view, dateFormat.format(session.waterlooApiDAO.getStartTime().getTime()));
-            setTextForView(R.id.location, view, session.waterlooApiDAO.getLocation());
-
-            // TODO: Add code to fill in Company Logo if it exist
-            // ImageView logo = (ImageView) view.findViewById(R.id.companyLogo);
-            // logo.setImageBitmap();
-
+            UIUtil.setTextForView(R.id.dateHeader, view, DAY_FORMAT.format(date));
             return view;
         }
     }
 
     /**
-     * Set the text for an inner text view inside of view
-     *
-     * @param id The id of the inner text view
-     * @param view The parent of the text view
-     * @param text The new text for the text view
+     * InfoSessionRow - A snippet of information about an InfoSession
      */
-    public static void setTextForView(int id, View view, String text) {
-        ((TextView) view.findViewById(id)).setText(text);
+    public static class InfoSessionRow implements Row {
+
+        private static final DateFormat dateFormat = new SimpleDateFormat("EEE MMM d, h:mma");
+
+        private InfoSession infoSession;
+
+        public InfoSessionRow(InfoSession infoSession) {
+            this.infoSession = infoSession;
+        }
+
+        @Override
+        public int getType() {
+            return Row.TYPE_INFO_SESSION;
+        }
+
+        @Override
+        public View getView(LayoutInflater inflater, View view, ViewGroup viewGroup) {
+            if (view == null) {
+                view = inflater.inflate(R.layout.info_session, viewGroup, false);
+            }
+
+            UIUtil.setTextForView(R.id.companyName, view, infoSession.waterlooApiDAO.getEmployer());
+            UIUtil.setTextForView(R.id.startTime, view, dateFormat.format(infoSession.waterlooApiDAO.getStartTime().getTime()));
+            UIUtil.setTextForView(R.id.location, view, infoSession.waterlooApiDAO.getLocation());
+            return view;
+        }
     }
+
+
 }

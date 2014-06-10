@@ -5,7 +5,7 @@
                 android:layout_height="wrap_content"
                 android:padding="20dp"
                 android:layout_margin="20dp"
-                android:background="@drawable/layer_card_background">
+                android:background="@drawable/info_session_card">
 
     <ImageView
         android:id="@+id/companyLogo"
@@ -37,6 +37,7 @@
         android:layout_alignLeft="@+id/companyName"
         android:layout_above="@+id/location"
         android:text="June 6th, 5:00pm"
+        android:textColor="#ff747474"
         android:textSize="16sp"/>
 
     <TextView
@@ -46,6 +47,7 @@
         android:layout_alignLeft="@+id/companyName"
         android:layout_alignBottom="@+id/companyLogo"
         android:text="TC 2022"
+        android:textColor="#ff747474"
         android:textSize="16sp" />
 
 </RelativeLayout>
