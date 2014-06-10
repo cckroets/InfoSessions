@@ -2,29 +2,30 @@ package com.sixbynine.infosessions.object.company;
 
 import android.graphics.Bitmap;
 import android.location.Address;
+import android.util.Log;
 
-import com.sixbynine.infosessions.object.company.NewsItem;
-import com.sixbynine.infosessions.object.company.TeamMember;
+import com.flurry.android.FlurryAgent;
+import com.sixbynine.infosessions.BuildConfig;
+import com.sixbynine.infosessions.net.CompanyImageLoader;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by stevenkideckel on 2014-06-06.
  */
 public class Company implements Comparable<Company> {
-    private static Map<String, Bitmap> sCompanyImages;
+
 
     private String mPermalink;
 
     private String mHomePageUrl;
     private String mName;
     private String mDescription;
+    private String mShortDescription;
     private Calendar mFoundedDate;
 
     private List<TeamMember> mTeamMembers;
@@ -38,6 +39,12 @@ public class Company implements Comparable<Company> {
 
     private Address mHeadquarters;
 
+    private int mImageStatus;
+    public static final int IMAGE_NOT_LOADED = 0;
+    public static final int IMAGE_LOADING = 1;
+    public static final int IMAGE_LOADED = 2;
+    public static final int IMAGE_ERROR_LOADING = 3;
+
 
     /**
      * Constructor for the Company data type
@@ -46,6 +53,7 @@ public class Company implements Comparable<Company> {
      */
     public Company(String name) {
         mName = name;
+        mImageStatus = IMAGE_NOT_LOADED;
     }
 
     public void setPermalink(String permalink) {
@@ -133,9 +141,40 @@ public class Company implements Comparable<Company> {
 
     public void setPrimaryImageUrl(String url) {
         mPrimaryImageUrl = url;
-        if (mPrimaryImageBitmap != null) {
-            addUrlImagePair(mPrimaryImageUrl, mPrimaryImageBitmap);
-        }
+        mImageStatus = IMAGE_LOADING;
+        CompanyImageLoader.getImage(url, new CompanyImageLoader.Callback(){
+            @Override
+            public void onImageLoaded(Bitmap img) {
+                mPrimaryImageBitmap = img;
+                mImageStatus = IMAGE_LOADED;
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(BuildConfig.DEBUG) Log.e("InfoSessions", e.toString());
+                FlurryAgent.onError("InfoSessions", "something", e);
+                mImageStatus = IMAGE_ERROR_LOADING;
+            }
+        });
+    }
+
+    public void loadImage(){
+        if(mPrimaryImageUrl == null) return;
+        mImageStatus = IMAGE_LOADING;
+        CompanyImageLoader.getImage(mPrimaryImageUrl, new CompanyImageLoader.Callback(){
+            @Override
+            public void onImageLoaded(Bitmap img) {
+                mPrimaryImageBitmap = img;
+                mImageStatus = IMAGE_LOADED;
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(BuildConfig.DEBUG) Log.e("InfoSessions", e.toString());
+                FlurryAgent.onError("InfoSessions", "something", e);
+                mImageStatus = IMAGE_ERROR_LOADING;
+            }
+        });
     }
 
     public String getPrimaryImageUrl() {
@@ -204,7 +243,7 @@ public class Company implements Comparable<Company> {
         mFounders = founders;
     }
 
-    public void addFounders(Founder founder) {
+    public void addFounder(Founder founder) {
         if (mFounders == null) {
             mFounders = new ArrayList<Founder>();
         }
@@ -219,6 +258,22 @@ public class Company implements Comparable<Company> {
         }
     }
 
+    public int getImageStatus(){
+        return mImageStatus;
+    }
+
+    public Bitmap getPrimaryImageBitmap(){
+        return mPrimaryImageBitmap;
+    }
+
+    public void setShortDescription(String shortDescription){
+        mShortDescription = shortDescription;
+    }
+
+    public String getShortDescription(){
+        return mShortDescription;
+    }
+
     public List<Founder> getFounders() {
         return mFounders;
     }
@@ -229,23 +284,6 @@ public class Company implements Comparable<Company> {
 
     public Address getHeadquarters() {
         return mHeadquarters;
-    }
-
-    public void setPrimaryImageBitmap(Bitmap bitmap) {
-        mPrimaryImageBitmap = bitmap;
-        if (mPrimaryImageUrl != null) {
-            addUrlImagePair(mPrimaryImageUrl, mPrimaryImageBitmap);
-        }
-    }
-
-    private static void addUrlImagePair(String url, Bitmap image) {
-        if (sCompanyImages == null) sCompanyImages = new HashMap<String, Bitmap>();
-        sCompanyImages.put(url, image);
-    }
-
-    private static Bitmap getCompanyBitmap(String url) {
-        if (sCompanyImages == null) return null;
-        else return sCompanyImages.get(url);
     }
 
     //TODO: add code to download the image based off of the url
