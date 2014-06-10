@@ -85,11 +85,12 @@ public class MainActivity extends ActionBarActivity {
                         @Override
                         public void onSuccess(InfoSessionWaterlooApiDAO infoSessionWaterlooApiDAO, Company crunchbaseApiDAO) {
                             infoSession.companyInfo = crunchbaseApiDAO;
+                            Log.d("InfoSessions", crunchbaseApiDAO.getName() + " data loaded");
                         }
 
                         @Override
                         public void onFailure(Throwable e) {
-                            Log.e("MA", "Did not load companyInfo: " +
+                            Log.e("InfoSessions", "Did not load companyInfo: " +
                                     infoSession.waterlooApiDAO.getEmployer());
                             e.printStackTrace();
                         }
@@ -102,7 +103,6 @@ public class MainActivity extends ActionBarActivity {
                         Fragment infoSessionsFragment = new InfoSessionListFragment(mInfoSessions);
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.fragment_container, infoSessionsFragment);
-                        transaction.addToBackStack(null);
                         transaction.commit();
                     }
                 });

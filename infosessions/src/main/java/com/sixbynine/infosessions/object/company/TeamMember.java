@@ -67,7 +67,7 @@ public class TeamMember implements Parcelable, JSONable {
     }
 
     public void setStartedOn(String startedOnString) {
-        if (startedOnString == null) {
+        if (startedOnString == null || "null".equals(startedOnString)) {
             mStartedOn = null;
         } else {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -76,7 +76,7 @@ public class TeamMember implements Parcelable, JSONable {
                 cal.setTime(sdf.parse(startedOnString));
                 setStartedOn(cal);
             } catch (ParseException e) {
-                throw new IllegalArgumentException("invalid date format");
+                throw new IllegalArgumentException("invalid date format " + startedOnString);
             }
         }
     }

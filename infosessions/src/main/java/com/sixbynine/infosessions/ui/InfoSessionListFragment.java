@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -50,6 +51,7 @@ public class InfoSessionListFragment extends ListFragment {
         ListView listView = getListView();
         listView.setDivider(null);
         listView.setDividerHeight(10);
+        listView.setBackgroundResource(R.color.info_sessions_fragment_bg);
         listView.setBackgroundColor(Color.rgb(230,230,230));
         listView.setPadding(15,0,15,0);
     }
@@ -120,7 +122,7 @@ public class InfoSessionListFragment extends ListFragment {
     /**
      * A Row represents a single list item in the InfoSessionListFragment.
      * It is one of:
-     * * A DateHeader - Separator to segregate info sessions that happen of different days
+     * * A DateHeader - Separator to segregate info sessions that happen on different days
      * * An InfoSessionRow - An InfoSession card with some information
      *
      * @author curtiskroetsch
@@ -190,6 +192,15 @@ public class InfoSessionListFragment extends ListFragment {
             UIUtil.setTextForView(R.id.companyName, view, infoSession.waterlooApiDAO.getEmployer());
             UIUtil.setTextForView(R.id.startTime, view, dateFormat.format(infoSession.waterlooApiDAO.getStartTime().getTime()));
             UIUtil.setTextForView(R.id.location, view, infoSession.waterlooApiDAO.getLocation());
+
+            ImageView logo = (ImageView) view.findViewById(R.id.companyLogo);
+            if (infoSession.companyInfo != null && infoSession.companyInfo.getPrimaryImageBitmap() != null) {
+                logo.setImageBitmap(infoSession.companyInfo.getPrimaryImageBitmap());
+            } else {
+                logo.setImageBitmap(null);
+            }
+
+
             return view;
         }
     }

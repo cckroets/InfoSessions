@@ -15,14 +15,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by stevenkideckel on 2014-06-06.
  */
 public class CompanyDataUtil {
 
-    private static AsyncCompanyDataFetcher sAsyncCompanyDataFetcher;
+    private static Map<String, AsyncCompanyDataFetcher> sAsyncCompanyDataFetchers
+            = new HashMap<String, AsyncCompanyDataFetcher>();
     private static String sImageRoot;
 
     public interface CompanyDataUtilCallback {
@@ -32,12 +40,13 @@ public class CompanyDataUtil {
     }
 
     public static void getCompanyData(InfoSessionWaterlooApiDAO waterlooApiDAO, CompanyDataUtilCallback callback) {
-        if (sAsyncCompanyDataFetcher == null || sAsyncCompanyDataFetcher.getStatus().equals(AsyncTask.Status.FINISHED)) {
-            sAsyncCompanyDataFetcher = new AsyncCompanyDataFetcher(waterlooApiDAO);
-            sAsyncCompanyDataFetcher.execute(callback);
+        AsyncCompanyDataFetcher fetcher = sAsyncCompanyDataFetchers.get(waterlooApiDAO.getEmployer());
+
+        if (fetcher == null || fetcher.getStatus().equals(AsyncTask.Status.FINISHED)) {
+            fetcher = new AsyncCompanyDataFetcher(waterlooApiDAO);
+            sAsyncCompanyDataFetchers.put(waterlooApiDAO.getEmployer(),fetcher);
+            fetcher.execute(callback);
         }
-
-
     }
 
     private static class CallProcessor implements CrunchbaseApiRestClient.Callback {
@@ -232,9 +241,35 @@ public class CompanyDataUtil {
                 throw new IllegalArgumentException("Provided callback is null");
             }
             CompanyDataUtilCallback callback = callbacks[0];
-            CrunchbaseApiRestClient.get("/organization/" + infoSessionWaterlooApiDAO.getEmployer(), null, new CallProcessor(callback, infoSessionWaterlooApiDAO));
-
+            String permalink = getPermalinkForCompany(infoSessionWaterlooApiDAO);
+            if (permalink != null) {
+                CrunchbaseApiRestClient.get("/organization/" + permalink, null, new CallProcessor(callback, infoSessionWaterlooApiDAO));
+            }
             return null;
+        }
+
+        // get the permalink p, such that .../organization/p points to a company
+        private String getPermalinkForCompany(InfoSessionWaterlooApiDAO waterlooApiDAO) {
+
+            String permalink = waterlooApiDAO.getEmployer().trim().replaceAll(" ", "+");
+            permalink = permalink.replaceAll("[^a-zA-Z0-9+]", "");
+            final String url = "http://www.google.com/search?q=crunchbase+" + permalink + "&btnI";
+            Log.d("InfoSessions", "google " + permalink);
+            try {
+                URLConnection con = new URL(url).openConnection();
+                /* Google blocks the default Java User-Agent, trick it instead! */
+                con.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
+                con.connect();
+                InputStream is = con.getInputStream();
+                System.out.println("Redirected URL: " + con.getURL()); // http://www.crunchbase.com/organization/microsoft
+                is.close();
+                String[] strings = con.getURL().toString().split("/");
+                Log.d("InfoSessions", "answer " + Arrays.toString(strings));
+                return strings[strings.length-1];
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return permalink;
         }
     }
 }
