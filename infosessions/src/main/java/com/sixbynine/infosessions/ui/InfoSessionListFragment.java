@@ -25,16 +25,17 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+@SuppressLint("ValidFragment")
 /**
-* @author curtiskroetsch
-*/
+ * @author curtiskroetsch
+ */
 public class InfoSessionListFragment extends Fragment implements AbsListView.OnItemClickListener {
 
     private ListView mListView;
     private List<InfoSession> sessions;
 
     // TODO: Use Bundle instead of raw type
-    @SuppressLint("ValidFragment")
+
     public InfoSessionListFragment(List<InfoSession> sessions) {
         this.sessions = sessions;
         Collections.sort(sessions);
@@ -110,7 +111,7 @@ public class InfoSessionListFragment extends Fragment implements AbsListView.OnI
         public View getView(int i, View view, ViewGroup viewGroup) {
 
             LayoutInflater inflater = InfoSessionListFragment.this.getLayoutInflater(null);
-            view = rows.get(i).getView(inflater,view,viewGroup);
+            view = rows.get(i).getView(inflater, view, viewGroup);
             return view;
         }
 
@@ -137,6 +138,7 @@ public class InfoSessionListFragment extends Fragment implements AbsListView.OnI
     public interface Row {
 
         public int getType();
+
         public View getView(LayoutInflater inflater, View view, ViewGroup viewGroup);
 
         public static int TYPE_INFO_SESSION = 0;

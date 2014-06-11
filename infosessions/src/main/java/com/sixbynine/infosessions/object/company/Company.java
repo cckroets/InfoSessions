@@ -104,7 +104,7 @@ public class Company implements Comparable<Company> {
      * @param foundedDate should be in the format yyyy-mm-dd
      */
     public void setFoundedDate(String foundedDate) {
-        if (foundedDate == null) {
+        if (foundedDate == null || foundedDate.equals("") || foundedDate.equals("null")) {
             mFoundedDate = null;
         } else {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

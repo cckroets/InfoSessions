@@ -70,6 +70,8 @@ public class CompanyDataUtil {
                     if (permalink != null && !permalink.equals(permalinkUsed)) {
                         permalinkUsed = permalink;
                         CrunchbaseApiRestClient.get("/organization/" + permalink, null, this);
+                    } else {
+                        Log.w("InfoSessions", "Unable to figure out permalink for " + waterlooApiDAO.getEmployer());
                     }
                     return;
                 }
@@ -253,7 +255,11 @@ public class CompanyDataUtil {
                 throw new IllegalArgumentException("Provided callback is null");
             }
             CompanyDataUtilCallback callback = callbacks[0];
-            CrunchbaseApiRestClient.get("/organization/" + infoSessionWaterlooApiDAO.getEmployer(), null, new CallProcessor(callback, infoSessionWaterlooApiDAO, infoSessionWaterlooApiDAO.getEmployer()));
+            if (infoSessionWaterlooApiDAO.getEmployer().contains(" ") == false) {
+                CrunchbaseApiRestClient.get("/organization/" + infoSessionWaterlooApiDAO.getEmployer(), null, new CallProcessor(callback, infoSessionWaterlooApiDAO, infoSessionWaterlooApiDAO.getEmployer()));
+            } else {
+                Log.w("InfoSessions", "skipping " + infoSessionWaterlooApiDAO.getEmployer() + " since it has a space");
+            }
             return null;
         }
 
