@@ -64,7 +64,8 @@ public class CompanyImageLoader {
         String root = Environment.getExternalStorageDirectory().toString();
         File myDir = new File(root + "/infosessions");
         myDir.mkdirs();
-        File file = new File (myDir, url);
+        // TODO: Temp fix for a legal filename, should probably be named <company>.bmap
+        File file = new File (myDir, url.split("/")[4]);
         if (file.exists ()) file.delete ();
         try {
             FileOutputStream out = new FileOutputStream(file);

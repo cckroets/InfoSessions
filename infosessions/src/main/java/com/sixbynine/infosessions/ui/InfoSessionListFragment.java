@@ -1,6 +1,5 @@
 package com.sixbynine.infosessions.ui;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -23,19 +22,14 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author curtiskroetsch
- */
+* @author curtiskroetsch
+*/
 public class InfoSessionListFragment extends ListFragment {
 
 
     private List<InfoSession> sessions;
 
-    public InfoSessionListFragment() {
-
-    }
-
     // TODO: Use Bundle instead of raw type
-    @SuppressLint("ValidFragment")
     public InfoSessionListFragment(List<InfoSession> sessions) {
         this.sessions = sessions;
         Collections.sort(sessions);
@@ -56,8 +50,8 @@ public class InfoSessionListFragment extends ListFragment {
         ListView listView = getListView();
         listView.setDivider(null);
         listView.setDividerHeight(10);
-        listView.setBackgroundColor(Color.rgb(230, 230, 230));
-        listView.setPadding(15, 0, 15, 0);
+        listView.setBackgroundColor(Color.rgb(230,230,230));
+        listView.setPadding(15,0,15,0);
     }
 
     @Override
@@ -79,7 +73,6 @@ public class InfoSessionListFragment extends ListFragment {
 
             for (InfoSession session : sessions) {
                 Calendar calendar = session.waterlooApiDAO.getStartTime();
-
                 int day = calendar.get(Calendar.DAY_OF_YEAR);
                 if (lastDay == -1 || lastDay < day) {
                     rows.add(new DateHeader(calendar.getTime()));
@@ -108,7 +101,7 @@ public class InfoSessionListFragment extends ListFragment {
         public View getView(int i, View view, ViewGroup viewGroup) {
 
             LayoutInflater inflater = InfoSessionListFragment.this.getLayoutInflater(null);
-            view = rows.get(i).getView(inflater, view, viewGroup);
+            view = rows.get(i).getView(inflater,view,viewGroup);
             return view;
         }
 
@@ -135,7 +128,6 @@ public class InfoSessionListFragment extends ListFragment {
     public interface Row {
 
         public int getType();
-
         public View getView(LayoutInflater inflater, View view, ViewGroup viewGroup);
 
         public static int TYPE_INFO_SESSION = 0;

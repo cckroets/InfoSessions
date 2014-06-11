@@ -2,7 +2,7 @@
 
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:id="@+id/dateHeader"
     android:paddingTop="6dp"
     android:paddingBottom="2dp"
@@ -10,4 +10,4 @@
     android:text="Tuesday, June 1, 2014"
     android:textSize="14sp"
     android:textColor="#ff6e6c6e"
-           />
+    android:background="@color/info_sessions_fragment_bg"/>
