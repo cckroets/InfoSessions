@@ -237,4 +237,13 @@ public class CompanyDataUtil {
             return null;
         }
     }
+
+
+    private static String checkForNull(String s) {
+        if (s == null || s.equals("") || s.equals("null")) {
+            return null;
+        } else {
+            return s;
+        }
+    }
 }
