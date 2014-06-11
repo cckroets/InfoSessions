@@ -45,6 +45,12 @@ public class Company implements Comparable<Company> {
     public static final int IMAGE_LOADED = 2;
     public static final int IMAGE_ERROR_LOADING = 3;
 
+    private OnImageStatusChangedListener mOnImageStatusChangedListener;
+
+    public interface OnImageStatusChangedListener {
+        public void onImageStatusChanged(int newStatus);
+    }
+
 
     /**
      * Constructor for the Company data type
@@ -141,31 +147,21 @@ public class Company implements Comparable<Company> {
 
     public void setPrimaryImageUrl(String url) {
         mPrimaryImageUrl = url;
-        mImageStatus = IMAGE_LOADING;
-        CompanyImageLoader.getImage(url, new CompanyImageLoader.Callback(){
-            @Override
-            public void onImageLoaded(Bitmap img) {
-                mPrimaryImageBitmap = img;
-                mImageStatus = IMAGE_LOADED;
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if(BuildConfig.DEBUG) Log.e("InfoSessions", e.toString());
-                FlurryAgent.onError("InfoSessions", "something", e);
-                mImageStatus = IMAGE_ERROR_LOADING;
-            }
-        });
+        loadImage();
     }
 
     public void loadImage(){
         if(mPrimaryImageUrl == null) return;
         mImageStatus = IMAGE_LOADING;
-        CompanyImageLoader.getImage(mPrimaryImageUrl, new CompanyImageLoader.Callback(){
+        if (mOnImageStatusChangedListener != null)
+            mOnImageStatusChangedListener.onImageStatusChanged(IMAGE_LOADING);
+        CompanyImageLoader.getImage(this, new CompanyImageLoader.Callback() {
             @Override
             public void onImageLoaded(Bitmap img) {
                 mPrimaryImageBitmap = img;
                 mImageStatus = IMAGE_LOADED;
+                if (mOnImageStatusChangedListener != null)
+                    mOnImageStatusChangedListener.onImageStatusChanged(mImageStatus);
             }
 
             @Override
@@ -173,8 +169,14 @@ public class Company implements Comparable<Company> {
                 if(BuildConfig.DEBUG) Log.e("InfoSessions", e.toString());
                 FlurryAgent.onError("InfoSessions", "something", e);
                 mImageStatus = IMAGE_ERROR_LOADING;
+                if (mOnImageStatusChangedListener != null)
+                    mOnImageStatusChangedListener.onImageStatusChanged(mImageStatus);
             }
         });
+    }
+
+    public void setOnImageStatusChangedListener(OnImageStatusChangedListener listener) {
+        mOnImageStatusChangedListener = listener;
     }
 
     public String getPrimaryImageUrl() {
@@ -285,9 +287,6 @@ public class Company implements Comparable<Company> {
     public Address getHeadquarters() {
         return mHeadquarters;
     }
-
-    //TODO: add code to download the image based off of the url
-
 
     @Override
     public int compareTo(Company another) {

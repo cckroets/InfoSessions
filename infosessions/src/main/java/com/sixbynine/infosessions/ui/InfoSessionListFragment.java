@@ -1,11 +1,15 @@
 package com.sixbynine.infosessions.ui;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -24,12 +28,13 @@ import java.util.List;
 /**
 * @author curtiskroetsch
 */
-public class InfoSessionListFragment extends ListFragment {
+public class InfoSessionListFragment extends Fragment implements AbsListView.OnItemClickListener {
 
-
+    private ListView mListView;
     private List<InfoSession> sessions;
 
     // TODO: Use Bundle instead of raw type
+    @SuppressLint("ValidFragment")
     public InfoSessionListFragment(List<InfoSession> sessions) {
         this.sessions = sessions;
         Collections.sort(sessions);
@@ -37,9 +42,14 @@ public class InfoSessionListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_info_session_list, null);
+
+        mListView = (ListView) view.findViewById(R.id.listView);
 
         ListAdapter adapter = new InfoSessionListAdapter(sessions);
-        setListAdapter(adapter);
+
+        mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(this);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -47,16 +57,15 @@ public class InfoSessionListFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ListView listView = getListView();
-        listView.setDivider(null);
-        listView.setDividerHeight(10);
-        listView.setBackgroundColor(Color.rgb(230,230,230));
-        listView.setPadding(15,0,15,0);
+        mListView.setDivider(null);
+        mListView.setDividerHeight(10);
+        mListView.setBackgroundColor(Color.rgb(230, 230, 230));
+        mListView.setPadding(15, 0, 15, 0);
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
     }
 
     /**
