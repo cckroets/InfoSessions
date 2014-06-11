@@ -83,14 +83,20 @@ public class InfoSessionListFragment extends ListFragment {
                 int day = calendar.get(Calendar.DAY_OF_YEAR);
                 if (lastDay < day) {
                     if (lastDay != -1) {
-                        InfoSessionRow sessionRow = (InfoSessionRow) rows.get(rows.size()-1);
-                        sessionRow.setIsLast(true);
+                        setLastRow();
                     }
                     rows.add(new DateHeader(calendar.getTime()));
                     lastDay = day;
                 }
                 rows.add(new InfoSessionRow(session));
             }
+            setLastRow();
+        }
+
+        /**
+         * Set the isLast field to true for the last added info session
+         */
+        private void setLastRow() {
             InfoSessionRow sessionRow = (InfoSessionRow) rows.get(rows.size()-1);
             sessionRow.setIsLast(true);
         }
