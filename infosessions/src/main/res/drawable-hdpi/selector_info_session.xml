@@ -5,12 +5,16 @@
 
     <item android:drawable="@drawable/info_session_focused" android:state_pressed="true"
            /> <!-- pressed -->
+
     <item android:drawable="@drawable/info_session_focused" android:state_focused="true"
            /> <!-- focused -->
+
     <item android:drawable="@drawable/info_session_focused" android:state_hovered="true"
            /> <!-- hovered -->
+
     <item android:drawable="@drawable/info_session_end" com.sixbynine.infosessions:state_last_of_category="true"
-           />
+           /> <!-- end -->
+
     <item android:drawable="@drawable/info_session_normal" /> <!-- default -->
 
 
