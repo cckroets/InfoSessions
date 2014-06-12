@@ -58,13 +58,6 @@ public class InfoSessionListFragment extends Fragment implements AbsListView.OnI
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        View footer = new View(getActivity());
-        footer.setLayoutParams(new AbsListView.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, 30));
-        mListView.setDivider(null);
-        mListView.setDividerHeight(10);
-        mListView.setBackgroundColor(Color.rgb(230, 230, 230));
-        mListView.setPadding(15, 0, 15, 0);
-        mListView.addFooterView(footer);
     }
 
     @Override
@@ -212,6 +205,9 @@ public class InfoSessionListFragment extends Fragment implements AbsListView.OnI
             if (view == null) {
                 view = inflater.inflate(R.layout.info_session, viewGroup, false);
             }
+
+            InfoSessionCardLayout layout = (InfoSessionCardLayout) view;
+            layout.setLastCategory(mIsLast);
 
             UIUtil.setTextForView(R.id.companyName, view, mInfoSession.waterlooApiDAO.getEmployer());
             UIUtil.setTextForView(R.id.startTime, view, dateFormat.format(mInfoSession.waterlooApiDAO.getStartTime().getTime()));

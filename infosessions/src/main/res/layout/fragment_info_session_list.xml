@@ -7,6 +7,12 @@
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="@color/info_sessions_fragment_bg"
+        />
 
 </FrameLayout>
