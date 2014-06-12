@@ -22,9 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements InfoSessionListFragment.Callback {
 
-    private List<InfoSession> mInfoSessions;
+    private ArrayList<InfoSession> mInfoSessions;
     private Fragment mContent;
 
     @Override
@@ -70,7 +70,8 @@ public class MainActivity extends ActionBarActivity {
     private void initInfoSessions() {
         InfoSessionUtil.getInfoSessions(new InfoSessionUtil.InfoSessionsCallback() {
             @Override
-            public void onSuccess(final List<InfoSessionWaterlooApiDAO> infoSessions) {
+            public void onSuccess(final ArrayList<InfoSessionWaterlooApiDAO> infoSessions) {
+                Log.d("InfoSessions", "init info sessions succeeded");
                 WebData.saveSessionsToDB(MainActivity.this, infoSessions);
 
                 for (InfoSessionWaterlooApiDAO waterlooApiDAO : infoSessions) {
@@ -100,8 +101,11 @@ public class MainActivity extends ActionBarActivity {
                 MainActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        /* TODO: Use a bundle to pass arguments instead of mInfoSessions */
-                        mContent = new InfoSessionListFragment(mInfoSessions);
+                        Log.d("InfoSessions", "Loading fragment");
+                        mContent = new InfoSessionListFragment();
+                        Bundle args = new Bundle();
+                        args.putParcelableArrayList("infoSessions", mInfoSessions);
+                        mContent.setArguments(args);
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.fragment_container, mContent);
                         transaction.commit();
@@ -118,4 +122,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
+    @Override
+    public void onInfoSessionClicked(InfoSession infoSession) {
+        //TODO: They clicked on an Info Session! Yay! Now what?
+    }
 }

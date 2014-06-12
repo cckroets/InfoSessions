@@ -26,7 +26,7 @@ public class InfoSessionUtil {
     private static AsyncInfoSessionFetcher sAsyncInfoSessionFetcher;
 
     public interface InfoSessionsCallback {
-        public void onSuccess(List<InfoSessionWaterlooApiDAO> infoSessions);
+        public void onSuccess(ArrayList<InfoSessionWaterlooApiDAO> infoSessions);
 
         public void onFailure(Throwable e);
     }
@@ -50,7 +50,7 @@ public class InfoSessionUtil {
             try {
                 JSONArray data = obj.getJSONArray("data");
                 int len = data.length();
-                List<InfoSessionWaterlooApiDAO> result = new ArrayList<InfoSessionWaterlooApiDAO>(len);
+                ArrayList<InfoSessionWaterlooApiDAO> result = new ArrayList<InfoSessionWaterlooApiDAO>(len);
                 for (int i = 0; i < len; i++) {
                     JSONObject raw = data.getJSONObject(i);
                     InfoSessionWaterlooApiDAO infoSession = new InfoSessionWaterlooApiDAO(raw.getInt("id"));
