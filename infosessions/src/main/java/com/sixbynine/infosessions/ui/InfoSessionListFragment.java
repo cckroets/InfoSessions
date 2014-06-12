@@ -1,16 +1,24 @@
 package com.sixbynine.infosessions.ui;
 
+<<<<<<< HEAD
 import android.app.ActionBar;
+=======
+import android.annotation.SuppressLint;
+>>>>>>> cde7899b864794f0f66b42b0ffd613ca6cb93a8a
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+<<<<<<< HEAD
+=======
+import android.widget.AdapterView;
+>>>>>>> cde7899b864794f0f66b42b0ffd613ca6cb93a8a
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -28,12 +36,13 @@ import java.util.List;
 /**
 * @author curtiskroetsch
 */
-public class InfoSessionListFragment extends ListFragment {
+public class InfoSessionListFragment extends Fragment implements AbsListView.OnItemClickListener {
 
-
+    private ListView mListView;
     private List<InfoSession> sessions;
 
     // TODO: Use Bundle instead of raw type
+    @SuppressLint("ValidFragment")
     public InfoSessionListFragment(List<InfoSession> sessions) {
         this.sessions = sessions;
         Collections.sort(sessions);
@@ -41,9 +50,14 @@ public class InfoSessionListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_info_session_list, null);
+
+        mListView = (ListView) view.findViewById(R.id.listView);
 
         ListAdapter adapter = new InfoSessionListAdapter(sessions);
-        setListAdapter(adapter);
+
+        mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(this);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -51,6 +65,7 @@ public class InfoSessionListFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+<<<<<<< HEAD
         ListView listView = getListView();
         listView.setDivider(null);
         listView.setDividerHeight(0);
@@ -59,11 +74,17 @@ public class InfoSessionListFragment extends ListFragment {
         View footer = new View(getActivity());
         footer.setLayoutParams(new AbsListView.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, 30));
         listView.addFooterView(footer);
+=======
+        mListView.setDivider(null);
+        mListView.setDividerHeight(10);
+        mListView.setBackgroundColor(Color.rgb(230, 230, 230));
+        mListView.setPadding(15, 0, 15, 0);
+>>>>>>> cde7899b864794f0f66b42b0ffd613ca6cb93a8a
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
     }
 
     /**
@@ -139,7 +160,7 @@ public class InfoSessionListFragment extends ListFragment {
     /**
      * A Row represents a single list item in the InfoSessionListFragment.
      * It is one of:
-     * * A DateHeader - Separator to segregate info sessions that happen on different days
+     * * A DateHeader - Separator to segregate info sessions that happen of different days
      * * An InfoSessionRow - An InfoSession card with some information
      *
      * @author curtiskroetsch
@@ -213,6 +234,7 @@ public class InfoSessionListFragment extends ListFragment {
             UIUtil.setTextForView(R.id.companyName, view, infoSession.waterlooApiDAO.getEmployer());
             UIUtil.setTextForView(R.id.startTime, view, dateFormat.format(infoSession.waterlooApiDAO.getStartTime().getTime()));
             UIUtil.setTextForView(R.id.location, view, infoSession.waterlooApiDAO.getLocation());
+<<<<<<< HEAD
 
             ImageView logo = (ImageView) view.findViewById(R.id.companyLogo);
             if (infoSession.companyInfo != null && infoSession.companyInfo.getPrimaryImageBitmap() != null) {
@@ -221,6 +243,8 @@ public class InfoSessionListFragment extends ListFragment {
                 logo.setImageBitmap(null);
             }
 
+=======
+>>>>>>> cde7899b864794f0f66b42b0ffd613ca6cb93a8a
             return view;
         }
 

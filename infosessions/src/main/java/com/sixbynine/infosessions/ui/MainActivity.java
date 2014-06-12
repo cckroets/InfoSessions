@@ -25,6 +25,7 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity {
 
     private List<InfoSession> mInfoSessions;
+    private Fragment mContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,9 +101,9 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                     public void run() {
                         /* TODO: Use a bundle to pass arguments instead of mInfoSessions */
-                        Fragment infoSessionsFragment = new InfoSessionListFragment(mInfoSessions);
+                        mContent = new InfoSessionListFragment(mInfoSessions);
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_container, infoSessionsFragment);
+                        transaction.replace(R.id.fragment_container, mContent);
                         transaction.commit();
                     }
                 });

@@ -52,22 +52,34 @@ public class CompanyDataUtil {
     private static class CallProcessor implements CrunchbaseApiRestClient.Callback {
         private CompanyDataUtilCallback callback;
         private InfoSessionWaterlooApiDAO waterlooApiDAO;
+        private String permalinkUsed;
 
-        public CallProcessor(CompanyDataUtilCallback callback, InfoSessionWaterlooApiDAO infoSessionWaterlooApiDAO) {
+        public CallProcessor(CompanyDataUtilCallback callback, InfoSessionWaterlooApiDAO infoSessionWaterlooApiDAO, String permalinkUsed) {
             this.callback = callback;
             this.waterlooApiDAO = infoSessionWaterlooApiDAO;
+            this.permalinkUsed = permalinkUsed;
         }
 
         @Override
         public void onSuccess(JSONObject obj) {
             Log.d("InfoSessions", obj.toString());
             try {
+                JSONObject data = obj.getJSONObject("data");
+                if (data.has("response") && data.getBoolean("response") == false) {
+                    String permalink = getPermalinkForCompany(waterlooApiDAO);
+                    if (permalink != null && !permalink.equals(permalinkUsed)) {
+                        permalinkUsed = permalink;
+                        CrunchbaseApiRestClient.get("/organization/" + permalink, null, this);
+                    }
+                    return;
+                }
+
+
                 JSONObject metadata = obj.getJSONObject("metadata");
                 if(metadata.optString("image_path_prefix").equals("") == false){
                     sImageRoot = metadata.getString("image_path_prefix");
                 }
 
-                JSONObject data = obj.getJSONObject("data");
 
                 JSONObject properties = data.getJSONObject("properties");
                 String name = properties.optString("name");
@@ -241,35 +253,43 @@ public class CompanyDataUtil {
                 throw new IllegalArgumentException("Provided callback is null");
             }
             CompanyDataUtilCallback callback = callbacks[0];
-            String permalink = getPermalinkForCompany(infoSessionWaterlooApiDAO);
-            if (permalink != null) {
-                CrunchbaseApiRestClient.get("/organization/" + permalink, null, new CallProcessor(callback, infoSessionWaterlooApiDAO));
-            }
+            CrunchbaseApiRestClient.get("/organization/" + infoSessionWaterlooApiDAO.getEmployer(), null, new CallProcessor(callback, infoSessionWaterlooApiDAO, infoSessionWaterlooApiDAO.getEmployer()));
             return null;
         }
 
-        // get the permalink p, such that .../organization/p points to a company
-        private String getPermalinkForCompany(InfoSessionWaterlooApiDAO waterlooApiDAO) {
 
-            String permalink = waterlooApiDAO.getEmployer().trim().replaceAll(" ", "+");
-            permalink = permalink.replaceAll("[^a-zA-Z0-9+]", "");
-            final String url = "http://www.google.com/search?q=crunchbase+" + permalink + "&btnI";
-            Log.d("InfoSessions", "google " + permalink);
-            try {
-                URLConnection con = new URL(url).openConnection();
-                /* Google blocks the default Java User-Agent, trick it instead! */
-                con.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
-                con.connect();
-                InputStream is = con.getInputStream();
-                System.out.println("Redirected URL: " + con.getURL()); // http://www.crunchbase.com/organization/microsoft
-                is.close();
-                String[] strings = con.getURL().toString().split("/");
-                Log.d("InfoSessions", "answer " + Arrays.toString(strings));
-                return strings[strings.length-1];
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return waterlooApiDAO.getEmployer();
+    }
+
+
+    private static String checkForNull(String s) {
+        if (s == null || s.equals("") || s.equals("null")) {
+            return null;
+        } else {
+            return s;
         }
+    }
+
+    // get the permalink p, such that .../organization/p points to a company
+    private static String getPermalinkForCompany(InfoSessionWaterlooApiDAO waterlooApiDAO) {
+
+        String permalink = waterlooApiDAO.getEmployer().trim().replaceAll(" ", "+");
+        permalink = permalink.replaceAll("[^a-zA-Z0-9+]", "");
+        final String url = "http://www.google.com/search?q=crunchbase+" + permalink + "&btnI";
+        Log.d("InfoSessions", "google " + permalink);
+        try {
+            URLConnection con = new URL(url).openConnection();
+                /* Google blocks the default Java User-Agent, trick it instead! */
+            con.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
+            con.connect();
+            InputStream is = con.getInputStream();
+            System.out.println("Redirected URL: " + con.getURL()); // http://www.crunchbase.com/organization/microsoft
+            is.close();
+            String[] strings = con.getURL().toString().split("/");
+            Log.d("InfoSessions", "answer " + Arrays.toString(strings));
+            return strings[strings.length - 1];
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return permalink;
     }
 }
