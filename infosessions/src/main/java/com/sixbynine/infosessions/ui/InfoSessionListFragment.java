@@ -1,10 +1,6 @@
 package com.sixbynine.infosessions.ui;
 
-<<<<<<< HEAD
 import android.app.ActionBar;
-=======
-import android.annotation.SuppressLint;
->>>>>>> cde7899b864794f0f66b42b0ffd613ca6cb93a8a
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,11 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-<<<<<<< HEAD
-=======
+import android.widget.AbsListView;
 import android.widget.AdapterView;
->>>>>>> cde7899b864794f0f66b42b0ffd613ca6cb93a8a
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -42,7 +37,6 @@ public class InfoSessionListFragment extends Fragment implements AbsListView.OnI
     private List<InfoSession> sessions;
 
     // TODO: Use Bundle instead of raw type
-    @SuppressLint("ValidFragment")
     public InfoSessionListFragment(List<InfoSession> sessions) {
         this.sessions = sessions;
         Collections.sort(sessions);
@@ -51,35 +45,23 @@ public class InfoSessionListFragment extends Fragment implements AbsListView.OnI
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_info_session_list, null);
-
-        mListView = (ListView) view.findViewById(R.id.listView);
-
         ListAdapter adapter = new InfoSessionListAdapter(sessions);
-
+        mListView = (ListView) view.findViewById(R.id.listView);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(this);
-
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-<<<<<<< HEAD
-        ListView listView = getListView();
-        listView.setDivider(null);
-        listView.setDividerHeight(0);
-        listView.setBackgroundResource(R.color.info_sessions_fragment_bg);
-        listView.setPadding(15,0,15,0);
         View footer = new View(getActivity());
         footer.setLayoutParams(new AbsListView.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, 30));
-        listView.addFooterView(footer);
-=======
         mListView.setDivider(null);
         mListView.setDividerHeight(10);
         mListView.setBackgroundColor(Color.rgb(230, 230, 230));
         mListView.setPadding(15, 0, 15, 0);
->>>>>>> cde7899b864794f0f66b42b0ffd613ca6cb93a8a
+        mListView.addFooterView(footer);
     }
 
     @Override
@@ -160,7 +142,7 @@ public class InfoSessionListFragment extends Fragment implements AbsListView.OnI
     /**
      * A Row represents a single list item in the InfoSessionListFragment.
      * It is one of:
-     * * A DateHeader - Separator to segregate info sessions that happen of different days
+     * * A DateHeader - Separator to segregate info sessions that happen on different days
      * * An InfoSessionRow - An InfoSession card with some information
      *
      * @author curtiskroetsch
@@ -210,11 +192,11 @@ public class InfoSessionListFragment extends Fragment implements AbsListView.OnI
 
         private static final DateFormat dateFormat = new SimpleDateFormat("EEE MMM d, h:mma");
 
-        private InfoSession infoSession;
-        private boolean isLast = false;
+        private InfoSession mInfoSession;
+        private boolean mIsLast = false;
 
         public InfoSessionRow(InfoSession infoSession) {
-            this.infoSession = infoSession;
+            this.mInfoSession = infoSession;
         }
 
         @Override
@@ -228,28 +210,22 @@ public class InfoSessionListFragment extends Fragment implements AbsListView.OnI
                 view = inflater.inflate(R.layout.info_session, viewGroup, false);
             }
 
-            InfoSessionCardLayout layout = (InfoSessionCardLayout) view;
-            layout.setLastCategory(isLast);
-
-            UIUtil.setTextForView(R.id.companyName, view, infoSession.waterlooApiDAO.getEmployer());
-            UIUtil.setTextForView(R.id.startTime, view, dateFormat.format(infoSession.waterlooApiDAO.getStartTime().getTime()));
-            UIUtil.setTextForView(R.id.location, view, infoSession.waterlooApiDAO.getLocation());
-<<<<<<< HEAD
+            UIUtil.setTextForView(R.id.companyName, view, mInfoSession.waterlooApiDAO.getEmployer());
+            UIUtil.setTextForView(R.id.startTime, view, dateFormat.format(mInfoSession.waterlooApiDAO.getStartTime().getTime()));
+            UIUtil.setTextForView(R.id.location, view, mInfoSession.waterlooApiDAO.getLocation());
 
             ImageView logo = (ImageView) view.findViewById(R.id.companyLogo);
-            if (infoSession.companyInfo != null && infoSession.companyInfo.getPrimaryImageBitmap() != null) {
-                logo.setImageBitmap(infoSession.companyInfo.getPrimaryImageBitmap());
+            if (mInfoSession.companyInfo != null && mInfoSession.companyInfo.getPrimaryImageBitmap() != null) {
+                logo.setImageBitmap(mInfoSession.companyInfo.getPrimaryImageBitmap());
             } else {
                 logo.setImageBitmap(null);
             }
 
-=======
->>>>>>> cde7899b864794f0f66b42b0ffd613ca6cb93a8a
             return view;
         }
 
         public void setIsLast(boolean val) {
-            this.isLast = val;
+            this.mIsLast = val;
         }
     }
 

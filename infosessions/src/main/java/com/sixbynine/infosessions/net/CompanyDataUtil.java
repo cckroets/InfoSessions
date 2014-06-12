@@ -253,7 +253,9 @@ public class CompanyDataUtil {
                 throw new IllegalArgumentException("Provided callback is null");
             }
             CompanyDataUtilCallback callback = callbacks[0];
-            CrunchbaseApiRestClient.get("/organization/" + infoSessionWaterlooApiDAO.getEmployer(), null, new CallProcessor(callback, infoSessionWaterlooApiDAO, infoSessionWaterlooApiDAO.getEmployer()));
+            String cleanEmployer = infoSessionWaterlooApiDAO.getEmployer().replaceAll(" ","-").
+                    replaceAll("[^a-zA-Z0-9]", "");
+            CrunchbaseApiRestClient.get("/organization/" + cleanEmployer, null, new CallProcessor(callback, infoSessionWaterlooApiDAO, infoSessionWaterlooApiDAO.getEmployer()));
             return null;
         }
 
