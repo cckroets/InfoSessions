@@ -94,6 +94,7 @@ public class WebData extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        return waterlooSessions;
     }
 
     public static String calendarToSQL(Calendar cal) {

@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.flurry.android.FlurryAgent;
+import com.sixbynine.infosessions.BuildConfig;
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.database.WebData;
 import com.sixbynine.infosessions.net.CompanyDataUtil;
@@ -18,8 +19,11 @@ import com.sixbynine.infosessions.object.company.Company;
 import com.sixbynine.infosessions.object.InfoSession;
 import com.sixbynine.infosessions.object.InfoSessionWaterlooApiDAO;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class MainActivity extends ActionBarActivity implements InfoSessionListFragment.Callback {
@@ -32,7 +36,12 @@ public class MainActivity extends ActionBarActivity implements InfoSessionListFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initInfoSessions();
+        if (savedInstanceState == null) {
+            initInfoSessions();
+        } else {
+            mInfoSessions = savedInstanceState.getParcelableArrayList("infoSessions");
+        }
+
     }
 
     @Override
@@ -67,6 +76,12 @@ public class MainActivity extends ActionBarActivity implements InfoSessionListFr
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("infoSessions", mInfoSessions);
+    }
+
     private void initInfoSessions() {
         InfoSessionUtil.getInfoSessions(new InfoSessionUtil.InfoSessionsCallback() {
             @Override
@@ -79,21 +94,20 @@ public class MainActivity extends ActionBarActivity implements InfoSessionListFr
                         mInfoSessions = new ArrayList<InfoSession>();
                     }
                     final InfoSession infoSession = new InfoSession();
-                    infoSession.waterlooApiDAO = waterlooApiDAO;
-                    infoSession.companyInfo = null;
+                    infoSession.setWaterlooApiDAO(waterlooApiDAO);
                     mInfoSessions.add(infoSession);
 
                     CompanyDataUtil.getCompanyData(waterlooApiDAO, new CompanyDataUtil.CompanyDataUtilCallback() {
                         @Override
                         public void onSuccess(InfoSessionWaterlooApiDAO infoSessionWaterlooApiDAO, Company crunchbaseApiDAO) {
-                            infoSession.companyInfo = crunchbaseApiDAO;
+                            infoSession.setCompanyInfo(crunchbaseApiDAO);
                             Log.d("InfoSessions", crunchbaseApiDAO.getName() + " data loaded");
                         }
 
                         @Override
                         public void onFailure(Throwable e) {
                             Log.e("InfoSessions", "Did not load companyInfo: " +
-                                    infoSession.waterlooApiDAO.getEmployer());
+                                    infoSession.getWaterlooApiDAO().getEmployer());
                             e.printStackTrace();
                         }
                     });
@@ -124,6 +138,18 @@ public class MainActivity extends ActionBarActivity implements InfoSessionListFr
 
     @Override
     public void onInfoSessionClicked(InfoSession infoSession) {
-        //TODO: They clicked on an Info Session! Yay! Now what?
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("employer", infoSession.getWaterlooApiDAO().getEmployer());
+        params.put("date", sdf.format(infoSession.getWaterlooApiDAO().getStartTime().getTime()));
+        FlurryAgent.logEvent("Info Session Clicked", params);
+        if (BuildConfig.DEBUG)
+            Log.d("InfoSessions", "Info Session clicked: " + infoSession.getWaterlooApiDAO().getEmployer());
+    }
+
+    @Override
+    public ArrayList<InfoSession> getInfoSessions() {
+        return mInfoSessions;
     }
 }

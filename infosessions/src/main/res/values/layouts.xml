@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- This will be true in different layout folders-->
+    <bool name="multipane">false</bool>
+
+</resources>

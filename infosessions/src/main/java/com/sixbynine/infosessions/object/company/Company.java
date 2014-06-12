@@ -47,7 +47,7 @@ public class Company implements Comparable<Company>, Parcelable {
     public static final int IMAGE_LOADED = 2;
     public static final int IMAGE_ERROR_LOADING = 3;
 
-    private OnImageStatusChangedListener mOnImageStatusChangedListener;
+    private List<OnImageStatusChangedListener> mOnImageStatusChangedListeners;
 
     public interface OnImageStatusChangedListener {
         public void onImageStatusChanged(int newStatus);
@@ -152,18 +152,24 @@ public class Company implements Comparable<Company>, Parcelable {
         loadImage();
     }
 
+    private void notifyListeners() {
+        if (mOnImageStatusChangedListeners != null) {
+            for (OnImageStatusChangedListener l : mOnImageStatusChangedListeners) {
+                l.onImageStatusChanged(mImageStatus);
+            }
+        }
+    }
+
     public void loadImage() {
         if (mPrimaryImageUrl == null) return;
         mImageStatus = IMAGE_LOADING;
-        if (mOnImageStatusChangedListener != null)
-            mOnImageStatusChangedListener.onImageStatusChanged(IMAGE_LOADING);
+        notifyListeners();
         CompanyImageLoader.getImage(this, new CompanyImageLoader.Callback() {
             @Override
             public void onImageLoaded(Bitmap img) {
                 mPrimaryImageBitmap = img;
                 mImageStatus = IMAGE_LOADED;
-                if (mOnImageStatusChangedListener != null)
-                    mOnImageStatusChangedListener.onImageStatusChanged(mImageStatus);
+                notifyListeners();
             }
 
             @Override
@@ -171,14 +177,15 @@ public class Company implements Comparable<Company>, Parcelable {
                 if (BuildConfig.DEBUG) Log.e("InfoSessions", e.toString());
                 FlurryAgent.onError("InfoSessions", "something", e);
                 mImageStatus = IMAGE_ERROR_LOADING;
-                if (mOnImageStatusChangedListener != null)
-                    mOnImageStatusChangedListener.onImageStatusChanged(mImageStatus);
+                notifyListeners();
             }
         });
     }
 
-    public void setOnImageStatusChangedListener(OnImageStatusChangedListener listener) {
-        mOnImageStatusChangedListener = listener;
+    public void addOnImageStatusChangedListener(OnImageStatusChangedListener listener) {
+        if (mOnImageStatusChangedListeners == null)
+            mOnImageStatusChangedListeners = new ArrayList<OnImageStatusChangedListener>();
+        mOnImageStatusChangedListeners.add(listener);
     }
 
     public String getPrimaryImageUrl() {
@@ -321,13 +328,11 @@ public class Company implements Comparable<Company>, Parcelable {
 
         parcel.writeInt(mImageStatus);
 
-        boolean[] parcelablesPresent = new boolean[3];
-        parcelablesPresent[0] = mPrimaryImageBitmap != null;
-        parcelablesPresent[1] = mWebsiteCatalogue != null;
-        parcelablesPresent[2] = mHeadquarters != null;
-        if (parcelablesPresent[0]) parcel.writeParcelable(mPrimaryImageBitmap, flags);
-        if (parcelablesPresent[1]) parcel.writeParcelable(mWebsiteCatalogue, flags);
-        if (parcelablesPresent[2]) parcel.writeParcelable(mHeadquarters, flags);
+        boolean[] parcelablesPresent = new boolean[2];
+        parcelablesPresent[0] = mWebsiteCatalogue != null;
+        parcelablesPresent[1] = mHeadquarters != null;
+        if (parcelablesPresent[0]) parcel.writeParcelable(mWebsiteCatalogue, flags);
+        if (parcelablesPresent[1]) parcel.writeParcelable(mHeadquarters, flags);
 
         boolean[] parcelableArraysPresent = new boolean[3];
         parcelableArraysPresent[0] = mTeamMembers != null;
@@ -367,13 +372,11 @@ public class Company implements Comparable<Company>, Parcelable {
 
             company.mImageStatus = parcel.readInt();
 
-            boolean[] parcelablesPresent = new boolean[3];
+            boolean[] parcelablesPresent = new boolean[2];
             parcel.readBooleanArray(parcelablesPresent);
             if (parcelablesPresent[0])
-                company.mPrimaryImageBitmap = parcel.readParcelable(Bitmap.class.getClassLoader());
-            if (parcelablesPresent[1])
                 company.mWebsiteCatalogue = parcel.readParcelable(WebsiteCatalogue.class.getClassLoader());
-            if (parcelablesPresent[2])
+            if (parcelablesPresent[1])
                 company.mHeadquarters = parcel.readParcelable(Address.class.getClassLoader());
 
             boolean[] parcelableArraysPresent = new boolean[3];
