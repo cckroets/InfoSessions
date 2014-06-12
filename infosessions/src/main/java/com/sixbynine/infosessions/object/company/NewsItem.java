@@ -48,7 +48,7 @@ public class NewsItem implements Parcelable, JSONable {
     }
 
     public void setPostDate(String postDate) {
-        if (postDate == null) {
+        if (postDate == null || postDate.equals("") || postDate.equals("null")) {
             mPostDate = null;
         } else {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

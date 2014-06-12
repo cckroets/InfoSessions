@@ -41,7 +41,7 @@ public class CompanyImageLoader {
         } else {
             Bitmap savedImage = loadImage(company.getPermalink()); //try to load from storage
             if (savedImage == null) {
-                new AsyncInternetImageLoader(company.getPrimaryImageUrl(), callback).execute(); //try to load from internet
+                new AsyncInternetImageLoader(company, callback).execute(); //try to load from internet
             } else {
                 sCompanyImages.put(company.getPermalink(), savedImage);
                 callback.onImageLoaded(savedImage);
@@ -91,11 +91,11 @@ public class CompanyImageLoader {
 
     private static class AsyncInternetImageLoader extends AsyncTask<Void, Void, Bitmap> {
 
-        private String url;
+        private Company company;
         private Callback callback;
 
-        public AsyncInternetImageLoader(String url, Callback callback) {
-            this.url = url;
+        public AsyncInternetImageLoader(Company company, Callback callback) {
+            this.company = company;
             this.callback = callback;
         }
 
@@ -103,7 +103,7 @@ public class CompanyImageLoader {
         protected Bitmap doInBackground(Void... args) {
             Bitmap mIcon11 = null;
             try {
-                InputStream in = new java.net.URL(url).openStream();
+                InputStream in = new java.net.URL(company.getPrimaryImageUrl()).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
                 callback.onError(e);
@@ -114,8 +114,8 @@ public class CompanyImageLoader {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
-                sCompanyImages.put(url, bitmap);
-                saveImage(url, bitmap);
+                sCompanyImages.put(company.getPermalink(), bitmap);
+                saveImage(company.getPermalink(), bitmap);
                 callback.onImageLoaded(bitmap);
             } else {
                 callback.onError(new Exception("result was null!"));

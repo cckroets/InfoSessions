@@ -1,5 +1,6 @@
 package com.sixbynine.infosessions.ui;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -28,15 +29,17 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+@SuppressLint("ValidFragment")
 /**
-* @author curtiskroetsch
-*/
+ * @author curtiskroetsch
+ */
 public class InfoSessionListFragment extends Fragment implements AbsListView.OnItemClickListener {
 
     private ListView mListView;
     private List<InfoSession> sessions;
 
     // TODO: Use Bundle instead of raw type
+
     public InfoSessionListFragment(List<InfoSession> sessions) {
         this.sessions = sessions;
         Collections.sort(sessions);

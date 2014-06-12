@@ -70,26 +70,28 @@ public class CompanyDataUtil {
                     if (permalink != null && !permalink.equals(permalinkUsed)) {
                         permalinkUsed = permalink;
                         CrunchbaseApiRestClient.get("/organization/" + permalink, null, this);
+                    } else {
+                        Log.w("InfoSessions", "Unable to figure out permalink for " + waterlooApiDAO.getEmployer());
                     }
                     return;
                 }
 
 
                 JSONObject metadata = obj.getJSONObject("metadata");
-                if(metadata.optString("image_path_prefix").equals("") == false){
+                if(performNullCheck(metadata.optString("image_path_prefix")) != null){
                     sImageRoot = metadata.getString("image_path_prefix");
                 }
 
 
                 JSONObject properties = data.getJSONObject("properties");
-                String name = properties.optString("name");
-                if(name.equals("")) throw new Exception("company name was missing or null!");
+                String name = performNullCheck(properties.optString("name"));
+                if(name == null) throw new Exception("company name was missing or null!");
                 Company company = new Company(name);
-                company.setDescription(properties.optString("description"));
-                company.setShortDescription(properties.optString("short_description"));
-                company.setFoundedDate(properties.optString("founded_on", null));
-                company.setPermalink(properties.getString("permalink"));
-                company.setHomePageUrl(properties.optString("homepage_url"));
+                company.setDescription(performNullCheck(properties.optString("description")));
+                company.setShortDescription(performNullCheck(properties.optString("short_description")));
+                company.setFoundedDate(performNullCheck(properties.optString("founded_on")));
+                company.setPermalink(performNullCheck(properties.optString("permalink")));
+                company.setHomePageUrl(performNullCheck(properties.optString("homepage_url")));
 
 
                 if(data.has("relationships")){
@@ -102,11 +104,11 @@ public class CompanyDataUtil {
                             for(int i = 0; i < items.length(); i ++){
                                 JSONObject currentTeamMember = items.getJSONObject(i);
                                 TeamMember teamMember = new TeamMember();
-                                if(currentTeamMember.has("first_name")) teamMember.setFirstName(currentTeamMember.getString("first_name"));
-                                if(currentTeamMember.has("last_name")) teamMember.setLastName(currentTeamMember.getString("last_name"));
-                                if(currentTeamMember.has("path")) teamMember.setPath(currentTeamMember.getString("path"));
-                                if(currentTeamMember.has("started_on")) teamMember.setStartedOn(currentTeamMember.getString("started_on"));
-                                company.addTeamMember(teamMember);
+                                teamMember.setFirstName(performNullCheck(currentTeamMember.optString("first_name")));
+                                teamMember.setLastName(performNullCheck(currentTeamMember.optString("last_name")));
+                                teamMember.setPath(performNullCheck(currentTeamMember.optString("path")));
+                                teamMember.setStartedOn(performNullCheck(currentTeamMember.optString("started_on")));
+                               company.addTeamMember(teamMember);
                             }
                         }
                     }
@@ -129,10 +131,10 @@ public class CompanyDataUtil {
                                 address = new Address(Locale.US);
                                 }
 
-                                address.setAddressLine(0, hq.optString("street_1"));
-                                address.setLocality(hq.optString("city"));
-                                String adminArea = hq.optString("region");
-                                if(adminArea.equals("") || adminArea.equals("null")){
+                                address.setAddressLine(0, performNullCheck(hq.optString("street_1")));
+                                address.setLocality(performNullCheck(hq.optString("city")));
+                                String adminArea = performNullCheck(hq.optString("region"));
+                                if(adminArea == null){
                                     if(address.getLocality() != null && (address.getLocality().equals("Waterloo")
                                                                         || address.getLocality().equals("Toronto")
                                                                         || address.getLocality().equals("Kitchener"))){
@@ -143,7 +145,7 @@ public class CompanyDataUtil {
                                 }else{
                                     address.setAdminArea(adminArea);
                                 }
-                                address.setCountryCode(hq.optString("country_code"));
+                                address.setCountryCode(performNullCheck(hq.optString("country_code")));
                                 company.setHeadquarters(address);
                             }
                         }
@@ -159,10 +161,10 @@ public class CompanyDataUtil {
                                 }else{
                                     address = new Address(Locale.US);
                                 }
-                                address.setAddressLine(0, hq.optString("street_1"));
-                                address.setLocality(hq.optString("city"));
-                                address.setAdminArea(hq.optString("region"));
-                                address.setCountryCode(hq.optString("country_code"));
+                                address.setAddressLine(0, performNullCheck(hq.optString("street_1")));
+                                address.setLocality(performNullCheck(hq.optString("city")));
+                                address.setAdminArea(performNullCheck(hq.optString("region")));
+                                address.setCountryCode(performNullCheck(hq.optString("country_code")));
                                 company.setHeadquarters(address);
                             }
                         }
@@ -174,8 +176,8 @@ public class CompanyDataUtil {
                             JSONArray items = founders.getJSONArray("items");
                             for(int i = 0; i < items.length(); i ++){
                                 JSONObject item = items.getJSONObject(i);
-                                String founderName = item.optString("name");
-                                String founderPath = item.optString("path");
+                                String founderName = performNullCheck(item.optString("name"));
+                                String founderPath = performNullCheck(item.optString("path"));
                                 company.addFounder(new Founder(founderName, founderPath));
                             }
                         }
@@ -187,8 +189,8 @@ public class CompanyDataUtil {
                             JSONArray items = primaryImage.getJSONArray("items");
                             if(items.length() > 0){
                                 JSONObject item = items.getJSONObject(0);
-                                String path = item.optString("path");
-                                if(path.equals("") == false){
+                                String path = performNullCheck(item.optString("path"));
+                                if(path != null){
                                     company.setPrimaryImageUrl(sImageRoot + path);
                                 }
                             }
@@ -201,7 +203,7 @@ public class CompanyDataUtil {
                             JSONArray items = websites.getJSONArray("items");
                             for(int i = 0; i < items.length(); i ++){
                                 JSONObject website = items.getJSONObject(i);
-                                company.addWebsite(new Website(website.optString("url"), website.optString("title")));
+                                company.addWebsite(new Website(performNullCheck(website.optString("url")), performNullCheck(website.optString("title"))));
                             }
                         }
                     }
@@ -213,10 +215,10 @@ public class CompanyDataUtil {
                             for(int i = 0; i < items.length(); i ++){
                                 JSONObject newsItemJson = items.getJSONObject(i);
                                 NewsItem newsItem = new NewsItem();
-                                if(newsItemJson.optString("author", null) != null) newsItem.setAuthor(newsItemJson.getString("author"));
-                                if(newsItemJson.optString("type", null) != null) newsItem.setType(newsItemJson.getString("type"));
-                                if(newsItemJson.optString("title", null) != null) newsItem.setTitle(newsItemJson.getString("title"));
-                                if(newsItemJson.optString("posted_on", null) != null) newsItem.setPostDate(newsItemJson.getString("posted_on"));
+                                newsItem.setAuthor(performNullCheck(newsItemJson.optString("author")));
+                                newsItem.setType(performNullCheck(newsItemJson.optString("type")));
+                                newsItem.setTitle(performNullCheck(newsItemJson.optString("title")));
+                                newsItem.setPostDate(performNullCheck(newsItemJson.optString("posted_on")));
                                 company.addNewsItem(newsItem);
                             }
                         }
@@ -253,17 +255,23 @@ public class CompanyDataUtil {
                 throw new IllegalArgumentException("Provided callback is null");
             }
             CompanyDataUtilCallback callback = callbacks[0];
-            String cleanEmployer = infoSessionWaterlooApiDAO.getEmployer().replaceAll(" ","-").
-                    replaceAll("[^a-zA-Z0-9]", "");
-            CrunchbaseApiRestClient.get("/organization/" + cleanEmployer, null, new CallProcessor(callback, infoSessionWaterlooApiDAO, infoSessionWaterlooApiDAO.getEmployer()));
+            if (infoSessionWaterlooApiDAO.getEmployer().contains(" ") == false) {
+                CrunchbaseApiRestClient.get("/organization/" + infoSessionWaterlooApiDAO.getEmployer(), null, new CallProcessor(callback, infoSessionWaterlooApiDAO, infoSessionWaterlooApiDAO.getEmployer()));
+            } else {
+                Log.w("InfoSessions", "skipping " + infoSessionWaterlooApiDAO.getEmployer() + " since it has a space");
+            }
             return null;
         }
 
 
     }
 
-
-    private static String checkForNull(String s) {
+    /**
+     *
+     * @param s the string to check
+     * @return null if s is null, empty or the string "null", s otherwise
+     */
+    private static String performNullCheck(String s) {
         if (s == null || s.equals("") || s.equals("null")) {
             return null;
         } else {
