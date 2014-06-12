@@ -2,6 +2,8 @@ package com.sixbynine.infosessions.object.company;
 
 import android.graphics.Bitmap;
 import android.location.Address;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.flurry.android.FlurryAgent;
@@ -17,7 +19,7 @@ import java.util.List;
 /**
  * Created by stevenkideckel on 2014-06-06.
  */
-public class Company implements Comparable<Company> {
+public class Company implements Comparable<Company>, Parcelable {
 
 
     private String mPermalink;
@@ -150,8 +152,8 @@ public class Company implements Comparable<Company> {
         loadImage();
     }
 
-    public void loadImage(){
-        if(mPrimaryImageUrl == null) return;
+    public void loadImage() {
+        if (mPrimaryImageUrl == null) return;
         mImageStatus = IMAGE_LOADING;
         if (mOnImageStatusChangedListener != null)
             mOnImageStatusChangedListener.onImageStatusChanged(IMAGE_LOADING);
@@ -166,7 +168,7 @@ public class Company implements Comparable<Company> {
 
             @Override
             public void onError(Throwable e) {
-                if(BuildConfig.DEBUG) Log.e("InfoSessions", e.toString());
+                if (BuildConfig.DEBUG) Log.e("InfoSessions", e.toString());
                 FlurryAgent.onError("InfoSessions", "something", e);
                 mImageStatus = IMAGE_ERROR_LOADING;
                 if (mOnImageStatusChangedListener != null)
@@ -260,19 +262,19 @@ public class Company implements Comparable<Company> {
         }
     }
 
-    public int getImageStatus(){
+    public int getImageStatus() {
         return mImageStatus;
     }
 
-    public Bitmap getPrimaryImageBitmap(){
+    public Bitmap getPrimaryImageBitmap() {
         return mPrimaryImageBitmap;
     }
 
-    public void setShortDescription(String shortDescription){
+    public void setShortDescription(String shortDescription) {
         mShortDescription = shortDescription;
     }
 
-    public String getShortDescription(){
+    public String getShortDescription() {
         return mShortDescription;
     }
 
@@ -292,4 +294,122 @@ public class Company implements Comparable<Company> {
     public int compareTo(Company another) {
         return this.mName.compareTo(another.mName);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        String[] strings = new String[6];
+        strings[0] = mName;
+        strings[1] = mPermalink;
+        strings[2] = mShortDescription;
+        strings[3] = mDescription;
+        strings[4] = mHomePageUrl;
+        strings[5] = mPrimaryImageUrl;
+        parcel.writeStringArray(strings);
+
+        long[] times = new long[1];
+        if (mFoundedDate != null) {
+            times[0] = mFoundedDate.getTimeInMillis();
+        } else {
+            times[0] = 0;
+        }
+        parcel.writeLongArray(times);
+
+        parcel.writeInt(mImageStatus);
+
+        boolean[] parcelablesPresent = new boolean[3];
+        parcelablesPresent[0] = mPrimaryImageBitmap != null;
+        parcelablesPresent[1] = mWebsiteCatalogue != null;
+        parcelablesPresent[2] = mHeadquarters != null;
+        if (parcelablesPresent[0]) parcel.writeParcelable(mPrimaryImageBitmap, flags);
+        if (parcelablesPresent[1]) parcel.writeParcelable(mWebsiteCatalogue, flags);
+        if (parcelablesPresent[2]) parcel.writeParcelable(mHeadquarters, flags);
+
+        boolean[] parcelableArraysPresent = new boolean[3];
+        parcelableArraysPresent[0] = mTeamMembers != null;
+        parcelableArraysPresent[1] = mNewsItems != null;
+        parcelableArraysPresent[2] = mFounders != null;
+        parcel.writeBooleanArray(parcelableArraysPresent);
+
+        if (parcelableArraysPresent[0])
+            parcel.writeParcelableArray(mTeamMembers.toArray(new TeamMember[mTeamMembers.size()]), flags);
+        if (parcelableArraysPresent[1])
+            parcel.writeParcelableArray(mNewsItems.toArray(new NewsItem[mNewsItems.size()]), flags);
+        if (parcelableArraysPresent[2])
+            parcel.writeParcelableArray(mFounders.toArray(new Founder[mFounders.size()]), flags);
+    }
+
+    public static final Parcelable.Creator<Company> CREATOR = new Parcelable.Creator<Company>() {
+
+        @Override
+        public Company createFromParcel(Parcel parcel) {
+            String[] strings = new String[6];
+            parcel.readStringArray(strings);
+
+            Company company = new Company(strings[0]);
+            company.setPermalink(strings[1]);
+            company.setShortDescription(strings[2]);
+            company.setDescription(strings[3]);
+            company.setHomePageUrl(strings[4]);
+            company.setPrimaryImageUrl(strings[5]);
+
+            long[] times = new long[1];
+            parcel.readLongArray(times);
+            if (times[0] == 0) {
+                company.setFoundedDate((String) null);
+            } else {
+                company.setFoundedDate(times[1]);
+            }
+
+            company.mImageStatus = parcel.readInt();
+
+            boolean[] parcelablesPresent = new boolean[3];
+            parcel.readBooleanArray(parcelablesPresent);
+            if (parcelablesPresent[0])
+                company.mPrimaryImageBitmap = parcel.readParcelable(Bitmap.class.getClassLoader());
+            if (parcelablesPresent[1])
+                company.mWebsiteCatalogue = parcel.readParcelable(WebsiteCatalogue.class.getClassLoader());
+            if (parcelablesPresent[2])
+                company.mHeadquarters = parcel.readParcelable(Address.class.getClassLoader());
+
+            boolean[] parcelableArraysPresent = new boolean[3];
+            parcel.readBooleanArray(parcelableArraysPresent);
+            if (parcelableArraysPresent[0]) {
+                TeamMember[] teamMembers = (TeamMember[]) parcel.readParcelableArray(TeamMember.class.getClassLoader());
+                List<TeamMember> teamMemberList = new ArrayList<TeamMember>(teamMembers.length);
+                for (TeamMember teamMember : teamMembers) {
+                    teamMemberList.add(teamMember);
+                }
+                company.setTeamMembers(teamMemberList);
+            }
+            if (parcelableArraysPresent[1]) {
+                NewsItem[] newsItems = (NewsItem[]) parcel.readParcelableArray(NewsItem.class.getClassLoader());
+                List<NewsItem> newsItemList = new ArrayList<NewsItem>(newsItems.length);
+                for (NewsItem newsItem : newsItems) {
+                    newsItemList.add(newsItem);
+                }
+                company.setNewsItems(newsItemList);
+            }
+            if (parcelableArraysPresent[2]) {
+                Founder[] founders = (Founder[]) parcel.readParcelableArray(Founder.class.getClassLoader());
+                List<Founder> founderList = new ArrayList<Founder>(founders.length);
+                for (Founder founder : founders) {
+                    founderList.add(founder);
+                }
+                company.setFounders(founderList);
+            }
+
+            return company;
+        }
+
+        @Override
+        public Company[] newArray(int i) {
+            return new Company[i];
+        }
+    };
+
 }

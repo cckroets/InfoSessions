@@ -1,10 +1,12 @@
 package com.sixbynine.infosessions.ui;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActionBar;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,33 +38,65 @@ import java.util.List;
 public class InfoSessionListFragment extends Fragment implements AbsListView.OnItemClickListener {
 
     private ListView mListView;
-    private List<InfoSession> sessions;
+    private ArrayList<InfoSession> mInfoSessions;
+    private Callback mCallback;
 
-    // TODO: Use Bundle instead of raw type
-
-    public InfoSessionListFragment(List<InfoSession> sessions) {
-        this.sessions = sessions;
-        Collections.sort(sessions);
+    //the Fragment should interact with its Activity by invoking Callback methods
+    //feel free to add methods as necessary, I figured this was one that we're going to need for sure
+    public interface Callback {
+        public void onInfoSessionClicked(InfoSession infoSession);
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        Log.d("InfoSessionsListFragment", "onAttach");
+        if (activity instanceof Callback) {
+            mCallback = (Callback) activity;
+        } else {
+            throw new IllegalStateException(activity.getClass().toString() + " must implement interface Callback");
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d("InfoSessionsListFragment", "onCreate");
+        if (savedInstanceState == null) {
+            Bundle args = getArguments();
+            mInfoSessions = args.getParcelableArrayList("infoSessions");
+            if (mInfoSessions == null) {
+                throw new IllegalStateException("InfoSessions list was not provided!");
+            }
+        } else {
+            mInfoSessions = savedInstanceState.getParcelableArrayList("infoSessions");
+            if (mInfoSessions == null) {
+                throw new IllegalStateException("InfoSessions list was not provided from onSavedInstance!");
+            }
+        }
+        Collections.sort(mInfoSessions);
+    }
+
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d("InfoSessionsListFragment", "onCreateView");
         View view = inflater.inflate(R.layout.fragment_info_session_list, null);
-        ListAdapter adapter = new InfoSessionListAdapter(sessions);
+
+        mListView = (ListView) view.findViewById(R.id.listView);
+
+        ListAdapter adapter = new InfoSessionListAdapter(mInfoSessions);
+
         mListView = (ListView) view.findViewById(R.id.listView);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(this);
         return view;
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+        //TODO: the user clicked an info session
     }
 
     /**
@@ -146,6 +180,7 @@ public class InfoSessionListFragment extends Fragment implements AbsListView.OnI
     public interface Row {
 
         public int getType();
+
         public View getView(LayoutInflater inflater, View view, ViewGroup viewGroup);
 
         public static int TYPE_INFO_SESSION = 0;
@@ -155,7 +190,7 @@ public class InfoSessionListFragment extends Fragment implements AbsListView.OnI
 
     /**
      * DateHeader - A single text field that displays the day of the year
-     * for the following info sessions
+     * for the following info mInfoSessions
      */
     public static class DateHeader implements Row {
 
@@ -228,5 +263,9 @@ public class InfoSessionListFragment extends Fragment implements AbsListView.OnI
         }
     }
 
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("infoSessions", mInfoSessions);
+    }
 }

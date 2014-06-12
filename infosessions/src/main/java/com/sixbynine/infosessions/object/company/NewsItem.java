@@ -105,7 +105,12 @@ public class NewsItem implements Parcelable, JSONable {
         parcel.writeStringArray(data);
 
         long[] time = new long[1];
-        time[0] = mPostDate.getTimeInMillis();
+        if (mPostDate != null) {
+            time[0] = mPostDate.getTimeInMillis();
+        } else {
+            time[0] = 0;
+        }
+
         parcel.writeLongArray(time);
     }
 
@@ -122,7 +127,7 @@ public class NewsItem implements Parcelable, JSONable {
             newsItem.setTitle(data[1]);
             newsItem.setType(data[2]);
             newsItem.setUrl(data[3]);
-            newsItem.setPostDate(time[0]);
+            if (time[0] != 0) newsItem.setPostDate(time[0]);
 
             return newsItem;
         }

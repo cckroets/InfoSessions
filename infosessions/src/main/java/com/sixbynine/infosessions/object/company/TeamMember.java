@@ -103,7 +103,12 @@ public class TeamMember implements Parcelable, JSONable {
         data[3] = mTitle;
         parcel.writeStringArray(data);
         long[] time = new long[1];
-        time[0] = mStartedOn.getTimeInMillis();
+        if (mStartedOn != null) {
+            time[0] = mStartedOn.getTimeInMillis();
+        } else {
+            time[0] = 0;
+        }
+
         parcel.writeLongArray(time);
     }
 
@@ -121,7 +126,9 @@ public class TeamMember implements Parcelable, JSONable {
             teamMember.setLastName(data[1]);
             teamMember.setPath(data[2]);
             teamMember.setTitle(data[3]);
-            teamMember.setStartedOn(time[0]);
+            if (time[0] != 0) {
+                teamMember.setStartedOn(time[0]);
+            }
 
             return teamMember;
         }
