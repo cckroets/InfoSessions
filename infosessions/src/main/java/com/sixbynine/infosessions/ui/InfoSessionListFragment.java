@@ -2,23 +2,20 @@ package com.sixbynine.infosessions.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActionBar;
-import android.graphics.Color;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.object.InfoSession;
@@ -36,6 +33,9 @@ import java.util.List;
  * @author curtiskroetsch
  */
 public class InfoSessionListFragment extends Fragment implements AbsListView.OnItemClickListener {
+
+    private static final DateFormat HEADER_DATE_FORMAT = new SimpleDateFormat("EEEE MMM d, yyyy");
+    private static final DateFormat TIME_DATE_FORMAT = new SimpleDateFormat("EEE MMM d, h:mma");
 
     private ListView mListView;
     private ArrayList<InfoSession> mInfoSessions;
@@ -82,11 +82,7 @@ public class InfoSessionListFragment extends Fragment implements AbsListView.OnI
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d("InfoSessionsListFragment", "onCreateView");
         View view = inflater.inflate(R.layout.fragment_info_session_list, null);
-
-        mListView = (ListView) view.findViewById(R.id.listView);
-
         ListAdapter adapter = new InfoSessionListAdapter(mInfoSessions);
-
         mListView = (ListView) view.findViewById(R.id.listView);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(this);
@@ -102,165 +98,82 @@ public class InfoSessionListFragment extends Fragment implements AbsListView.OnI
     /**
      * @author curtiskroetsch
      */
-    public class InfoSessionListAdapter extends BaseAdapter {
-
-        List<Row> rows;
+    public class InfoSessionListAdapter extends ArrayAdapter<InfoSession> {
 
         public InfoSessionListAdapter(List<InfoSession> sessions) {
+            super(getActivity(), R.layout.info_session, R.id.companyName, sessions);
+        }
 
-            this.rows = new ArrayList<Row>(sessions.size());
-            int lastDay = -1;
-
-            for (InfoSession session : sessions) {
-                Calendar calendar = session.waterlooApiDAO.getStartTime();
-                int day = calendar.get(Calendar.DAY_OF_YEAR);
-                if (lastDay < day) {
-                    if (lastDay != -1) {
-                        setLastRow();
-                    }
-                    rows.add(new DateHeader(calendar.getTime()));
-                    lastDay = day;
-                }
-                rows.add(new InfoSessionRow(session));
-            }
-            setLastRow();
+        private int getDayOfYear(int row) {
+            return getItem(row).waterlooApiDAO.getStartTime().get(Calendar.DAY_OF_YEAR);
         }
 
         /**
-         * Set the isLast field to true for the last added info session
+         * Test if info session i, is the last on its day
+         * @param i The index of the info session
+         * @return True if the session is the last on its day
          */
-        private void setLastRow() {
-            InfoSessionRow sessionRow = (InfoSessionRow) rows.get(rows.size()-1);
-            sessionRow.setIsLast(true);
+        private boolean isLastOfDay(int i) {
+            return (i == getCount()-1) || isFirstOfDay(i+1);
         }
 
-        @Override
-        public int getCount() {
-            return rows.size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return rows.get(i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i;
+        /**
+         * Test if info session i, is the first on its day
+         * @param i The index of the info session
+         * @return True if the sesssion is the first on its day
+         */
+        private boolean isFirstOfDay(int i) {
+            return (i == 0) || (getDayOfYear(i) > getDayOfYear(i-1));
         }
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
 
             LayoutInflater inflater = InfoSessionListFragment.this.getLayoutInflater(null);
-            view = rows.get(i).getView(inflater,view,viewGroup);
-            return view;
-        }
+            ViewHolder viewHolder;
+            InfoSession infoSession = getItem(i);
 
-        @Override
-        public int getItemViewType(int position) {
-            return rows.get(position).getType();
-        }
-
-        @Override
-        public int getViewTypeCount() {
-            return Row.NUM_TYPES;
-        }
-
-    }
-
-    /**
-     * A Row represents a single list item in the InfoSessionListFragment.
-     * It is one of:
-     * * A DateHeader - Separator to segregate info sessions that happen on different days
-     * * An InfoSessionRow - An InfoSession card with some information
-     *
-     * @author curtiskroetsch
-     */
-    public interface Row {
-
-        public int getType();
-
-        public View getView(LayoutInflater inflater, View view, ViewGroup viewGroup);
-
-        public static int TYPE_INFO_SESSION = 0;
-        public static int TYPE_HEADER = 1;
-        public static int NUM_TYPES = 2;
-    }
-
-    /**
-     * DateHeader - A single text field that displays the day of the year
-     * for the following info mInfoSessions
-     */
-    public static class DateHeader implements Row {
-
-        private static DateFormat DAY_FORMAT = new SimpleDateFormat("EEEE MMM d, yyyy");
-
-        private Date date;
-
-        public DateHeader(Date date) {
-            this.date = date;
-        }
-
-        public int getType() {
-            return TYPE_HEADER;
-        }
-
-        @Override
-        public View getView(LayoutInflater inflater, View view, ViewGroup viewGroup) {
-            if (view == null) {
-                view = inflater.inflate(R.layout.info_session_date, viewGroup, false);
-            }
-            UIUtil.setTextForView(R.id.dateHeader, view, DAY_FORMAT.format(date));
-            return view;
-        }
-    }
-
-    /**
-     * InfoSessionRow - A snippet of information about an InfoSession
-     */
-    public static class InfoSessionRow implements Row {
-
-        private static final DateFormat dateFormat = new SimpleDateFormat("EEE MMM d, h:mma");
-
-        private InfoSession mInfoSession;
-        private boolean mIsLast = false;
-
-        public InfoSessionRow(InfoSession infoSession) {
-            this.mInfoSession = infoSession;
-        }
-
-        @Override
-        public int getType() {
-            return Row.TYPE_INFO_SESSION;
-        }
-
-        @Override
-        public View getView(LayoutInflater inflater, View view, ViewGroup viewGroup) {
             if (view == null) {
                 view = inflater.inflate(R.layout.info_session, viewGroup, false);
-            }
-
-            InfoSessionCardLayout layout = (InfoSessionCardLayout) view;
-            layout.setLastCategory(mIsLast);
-
-            UIUtil.setTextForView(R.id.companyName, view, mInfoSession.waterlooApiDAO.getEmployer());
-            UIUtil.setTextForView(R.id.startTime, view, dateFormat.format(mInfoSession.waterlooApiDAO.getStartTime().getTime()));
-            UIUtil.setTextForView(R.id.location, view, mInfoSession.waterlooApiDAO.getLocation());
-
-            ImageView logo = (ImageView) view.findViewById(R.id.companyLogo);
-            if (mInfoSession.companyInfo != null && mInfoSession.companyInfo.getPrimaryImageBitmap() != null) {
-                logo.setImageBitmap(mInfoSession.companyInfo.getPrimaryImageBitmap());
+                viewHolder = new ViewHolder();
+                viewHolder.dateHeader = (TextView) view.findViewById(R.id.dateHeader);
+                viewHolder.companyName = (TextView) view.findViewById(R.id.companyName);
+                viewHolder.startTime = (TextView) view.findViewById(R.id.startTime);
+                viewHolder.location = (TextView) view.findViewById(R.id.location);
+                viewHolder.companyLogo = (ImageView) view.findViewById(R.id.companyLogo);
+                viewHolder.cardLayout = (InfoSessionCardLayout) view.findViewById(R.id.card);
+                view.setTag(viewHolder);
             } else {
-                logo.setImageBitmap(null);
+                viewHolder = (ViewHolder) view.getTag();
             }
+
+            Date date = infoSession.waterlooApiDAO.getStartTime().getTime();
+            Bitmap logo = (infoSession.companyInfo == null) ? null :
+                    infoSession.companyInfo.getPrimaryImageBitmap();
+
+            if (isFirstOfDay(i)) {
+                viewHolder.dateHeader.setVisibility(View.VISIBLE);
+                viewHolder.dateHeader.setText(HEADER_DATE_FORMAT.format(date));
+            } else {
+                viewHolder.dateHeader.setVisibility(View.GONE);
+            }
+            viewHolder.companyName.setText(infoSession.waterlooApiDAO.getEmployer());
+            viewHolder.startTime.setText(TIME_DATE_FORMAT.format(date));
+            viewHolder.location.setText(infoSession.waterlooApiDAO.getLocation());
+            viewHolder.companyLogo.setImageBitmap(logo);
+            viewHolder.cardLayout.setLastCategory(isLastOfDay(i));
 
             return view;
         }
+    }
 
-        public void setIsLast(boolean val) {
-            this.mIsLast = val;
-        }
+    static class ViewHolder {
+        TextView dateHeader;
+        TextView companyName;
+        TextView startTime;
+        TextView location;
+        ImageView companyLogo;
+        InfoSessionCardLayout cardLayout;
     }
 
     @Override

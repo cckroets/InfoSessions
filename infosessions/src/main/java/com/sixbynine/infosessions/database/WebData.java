@@ -8,11 +8,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.sixbynine.infosessions.object.InfoSession;
 import com.sixbynine.infosessions.object.InfoSessionWaterlooApiDAO;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -71,6 +74,27 @@ public class WebData extends SQLiteOpenHelper {
         this.onCreate(db);
     }
 
+    private Cursor getInfoSessionCursor() {
+        SQLiteDatabase database = getReadableDatabase();
+        if (database == null) {
+            throw new IllegalStateException("Database could not be opened");
+        }
+        return database.query(INFO_SESSION_TABLE_NAME, null, null, null, null, null, null);
+    }
+
+    public static List<InfoSessionWaterlooApiDAO> readInfoSessionsFromDB(Context context) {
+        WebData webData = new WebData(context);
+        Cursor cursor = webData.getInfoSessionCursor();
+        if (cursor == null || cursor.getCount() <= 0) {
+            return null;
+        }
+        List<InfoSessionWaterlooApiDAO> waterlooSessions = new ArrayList<InfoSessionWaterlooApiDAO>(cursor.getCount());
+        for (int row = 0; row < cursor.getCount(); row++) {
+            // TODO: Populate waterlooSessions
+        }
+
+        cursor.close();
+    }
 
     public static String calendarToSQL(Calendar cal) {
         return SQL_DATE.format(cal.getTime());
