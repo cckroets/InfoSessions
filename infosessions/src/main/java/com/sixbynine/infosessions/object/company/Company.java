@@ -331,21 +331,32 @@ public class Company implements Comparable<Company>, Parcelable {
         boolean[] parcelablesPresent = new boolean[2];
         parcelablesPresent[0] = mWebsiteCatalogue != null;
         parcelablesPresent[1] = mHeadquarters != null;
+        parcel.writeBooleanArray(parcelablesPresent);
+
         if (parcelablesPresent[0]) parcel.writeParcelable(mWebsiteCatalogue, flags);
         if (parcelablesPresent[1]) parcel.writeParcelable(mHeadquarters, flags);
 
-        boolean[] parcelableArraysPresent = new boolean[3];
-        parcelableArraysPresent[0] = mTeamMembers != null;
-        parcelableArraysPresent[1] = mNewsItems != null;
-        parcelableArraysPresent[2] = mFounders != null;
-        parcel.writeBooleanArray(parcelableArraysPresent);
+        parcel.writeInt(mTeamMembers == null ? 0 : mTeamMembers.size());
+        if (mTeamMembers != null) {
+            for (TeamMember teamMember : mTeamMembers) {
+                parcel.writeParcelable(teamMember, flags);
+            }
+        }
 
-        if (parcelableArraysPresent[0])
-            parcel.writeParcelableArray(mTeamMembers.toArray(new TeamMember[mTeamMembers.size()]), flags);
-        if (parcelableArraysPresent[1])
-            parcel.writeParcelableArray(mNewsItems.toArray(new NewsItem[mNewsItems.size()]), flags);
-        if (parcelableArraysPresent[2])
-            parcel.writeParcelableArray(mFounders.toArray(new Founder[mFounders.size()]), flags);
+        parcel.writeInt(mNewsItems == null ? 0 : mNewsItems.size());
+        if (mNewsItems != null) {
+            for (NewsItem newsItem : mNewsItems) {
+                parcel.writeParcelable(newsItem, flags);
+            }
+        }
+
+        parcel.writeInt(mFounders == null ? 0 : mFounders.size());
+        if (mFounders != null) {
+            for (Founder founder : mFounders) {
+                parcel.writeParcelable(founder, flags);
+            }
+        }
+
     }
 
     public static final Parcelable.Creator<Company> CREATOR = new Parcelable.Creator<Company>() {
@@ -367,7 +378,7 @@ public class Company implements Comparable<Company>, Parcelable {
             if (times[0] == 0) {
                 company.setFoundedDate((String) null);
             } else {
-                company.setFoundedDate(times[1]);
+                company.setFoundedDate(times[0]);
             }
 
             company.mImageStatus = parcel.readInt();
@@ -379,32 +390,28 @@ public class Company implements Comparable<Company>, Parcelable {
             if (parcelablesPresent[1])
                 company.mHeadquarters = parcel.readParcelable(Address.class.getClassLoader());
 
-            boolean[] parcelableArraysPresent = new boolean[3];
-            parcel.readBooleanArray(parcelableArraysPresent);
-            if (parcelableArraysPresent[0]) {
-                TeamMember[] teamMembers = (TeamMember[]) parcel.readParcelableArray(TeamMember.class.getClassLoader());
-                List<TeamMember> teamMemberList = new ArrayList<TeamMember>(teamMembers.length);
-                for (TeamMember teamMember : teamMembers) {
-                    teamMemberList.add(teamMember);
-                }
-                company.setTeamMembers(teamMemberList);
+            int numTeamMembers = parcel.readInt();
+            List<TeamMember> teamMemberList = new ArrayList<TeamMember>(numTeamMembers);
+            for (int i = 0; i < numTeamMembers; i++) {
+                teamMemberList.add((TeamMember) parcel.readParcelable(TeamMember.class.getClassLoader()));
             }
-            if (parcelableArraysPresent[1]) {
-                NewsItem[] newsItems = (NewsItem[]) parcel.readParcelableArray(NewsItem.class.getClassLoader());
-                List<NewsItem> newsItemList = new ArrayList<NewsItem>(newsItems.length);
-                for (NewsItem newsItem : newsItems) {
-                    newsItemList.add(newsItem);
-                }
-                company.setNewsItems(newsItemList);
+            company.setTeamMembers(teamMemberList);
+
+            int numNewsItems = parcel.readInt();
+            List<NewsItem> newsItemsList = new ArrayList<NewsItem>(numNewsItems);
+            for (int i = 0; i < numNewsItems; i++) {
+                newsItemsList.add((NewsItem) parcel.readParcelable(NewsItem.class.getClassLoader()));
             }
-            if (parcelableArraysPresent[2]) {
-                Founder[] founders = (Founder[]) parcel.readParcelableArray(Founder.class.getClassLoader());
-                List<Founder> founderList = new ArrayList<Founder>(founders.length);
-                for (Founder founder : founders) {
-                    founderList.add(founder);
-                }
-                company.setFounders(founderList);
+            company.setNewsItems(newsItemsList);
+
+            int numFounders = parcel.readInt();
+            List<Founder> foundersList = new ArrayList<Founder>(numFounders);
+            for (int i = 0; i < numFounders; i++) {
+                foundersList.add((Founder) parcel.readParcelable(Founder.class.getClassLoader()));
             }
+            company.setFounders(foundersList);
+
+
 
             return company;
         }

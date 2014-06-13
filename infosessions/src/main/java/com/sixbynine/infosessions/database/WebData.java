@@ -63,54 +63,52 @@ public class WebData extends SQLiteOpenHelper {
     private static final String COMPANY_TABLE_NAME = "COMPANY";
     private static final SQLTable COMPANY_TABLE =
             new SQLTable.Builder(COMPANY_TABLE_NAME)
-            .addPrimaryKey("permalink", SQLType.TEXT)
-            .addKey("name", SQLType.TEXT)
-            .addKey("description", SQLType.TEXT)
-            .addKey("shortDescription", SQLType.TEXT)
-            .addKey("foundedDate", SQLType.DATETIME)
-            .addKey("primaryImageURL", SQLType.TEXT)
-            .addKey("addresss", SQLType.TEXT).build();
+                    .addPrimaryKey("permalink", SQLType.TEXT)
+                    .addKey("name", SQLType.TEXT)
+                    .addKey("description", SQLType.TEXT)
+                    .addKey("shortDescription", SQLType.TEXT)
+                    .addKey("foundedDate", SQLType.DATETIME)
+                    .addKey("primaryImageURL", SQLType.TEXT)
+                    .addKey("addresss", SQLType.TEXT).build();
 
 
     private static final String TEAM_TABLE_NAME = "TEAM_MEMBERS";
     private static final SQLTable TEAM_TABLE =
             new SQLTable.Builder(TEAM_TABLE_NAME)
-            .addPrimaryForeignKey("permalink", SQLType.TEXT, COMPANY_TABLE, "permalink")
-            .addPrimaryKey("firstName", SQLType.TEXT)
-            .addPrimaryKey("lastName", SQLType.TEXT)
-            .addKey("title", SQLType.TEXT)
-            .addKey("startDate", SQLType.DATETIME)
-            .addKey("path", SQLType.TEXT).build();
+                    .addPrimaryForeignKey("permalink", SQLType.TEXT, COMPANY_TABLE, "permalink")
+                    .addPrimaryKey("firstName", SQLType.TEXT)
+                    .addPrimaryKey("lastName", SQLType.TEXT)
+                    .addKey("title", SQLType.TEXT)
+                    .addKey("startDate", SQLType.DATETIME)
+                    .addKey("path", SQLType.TEXT).build();
 
 
     private static final String NEWS_TABLE_NAME = "NEWS_ITEM";
     private static final SQLTable NEWS_TABLE =
             new SQLTable.Builder(NEWS_TABLE_NAME)
-            .addPrimaryForeignKey("permalink", SQLType.TEXT, COMPANY_TABLE, "permalink")
-            .addPrimaryKey("url", SQLType.TEXT)
-            .addKey("title", SQLType.TEXT)
-            .addKey("postDate", SQLType.DATETIME)
-            .addKey("author", SQLType.TEXT)
-            .addKey("type", SQLType.TEXT).build();
+                    .addPrimaryForeignKey("permalink", SQLType.TEXT, COMPANY_TABLE, "permalink")
+                    .addPrimaryKey("url", SQLType.TEXT)
+                    .addKey("title", SQLType.TEXT)
+                    .addKey("postDate", SQLType.DATETIME)
+                    .addKey("author", SQLType.TEXT)
+                    .addKey("type", SQLType.TEXT).build();
 
 
     private static final String WEBSITE_TABLE_NAME = "WEBSITE";
     private static final SQLTable WEBSITE_TABLE =
             new SQLTable.Builder(WEBSITE_TABLE_NAME)
-            .addPrimaryForeignKey("permalink", SQLType.TEXT, COMPANY_TABLE, "permalink")
-            .addPrimaryKey("type", SQLType.INTEGER)
-            .addKey("url", SQLType.TEXT)
-            .addKey("title", SQLType.TEXT).build();
+                    .addPrimaryForeignKey("permalink", SQLType.TEXT, COMPANY_TABLE, "permalink")
+                    .addPrimaryKey("type", SQLType.INTEGER)
+                    .addKey("url", SQLType.TEXT)
+                    .addKey("title", SQLType.TEXT).build();
 
 
     private static final String FOUNDER_TABLE_NAME = "FOUNDER";
     private static final SQLTable FOUNDER_TABLE =
             new SQLTable.Builder(FOUNDER_TABLE_NAME)
-            .addPrimaryForeignKey("permalink", SQLType.TEXT, COMPANY_TABLE, "permalink")
-            .addPrimaryKey("name", SQLType.TEXT)
-            .addKey("path", SQLType.TEXT).build();
-
-
+                    .addPrimaryForeignKey("permalink", SQLType.TEXT, COMPANY_TABLE, "permalink")
+                    .addPrimaryKey("name", SQLType.TEXT)
+                    .addKey("path", SQLType.TEXT).build();
 
 
     private WebData(Context context) {
@@ -148,7 +146,7 @@ public class WebData extends SQLiteOpenHelper {
         if (database == null) {
             throw new IllegalStateException("Database could not be opened");
         }
-        return database.query(tableName,null,selection,null,null,null,null);
+        return database.query(tableName, null, selection, null, null, null, null);
     }
 
     public static Calendar sqlStringToCalendar(String sqlDate) {
@@ -162,7 +160,7 @@ public class WebData extends SQLiteOpenHelper {
     }
 
     public static List<InfoSession> readInfoSessionsFromDB(Context context)
-        throws DataNotFoundException {
+            throws DataNotFoundException {
 
         WebData webData = WebData.get(context);
         Cursor cursor = webData.getCursor(INFO_SESSION_TABLE_NAME, null);
@@ -190,7 +188,7 @@ public class WebData extends SQLiteOpenHelper {
                 throw new DataNotFoundException("No program data found");
             }
             List<String> programs = new ArrayList<String>(programCursor.getCount());
-            for (programCursor.moveToFirst(); programCursor.moveToNext();) {
+            for (programCursor.moveToFirst(); programCursor.moveToNext(); ) {
                 programs.add(programCursor.getString(0));
             }
 
@@ -211,7 +209,6 @@ public class WebData extends SQLiteOpenHelper {
         }
 
         cursor.close();
-
         return sessions;
     }
 
@@ -227,14 +224,12 @@ public class WebData extends SQLiteOpenHelper {
      * @throws DataNotFoundException if data for company is not presented in database
      */
     public void fillCompanyInfo(InfoSession infoSession)
-        throws DataNotFoundException {
+            throws DataNotFoundException {
 
 
         // TODO
-        throw  new DataNotFoundException("stub");
+        throw new DataNotFoundException("stub");
     }
-
-
 
 
     /**

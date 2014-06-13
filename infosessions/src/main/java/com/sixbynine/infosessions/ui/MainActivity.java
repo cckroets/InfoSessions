@@ -1,5 +1,6 @@
 package com.sixbynine.infosessions.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -27,11 +28,12 @@ import java.util.List;
 import java.util.Map;
 
 
-
-public class MainActivity extends ActionBarActivity implements InfoSessionListFragment.Callback {
+public class MainActivity extends ActionBarActivity implements InfoSessionListFragment.Callback, CompanyInfoFragment.Callback {
 
     private ArrayList<InfoSession> mInfoSessions;
     private Fragment mContent;
+    private Fragment mSecondaryContent;
+    private InfoSession mSelectedInfoSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +128,7 @@ public class MainActivity extends ActionBarActivity implements InfoSessionListFr
      * Setup the InfoSessionListFragment
      */
     private void setupFragments() {
+        boolean multipane = getResources().getBoolean(R.bool.multipane);
         MainActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -192,10 +195,27 @@ public class MainActivity extends ActionBarActivity implements InfoSessionListFr
         FlurryAgent.logEvent("Info Session Clicked", params);
         if (BuildConfig.DEBUG)
             Log.d("InfoSessions", "Info Session clicked: " + infoSession.getWaterlooApiDAO().getEmployer());
+
+        mSelectedInfoSession = infoSession;
+        if (getResources().getBoolean(R.bool.multipane)) {
+            mSecondaryContent = new CompanyInfoFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container_secondary, mSecondaryContent);
+            transaction.commit();
+        } else {
+            Intent intent = new Intent(this, CompanyInfoActivity.class);
+            intent.putExtra("infoSession", mSelectedInfoSession);
+            startActivity(intent);
+        }
     }
 
     @Override
     public ArrayList<InfoSession> getInfoSessions() {
         return mInfoSessions;
+    }
+
+    @Override
+    public InfoSession getSelectedInfoSession() {
+        return mSelectedInfoSession;
     }
 }

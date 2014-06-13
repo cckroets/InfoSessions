@@ -100,7 +100,7 @@ public class InfoSession implements Comparable<InfoSession>, Parcelable {
                 infoSession.mWaterlooApiDAO = parcel.readParcelable(InfoSessionWaterlooApiDAO.class.getClassLoader());
             if (booleans[1])
                 infoSession.mCompanyInfo = parcel.readParcelable(Company.class.getClassLoader());
-            infoSession.setFavourite(booleans[3]);
+            infoSession.setFavourite(booleans[2]);
             return infoSession;
 
         }
