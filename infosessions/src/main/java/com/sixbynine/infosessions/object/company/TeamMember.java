@@ -1,9 +1,13 @@
 package com.sixbynine.infosessions.object.company;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sixbynine.infosessions.database.WebData;
 import com.sixbynine.infosessions.interfaces.JSONable;
+import com.sixbynine.infosessions.interfaces.SQLiteable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +20,7 @@ import java.util.Calendar;
  * Corresponds to relationships->current_team items in the crunchbase database
  * This might be excessive data, but it's easier to take stuff out than add it
  */
-public class TeamMember implements Parcelable, JSONable {
+public class TeamMember implements Parcelable, JSONable, SQLiteable {
 
     private String mFirstName;
     private String mLastName;
@@ -171,6 +175,30 @@ public class TeamMember implements Parcelable, JSONable {
         @Override
         public TeamMember[] newArray(int size) {
             return new TeamMember[size];
+        }
+    };
+
+    @Override
+    public ContentValues toContentValues() {
+        ContentValues cv = new ContentValues();
+        cv.put("firstName", mFirstName);
+        cv.put("lastName", mLastName);
+        cv.put("path", mPath);
+        cv.put("title", mTitle);
+        cv.put("startedOn", WebData.calendarToSQL(mStartedOn));
+        return cv;
+    }
+
+    public static final SQLiteable.Creator<TeamMember> SQL_CREATOR = new SQLiteable.Creator<TeamMember>() {
+        @Override
+        public TeamMember createFromCursor(Cursor cursor) {
+            TeamMember member = new TeamMember();
+            member.setFirstName(getString(cursor, "firstName"));
+            member.setLastName(getString(cursor, "lastName"));
+            member.setPath(getString(cursor, "path"));
+            member.setTitle(getString(cursor, "title"));
+            member.setStartedOn(WebData.sqlStringToCalendar(getString(cursor, "startedOn")));
+            return member;
         }
     };
 }

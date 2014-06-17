@@ -45,8 +45,6 @@ public class MainActivity extends ActionBarActivity implements InfoSessionListFr
         } else {
             mInfoSessions = savedInstanceState.getParcelableArrayList("infoSessions");
         }
-        setupFragments();
-
     }
 
     @Override
@@ -104,6 +102,7 @@ public class MainActivity extends ActionBarActivity implements InfoSessionListFr
             Log.d("InfoSessions", infoSession.getCompanyInfo().getName() + " data loaded from db");
         } catch (DataNotFoundException e) {
             // If the database does not have the data, load it from the web
+            Log.d("InfoSessions", "DataNotFound:" + e.getMessage());
             CompanyDataUtil.getCompanyData(infoSession.getWaterlooApiDAO(),
                     new CompanyDataUtil.CompanyDataUtilCallback() {
                 @Override
@@ -151,11 +150,13 @@ public class MainActivity extends ActionBarActivity implements InfoSessionListFr
     private void initInfoSessions() {
         try {
             mInfoSessions = (ArrayList<InfoSession>) WebData.readInfoSessionsFromDB(getApplicationContext());
+            Log.d("InfoSessions", "Loaded Info Sessions from DB");
             for (InfoSession session : mInfoSessions) {
                 fillCompanyInfo(session);
             }
+            setupFragments();
         } catch (DataNotFoundException e) {
-
+            Log.d("InfoSessions", "Loading Info Sessions from web");
             InfoSessionUtil.getInfoSessions(new InfoSessionUtil.InfoSessionsCallback() {
                 @Override
                 public void onSuccess(final ArrayList<InfoSessionWaterlooApiDAO> infoSessions) {

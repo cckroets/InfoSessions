@@ -1,15 +1,21 @@
 package com.sixbynine.infosessions.database;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.AsyncTask;
+import android.location.Address;
 import android.util.Log;
 
+import com.sixbynine.infosessions.interfaces.SQLiteable;
 import com.sixbynine.infosessions.object.InfoSession;
 import com.sixbynine.infosessions.object.InfoSessionWaterlooApiDAO;
+import com.sixbynine.infosessions.object.company.Company;
+import com.sixbynine.infosessions.object.company.Founder;
+import com.sixbynine.infosessions.object.company.NewsItem;
+import com.sixbynine.infosessions.object.company.TeamMember;
+import com.sixbynine.infosessions.object.company.Website;
+import com.sixbynine.infosessions.object.company.WebsiteCatalogue;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,7 +34,7 @@ import java.util.List;
 public class WebData extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "sixbynineInfosessions";
     private static final int DATABASE_VERSION = 2;
-    private static final long SQL_FAIL = -1;
+    public static final long SQL_FAIL = -1;
 
     private static final SimpleDateFormat SQL_DATE = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static WebData sInstance;
@@ -36,8 +42,8 @@ public class WebData extends SQLiteOpenHelper {
     /**
      * A Table for each employee session and its details
      */
-    private static final String INFO_SESSION_TABLE_NAME = "SESSION";
-    private static final SQLTable INFO_SESSION_TABLE =
+    public static final String INFO_SESSION_TABLE_NAME = "SESSION";
+    public static final SQLTable INFO_SESSION_TABLE =
             new SQLTable.Builder(INFO_SESSION_TABLE_NAME)
                     .addPrimaryKey("sid", SQLType.INTEGER)
                     .addKey("employer", SQLType.TEXT)
@@ -53,15 +59,15 @@ public class WebData extends SQLiteOpenHelper {
     /**
      * A Table for each program-session pair
      */
-    private static final String PROGRAM_TABLE_NAME = "PROGRAM";
-    private static final SQLTable PROGRAM_TABLE =
+    public static final String PROGRAM_TABLE_NAME = "PROGRAM";
+    public static final SQLTable PROGRAM_TABLE =
             new SQLTable.Builder(PROGRAM_TABLE_NAME)
                     .addPrimaryKey("program", SQLType.TEXT)
                     .addPrimaryForeignKey("sid", SQLType.INTEGER, INFO_SESSION_TABLE, "sid").build();
 
 
-    private static final String COMPANY_TABLE_NAME = "COMPANY";
-    private static final SQLTable COMPANY_TABLE =
+    public static final String COMPANY_TABLE_NAME = "COMPANY";
+    public static final SQLTable COMPANY_TABLE =
             new SQLTable.Builder(COMPANY_TABLE_NAME)
                     .addPrimaryKey("permalink", SQLType.TEXT)
                     .addKey("name", SQLType.TEXT)
@@ -69,22 +75,22 @@ public class WebData extends SQLiteOpenHelper {
                     .addKey("shortDescription", SQLType.TEXT)
                     .addKey("foundedDate", SQLType.DATETIME)
                     .addKey("primaryImageURL", SQLType.TEXT)
-                    .addKey("addresss", SQLType.TEXT).build();
+                    .addKey("address", SQLType.TEXT).build();
 
 
-    private static final String TEAM_TABLE_NAME = "TEAM_MEMBERS";
-    private static final SQLTable TEAM_TABLE =
+    public static final String TEAM_TABLE_NAME = "TEAM_MEMBERS";
+    public static final SQLTable TEAM_TABLE =
             new SQLTable.Builder(TEAM_TABLE_NAME)
                     .addPrimaryForeignKey("permalink", SQLType.TEXT, COMPANY_TABLE, "permalink")
                     .addPrimaryKey("firstName", SQLType.TEXT)
                     .addPrimaryKey("lastName", SQLType.TEXT)
-                    .addKey("title", SQLType.TEXT)
-                    .addKey("startDate", SQLType.DATETIME)
+                    .addPrimaryKey("title", SQLType.TEXT)
+                    .addKey("startedOn", SQLType.DATETIME)
                     .addKey("path", SQLType.TEXT).build();
 
 
-    private static final String NEWS_TABLE_NAME = "NEWS_ITEM";
-    private static final SQLTable NEWS_TABLE =
+    public static final String NEWS_TABLE_NAME = "NEWS_ITEM";
+    public static final SQLTable NEWS_TABLE =
             new SQLTable.Builder(NEWS_TABLE_NAME)
                     .addPrimaryForeignKey("permalink", SQLType.TEXT, COMPANY_TABLE, "permalink")
                     .addPrimaryKey("url", SQLType.TEXT)
@@ -94,8 +100,8 @@ public class WebData extends SQLiteOpenHelper {
                     .addKey("type", SQLType.TEXT).build();
 
 
-    private static final String WEBSITE_TABLE_NAME = "WEBSITE";
-    private static final SQLTable WEBSITE_TABLE =
+    public static final String WEBSITE_TABLE_NAME = "WEBSITE";
+    public static final SQLTable WEBSITE_TABLE =
             new SQLTable.Builder(WEBSITE_TABLE_NAME)
                     .addPrimaryForeignKey("permalink", SQLType.TEXT, COMPANY_TABLE, "permalink")
                     .addPrimaryKey("type", SQLType.INTEGER)
@@ -103,8 +109,8 @@ public class WebData extends SQLiteOpenHelper {
                     .addKey("title", SQLType.TEXT).build();
 
 
-    private static final String FOUNDER_TABLE_NAME = "FOUNDER";
-    private static final SQLTable FOUNDER_TABLE =
+    public static final String FOUNDER_TABLE_NAME = "FOUNDER";
+    public static final SQLTable FOUNDER_TABLE =
             new SQLTable.Builder(FOUNDER_TABLE_NAME)
                     .addPrimaryForeignKey("permalink", SQLType.TEXT, COMPANY_TABLE, "permalink")
                     .addPrimaryKey("name", SQLType.TEXT)
@@ -113,6 +119,10 @@ public class WebData extends SQLiteOpenHelper {
 
     private WebData(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public static String getWhereString(String colname, String value) {
+        return colname + " = " + '\'' + value + '\'';
     }
 
     public static WebData get(Context context) {
@@ -131,13 +141,18 @@ public class WebData extends SQLiteOpenHelper {
         NEWS_TABLE.createTable(db);
         TEAM_TABLE.createTable(db);
         WEBSITE_TABLE.createTable(db);
+        Log.d("DB", "Created");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i2) {
         INFO_SESSION_TABLE.dropTable(db);
         PROGRAM_TABLE.dropTable(db);
-
+        COMPANY_TABLE.dropTable(db);
+        FOUNDER_TABLE.dropTable(db);
+        NEWS_TABLE.dropTable(db);
+        TEAM_TABLE.dropTable(db);
+        WEBSITE_TABLE.dropTable(db);
         this.onCreate(db);
     }
 
@@ -155,10 +170,54 @@ public class WebData extends SQLiteOpenHelper {
             cal.setTime(SQL_DATE.parse(sqlDate));
         } catch (ParseException e) {
             throw new IllegalArgumentException("sqlDate is not a valid SQL date");
+        } catch (NullPointerException e) {
+            return null;
         }
         return cal;
     }
 
+
+    public static String addressToSQL(Address address) {
+        // TODO
+        return (address == null) ? null : address.toString();
+    }
+
+    public static Address sqlStringToAddress(String sqlAddr) {
+        // TODO
+        return new Address(null);
+    }
+
+    public static String calendarToSQL(Calendar cal) {
+        return (cal == null) ? null : SQL_DATE.format(cal.getTime());
+    }
+
+
+    /**
+     * Save a collection of Info Sessions to the database. This method
+     * deals with the case where sessions are already in the database
+     * Works asynchronously
+     *
+     * @param context
+     * @param sessions
+     */
+    public static void saveSessionsToDB(Context context, Collection<InfoSessionWaterlooApiDAO> sessions) {
+        AsyncAddWaterlooInfoToDB asyncAddToDB = new AsyncAddWaterlooInfoToDB(context, sessions);
+        asyncAddToDB.execute();
+    }
+
+    public static void saveCompanyInfoToDB(Context context, InfoSession infoSession) {
+        AsyncAddCompanyDataToDB asyncTask = new AsyncAddCompanyDataToDB(context, infoSession);
+        asyncTask.execute();
+    }
+
+    public static boolean isNullSelection(SQLiteDatabase db, String table, String selection) {
+        Cursor cursor = db.query(table, null, selection, null, null, null, null);
+        boolean inDB = (cursor != null) && (cursor.getCount() > 0);
+        if (cursor != null)
+            cursor.close();
+        return ! inDB;
+    }
+    //startedOn startedOn
     public static List<InfoSession> readInfoSessionsFromDB(Context context)
             throws DataNotFoundException {
 
@@ -212,11 +271,6 @@ public class WebData extends SQLiteOpenHelper {
         return sessions;
     }
 
-    public static String calendarToSQL(Calendar cal) {
-        return SQL_DATE.format(cal.getTime());
-    }
-
-
     /**
      * Fill in the company information for the given infoSession.
      *
@@ -226,138 +280,67 @@ public class WebData extends SQLiteOpenHelper {
     public void fillCompanyInfo(InfoSession infoSession)
             throws DataNotFoundException {
 
-
-        // TODO
-        throw new DataNotFoundException("stub");
+        String permalink = getCompanyPermalink(infoSession);
+        Cursor cursor = getCursor(COMPANY_TABLE_NAME, getWhereString("permalink", permalink));
+        if (cursor == null || cursor.getCount() <= 0) {
+            if (cursor != null) cursor.close();
+            throw new DataNotFoundException("Company info not found: " +
+                    infoSession.getWaterlooApiDAO().getEmployer());
+        }
+        Log.d("Info Sessions", "Company Info Found: " + infoSession.getWaterlooApiDAO().getEmployer());
+        cursor.moveToFirst();
+        Company company = Company.SQL_CREATOR.createFromCursor(cursor);
+        cursor.close();
+        company.setFounders(getSQLObjects(FOUNDER_TABLE_NAME, permalink, Founder.SQL_CREATOR));
+        company.setNewsItems(getSQLObjects(NEWS_TABLE_NAME, permalink, NewsItem.SQL_CREATOR));
+        company.setTeamMembers(getSQLObjects(TEAM_TABLE_NAME, permalink, TeamMember.SQL_CREATOR));
+        company.setWebsites(getWebsites(permalink));
+        infoSession.setCompanyInfo(company);
     }
 
 
-    /**
-     * Save a collection of Info Sessions to the database. This method
-     * deals with the case where sessions are already in the database
-     * Works asynchronously
-     *
-     * @param context
-     * @param sessions
-     */
-    public static void saveSessionsToDB(Context context, Collection<InfoSessionWaterlooApiDAO> sessions) {
-        AsyncAddWaterlooInfoToDB asyncAddToDB = new AsyncAddWaterlooInfoToDB(context, sessions);
-        asyncAddToDB.execute();
+    private <E extends SQLiteable> List<E> getSQLObjects(String table, String permalink, SQLiteable.Creator<E> creator)
+        throws DataNotFoundException {
+        Cursor cursor = getCursor(table, getWhereString("permalink", permalink));
+        if (cursor == null || cursor.getCount() <= 0) {
+            if (cursor != null) cursor.close();
+            throw new DataNotFoundException(table + " info not found: " + permalink);
+        }
+        List<E> objects = new ArrayList<E>(cursor.getCount());
+        for (cursor.moveToFirst(); cursor.moveToNext();) {
+            objects.add(creator.createFromCursor(cursor));
+        }
+        cursor.close();
+        return objects;
     }
 
-    public static void saveCompanyInfoToDB(Context context, InfoSession infoSession) {
-        AsyncAddCompanyDataToDB asyncTask = new AsyncAddCompanyDataToDB(context, infoSession);
-        asyncTask.execute();
+    private WebsiteCatalogue getWebsites(String permalink)
+            throws DataNotFoundException {
+        String table = WEBSITE_TABLE_NAME;
+        Cursor cursor = getCursor(table, getWhereString("permalink", permalink));
+        if (cursor == null || cursor.getCount() <= 0) {
+            if (cursor != null) cursor.close();
+            throw new DataNotFoundException(table + " info not found: " + permalink);
+        }
+        WebsiteCatalogue catalogue = new WebsiteCatalogue(cursor.getCount());
+        for (cursor.moveToFirst(); cursor.moveToNext();) {
+            catalogue.add(Website.SQL_CREATOR.createFromCursor(cursor));
+        }
+        cursor.close();
+        return catalogue;
     }
 
-    private static class AsyncAddWaterlooInfoToDB extends AsyncTask<Object, Void, Void> {
+    private String getCompanyPermalink(InfoSession infoSession) throws DataNotFoundException {
 
-        private WebData webData;
-        private Collection<InfoSessionWaterlooApiDAO> sessions;
-
-        public AsyncAddWaterlooInfoToDB(Context context, Collection<InfoSessionWaterlooApiDAO> sessions) {
-            this.webData = WebData.get(context);
-            this.sessions = sessions;
+        Cursor cursor = getCursor(INFO_SESSION_TABLE_NAME, "sid = " + infoSession.getWaterlooApiDAO().getId());
+        if (cursor == null || cursor.getCount() <= 0) {
+            throw new DataNotFoundException("Permalink could not be found for company: " +
+                    infoSession.getWaterlooApiDAO().getEmployer());
         }
-
-        @Override
-        protected Void doInBackground(Object... unused) {
-            for (InfoSessionWaterlooApiDAO session : sessions) {
-                if (isInDatabase(session, webData.getReadableDatabase())) continue;
-                addInfoSession(session, webData.getWritableDatabase());
-            }
-            return null;
-        }
-
-        private boolean isInDatabase(InfoSessionWaterlooApiDAO session, SQLiteDatabase database) {
-            Cursor cursor = database.query(INFO_SESSION_TABLE_NAME, null, "sid = " + session.getId(),
-                    null, null, null, null);
-
-            boolean inDB = (cursor != null) && (cursor.getCount() > 0);
-            if (cursor != null)
-                cursor.close();
-            return inDB;
-        }
-
-        /**
-         * Add an Info Session to the database
-         *
-         * @param session to be added
-         */
-        public void addInfoSession(InfoSessionWaterlooApiDAO session, SQLiteDatabase database) {
-
-            ContentValues values = new ContentValues();
-            values.put("sid", session.getId());
-            values.put("employer", session.getEmployer());
-            values.put("startTime", calendarToSQL(session.getStartTime()));
-            values.put("endTime", calendarToSQL(session.getEndTime()));
-            values.put("location", session.getLocation());
-            values.put("website", session.getWebsite());
-            values.put("forCoopStudents", session.isForCoopStudents());
-            values.put("forGraduatingStudents", session.isForGraduatingStudents());
-            values.put("description", session.getDescription());
-
-            if (database.insert(INFO_SESSION_TABLE_NAME, null, values) == SQL_FAIL) {
-                throw new IllegalStateException("Could not save info session: " + session.toString());
-            }
-
-            values.clear();
-            values.put("sid", session.getId());
-            for (String program : session.getPrograms()) {
-                values.put("program", program);
-                if (database.insert(PROGRAM_TABLE_NAME, null, values) == SQL_FAIL) {
-                    throw new IllegalStateException("Could not save program: " +
-                            session.toString() + " for " + program);
-                }
-            }
-        }
+        cursor.moveToFirst();
+        String permalink = cursor.getString(9);
+        cursor.close();
+        return permalink;
     }
 
-    private static class AsyncAddCompanyDataToDB extends AsyncTask<Object, Void, Void> {
-
-        InfoSession mInfoSession;
-        WebData webData;
-
-        public AsyncAddCompanyDataToDB(Context context, InfoSession infoSession) {
-            this.webData = WebData.get(context);
-            this.mInfoSession = infoSession;
-        }
-
-        @Override
-        protected Void doInBackground(Object... unused) {
-            addCompanyData();
-            updateInfoSessionPermalink();
-            addFounders();
-            addNewsItems();
-            addTeamMembers();
-            addWebsites();
-            return null;
-        }
-
-        private void addCompanyData() {
-
-        }
-
-        private void updateInfoSessionPermalink() {
-
-        }
-
-        private void addFounders() {
-
-        }
-
-        private void addNewsItems() {
-
-        }
-
-        private void addTeamMembers() {
-
-        }
-
-        private void addWebsites() {
-
-        }
-
-
-    }
 }
