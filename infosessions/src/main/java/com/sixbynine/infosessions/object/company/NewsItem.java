@@ -7,7 +7,7 @@ import android.os.Parcelable;
 
 import com.sixbynine.infosessions.database.WebData;
 import com.sixbynine.infosessions.interfaces.JSONable;
-import com.sixbynine.infosessions.interfaces.SQLiteable;
+import com.sixbynine.infosessions.interfaces.SQLEntity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +19,7 @@ import java.util.Calendar;
 /**
  * Corresponds to the data found in the "news" tag
  */
-public class NewsItem implements Parcelable, JSONable, SQLiteable {
+public class NewsItem implements Parcelable, JSONable, SQLEntity {
 
     private String mUrl;
     private String mTitle;
@@ -187,7 +187,7 @@ public class NewsItem implements Parcelable, JSONable, SQLiteable {
         return cv;
     }
 
-    public static final SQLiteable.Creator<NewsItem> SQL_CREATOR = new SQLiteable.Creator<NewsItem>() {
+    public static final SQLEntity.Creator<NewsItem> SQL_CREATOR = new SQLEntity.Creator<NewsItem>() {
         @Override
         public NewsItem createFromCursor(Cursor cursor) {
             NewsItem newsItem = new NewsItem();

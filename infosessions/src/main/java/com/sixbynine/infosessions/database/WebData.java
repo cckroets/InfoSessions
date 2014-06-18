@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Address;
 import android.util.Log;
 
-import com.sixbynine.infosessions.interfaces.SQLiteable;
+import com.sixbynine.infosessions.database.sql.SQLTable;
+import com.sixbynine.infosessions.database.sql.SQLType;
+import com.sixbynine.infosessions.interfaces.SQLEntity;
 import com.sixbynine.infosessions.object.InfoSession;
 import com.sixbynine.infosessions.object.InfoSessionWaterlooApiDAO;
 import com.sixbynine.infosessions.object.company.Company;
@@ -66,6 +68,9 @@ public class WebData extends SQLiteOpenHelper {
                     .addPrimaryForeignKey("sid", SQLType.INTEGER, INFO_SESSION_TABLE, "sid").build();
 
 
+    /**
+     * Basic Company information
+     */
     public static final String COMPANY_TABLE_NAME = "COMPANY";
     public static final SQLTable COMPANY_TABLE =
             new SQLTable.Builder(COMPANY_TABLE_NAME)
@@ -74,10 +79,25 @@ public class WebData extends SQLiteOpenHelper {
                     .addKey("description", SQLType.TEXT)
                     .addKey("shortDescription", SQLType.TEXT)
                     .addKey("foundedDate", SQLType.DATETIME)
-                    .addKey("primaryImageURL", SQLType.TEXT)
-                    .addKey("address", SQLType.TEXT).build();
+                    .addKey("primaryImageURL", SQLType.TEXT).build();
+
+    /**
+     * Contains the address of the headquarters for each company
+     */
+    public static final String ADDRESS_TABLE_NAME = "HEADQUARTERS";
+    public static final SQLTable ADDRESS_TABLE =
+            new SQLTable.Builder(ADDRESS_TABLE_NAME)
+                    .addPrimaryKey("permalink", SQLType.TEXT)
+                    .addKey("addressLine", SQLType.TEXT)
+                    .addKey("locality", SQLType.TEXT)
+                    .addKey("adminArea", SQLType.TEXT)
+                    .addKey("country", SQLType.TEXT)
+                    .addKey("locale", SQLType.INTEGER).build();
 
 
+    /**
+     * Contains information about the team members of a company
+     */
     public static final String TEAM_TABLE_NAME = "TEAM_MEMBERS";
     public static final SQLTable TEAM_TABLE =
             new SQLTable.Builder(TEAM_TABLE_NAME)
@@ -89,6 +109,9 @@ public class WebData extends SQLiteOpenHelper {
                     .addKey("path", SQLType.TEXT).build();
 
 
+    /**
+     * Contains news items about a company
+     */
     public static final String NEWS_TABLE_NAME = "NEWS_ITEM";
     public static final SQLTable NEWS_TABLE =
             new SQLTable.Builder(NEWS_TABLE_NAME)
@@ -100,6 +123,9 @@ public class WebData extends SQLiteOpenHelper {
                     .addKey("type", SQLType.TEXT).build();
 
 
+    /**
+     * Contains various websites associated with a company
+     */
     public static final String WEBSITE_TABLE_NAME = "WEBSITE";
     public static final SQLTable WEBSITE_TABLE =
             new SQLTable.Builder(WEBSITE_TABLE_NAME)
@@ -109,6 +135,9 @@ public class WebData extends SQLiteOpenHelper {
                     .addKey("title", SQLType.TEXT).build();
 
 
+    /**
+     * Contains information about the founders of a company
+     */
     public static final String FOUNDER_TABLE_NAME = "FOUNDER";
     public static final SQLTable FOUNDER_TABLE =
             new SQLTable.Builder(FOUNDER_TABLE_NAME)
@@ -121,6 +150,13 @@ public class WebData extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * Create a selection string for a particular colname against a string literal
+     *
+     * @param colname The name of the column to check for selection
+     * @param value The string literal to check against
+     * @return A selection string that can be used for que
+     */
     public static String getWhereString(String colname, String value) {
         return colname + " = " + '\'' + value + '\'';
     }
@@ -135,6 +171,7 @@ public class WebData extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         INFO_SESSION_TABLE.createTable(db);
+        ADDRESS_TABLE.createTable(db);
         PROGRAM_TABLE.createTable(db);
         COMPANY_TABLE.createTable(db);
         FOUNDER_TABLE.createTable(db);
@@ -147,6 +184,7 @@ public class WebData extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i2) {
         INFO_SESSION_TABLE.dropTable(db);
+        ADDRESS_TABLE.dropTable(db);
         PROGRAM_TABLE.dropTable(db);
         COMPANY_TABLE.dropTable(db);
         FOUNDER_TABLE.dropTable(db);
@@ -174,17 +212,6 @@ public class WebData extends SQLiteOpenHelper {
             return null;
         }
         return cal;
-    }
-
-
-    public static String addressToSQL(Address address) {
-        // TODO
-        return (address == null) ? null : address.toString();
-    }
-
-    public static Address sqlStringToAddress(String sqlAddr) {
-        // TODO
-        return new Address(null);
     }
 
     public static String calendarToSQL(Calendar cal) {
@@ -217,7 +244,7 @@ public class WebData extends SQLiteOpenHelper {
             cursor.close();
         return ! inDB;
     }
-    //startedOn startedOn
+
     public static List<InfoSession> readInfoSessionsFromDB(Context context)
             throws DataNotFoundException {
 
@@ -295,11 +322,12 @@ public class WebData extends SQLiteOpenHelper {
         company.setNewsItems(getSQLObjects(NEWS_TABLE_NAME, permalink, NewsItem.SQL_CREATOR));
         company.setTeamMembers(getSQLObjects(TEAM_TABLE_NAME, permalink, TeamMember.SQL_CREATOR));
         company.setWebsites(getWebsites(permalink));
+        company.setHeadquarters(getAddress(permalink));
         infoSession.setCompanyInfo(company);
     }
 
 
-    private <E extends SQLiteable> List<E> getSQLObjects(String table, String permalink, SQLiteable.Creator<E> creator)
+    private <E extends SQLEntity> List<E> getSQLObjects(String table, String permalink, SQLEntity.Creator<E> creator)
         throws DataNotFoundException {
         Cursor cursor = getCursor(table, getWhereString("permalink", permalink));
         if (cursor == null || cursor.getCount() <= 0) {
@@ -329,6 +357,21 @@ public class WebData extends SQLiteOpenHelper {
         cursor.close();
         return catalogue;
     }
+
+    private Address getAddress(String permalink)
+        throws DataNotFoundException {
+        String table = ADDRESS_TABLE_NAME;
+        Cursor cursor = getCursor(table, getWhereString("permalink", permalink));
+        if (cursor == null || cursor.getCount() <= 0) {
+            if (cursor != null) cursor.close();
+            throw new DataNotFoundException(table + " info not found: " + permalink);
+        }
+        cursor.moveToFirst();
+        AddressSQL addressSQL = AddressSQL.SQL_CREATOR.createFromCursor(cursor);
+        cursor.close();
+        return addressSQL.getAddress();
+    }
+
 
     private String getCompanyPermalink(InfoSession infoSession) throws DataNotFoundException {
 

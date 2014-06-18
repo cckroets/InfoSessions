@@ -6,11 +6,11 @@ import android.database.Cursor;
 /**
  * @author curtiskroetsch
  */
-public interface SQLiteable {
+public interface SQLEntity {
 
     public ContentValues toContentValues();
 
-    abstract class Creator<T extends SQLiteable> {
+    abstract class Creator<T extends SQLEntity> {
 
         public abstract T createFromCursor(Cursor cursor);
 

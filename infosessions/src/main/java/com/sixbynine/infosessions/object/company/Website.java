@@ -6,7 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.sixbynine.infosessions.interfaces.JSONable;
-import com.sixbynine.infosessions.interfaces.SQLiteable;
+import com.sixbynine.infosessions.interfaces.SQLEntity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +15,7 @@ import org.json.JSONObject;
  * Corresponds to the "websites" section of the crunchbase api
  * Should be held in a {@link com.sixbynine.infosessions.object.company.WebsiteCatalogue}
  */
-public class Website implements Parcelable, Comparable<Website>, JSONable, SQLiteable {
+public class Website implements Parcelable, Comparable<Website>, JSONable, SQLEntity {
 
     private String mUrl;
     private String mTitle;
@@ -101,7 +101,7 @@ public class Website implements Parcelable, Comparable<Website>, JSONable, SQLit
         return cv;
     }
 
-    public static final SQLiteable.Creator<Website> SQL_CREATOR = new SQLiteable.Creator<Website>() {
+    public static final SQLEntity.Creator<Website> SQL_CREATOR = new SQLEntity.Creator<Website>() {
         @Override
         public Website createFromCursor(Cursor cursor) {
             // TODO: Handle "type"

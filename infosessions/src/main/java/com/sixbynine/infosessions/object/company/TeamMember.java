@@ -7,7 +7,7 @@ import android.os.Parcelable;
 
 import com.sixbynine.infosessions.database.WebData;
 import com.sixbynine.infosessions.interfaces.JSONable;
-import com.sixbynine.infosessions.interfaces.SQLiteable;
+import com.sixbynine.infosessions.interfaces.SQLEntity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +20,7 @@ import java.util.Calendar;
  * Corresponds to relationships->current_team items in the crunchbase database
  * This might be excessive data, but it's easier to take stuff out than add it
  */
-public class TeamMember implements Parcelable, JSONable, SQLiteable {
+public class TeamMember implements Parcelable, JSONable, SQLEntity {
 
     private String mFirstName;
     private String mLastName;
@@ -189,7 +189,7 @@ public class TeamMember implements Parcelable, JSONable, SQLiteable {
         return cv;
     }
 
-    public static final SQLiteable.Creator<TeamMember> SQL_CREATOR = new SQLiteable.Creator<TeamMember>() {
+    public static final SQLEntity.Creator<TeamMember> SQL_CREATOR = new SQLEntity.Creator<TeamMember>() {
         @Override
         public TeamMember createFromCursor(Cursor cursor) {
             TeamMember member = new TeamMember();

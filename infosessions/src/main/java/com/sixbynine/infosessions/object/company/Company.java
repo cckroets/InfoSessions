@@ -11,7 +11,7 @@ import android.util.Log;
 import com.flurry.android.FlurryAgent;
 import com.sixbynine.infosessions.BuildConfig;
 import com.sixbynine.infosessions.database.WebData;
-import com.sixbynine.infosessions.interfaces.SQLiteable;
+import com.sixbynine.infosessions.interfaces.SQLEntity;
 import com.sixbynine.infosessions.net.CompanyImageLoader;
 
 import java.text.ParseException;
@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by stevenkideckel on 2014-06-06.
  */
-public class Company implements Comparable<Company>, Parcelable, SQLiteable {
+public class Company implements Comparable<Company>, Parcelable, SQLEntity {
 
 
     private String mPermalink;
@@ -435,11 +435,10 @@ public class Company implements Comparable<Company>, Parcelable, SQLiteable {
         cv.put("shortDescription", getShortDescription());
         cv.put("foundedDate", WebData.calendarToSQL(getFoundedDate()));
         cv.put("primaryImageURL", getPrimaryImageUrl());
-        cv.put("address", WebData.addressToSQL(getHeadquarters()));
         return cv;
     }
 
-    public static SQLiteable.Creator<Company> SQL_CREATOR = new SQLiteable.Creator<Company>() {
+    public static SQLEntity.Creator<Company> SQL_CREATOR = new SQLEntity.Creator<Company>() {
         @Override
         public Company createFromCursor(Cursor cursor) {
             Company company = new Company(getString(cursor, "name"));
@@ -448,7 +447,6 @@ public class Company implements Comparable<Company>, Parcelable, SQLiteable {
             company.setShortDescription(getString(cursor, "shortDescription"));
             company.setFoundedDate(WebData.sqlStringToCalendar(getString(cursor, "foundedDate")));
             company.setPrimaryImageUrl(getString(cursor, "primaryImageURL"));
-            company.setHeadquarters(WebData.sqlStringToAddress(getString(cursor, "address")));
             return company;
         }
     };

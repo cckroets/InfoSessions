@@ -6,7 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.sixbynine.infosessions.interfaces.JSONable;
-import com.sixbynine.infosessions.interfaces.SQLiteable;
+import com.sixbynine.infosessions.interfaces.SQLEntity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,7 +14,7 @@ import org.json.JSONObject;
 /**
  * Corresponds to the data values found in the Founders tags
  */
-public class Founder implements Parcelable, JSONable, SQLiteable {
+public class Founder implements Parcelable, JSONable, SQLEntity {
 
     private String mName;
     private String mPath;
@@ -88,7 +88,7 @@ public class Founder implements Parcelable, JSONable, SQLiteable {
         return cv;
     }
 
-    public static final SQLiteable.Creator<Founder> SQL_CREATOR = new SQLiteable.Creator<Founder>() {
+    public static final SQLEntity.Creator<Founder> SQL_CREATOR = new SQLEntity.Creator<Founder>() {
         @Override
         public Founder createFromCursor(Cursor cursor) {
             return new Founder(getString(cursor, "name"), getString(cursor, "path"));
