@@ -1,5 +1,7 @@
 package com.sixbynine.infosessions.object.company;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.os.Parcel;
@@ -8,6 +10,8 @@ import android.util.Log;
 
 import com.flurry.android.FlurryAgent;
 import com.sixbynine.infosessions.BuildConfig;
+import com.sixbynine.infosessions.database.WebData;
+import com.sixbynine.infosessions.interfaces.SQLEntity;
 import com.sixbynine.infosessions.net.CompanyImageLoader;
 
 import java.text.ParseException;
@@ -19,7 +23,7 @@ import java.util.List;
 /**
  * Created by stevenkideckel on 2014-06-06.
  */
-public class Company implements Comparable<Company>, Parcelable {
+public class Company implements Comparable<Company>, Parcelable, SQLEntity {
 
 
     private String mPermalink;
@@ -419,6 +423,31 @@ public class Company implements Comparable<Company>, Parcelable {
         @Override
         public Company[] newArray(int i) {
             return new Company[i];
+        }
+    };
+
+    @Override
+    public ContentValues toContentValues() {
+        ContentValues cv = new ContentValues();
+        cv.put("permalink", getPermalink());
+        cv.put("name", getName());
+        cv.put("description", getDescription());
+        cv.put("shortDescription", getShortDescription());
+        cv.put("foundedDate", WebData.calendarToSQL(getFoundedDate()));
+        cv.put("primaryImageURL", getPrimaryImageUrl());
+        return cv;
+    }
+
+    public static SQLEntity.Creator<Company> SQL_CREATOR = new SQLEntity.Creator<Company>() {
+        @Override
+        public Company createFromCursor(Cursor cursor) {
+            Company company = new Company(getString(cursor, "name"));
+            company.setPermalink(getString(cursor, "permalink"));
+            company.setDescription(getString(cursor, "description"));
+            company.setShortDescription(getString(cursor, "shortDescription"));
+            company.setFoundedDate(WebData.sqlStringToCalendar(getString(cursor, "foundedDate")));
+            company.setPrimaryImageUrl(getString(cursor, "primaryImageURL"));
+            return company;
         }
     };
 

@@ -1,4 +1,4 @@
-package com.sixbynine.infosessions.database;
+package com.sixbynine.infosessions.database.sql;
 
 
 import android.database.sqlite.SQLiteDatabase;

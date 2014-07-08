@@ -1,4 +1,4 @@
-package com.sixbynine.infosessions.database;
+package com.sixbynine.infosessions.database.sql;
 
 /**
  * An Abstract SQL Column which is a Name-DataType pair, and can be a primary key.

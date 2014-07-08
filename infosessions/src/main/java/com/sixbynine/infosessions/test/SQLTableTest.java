@@ -1,7 +1,7 @@
 package com.sixbynine.infosessions.test;
 
-import com.sixbynine.infosessions.database.SQLTable;
-import com.sixbynine.infosessions.database.SQLType;
+import com.sixbynine.infosessions.database.sql.SQLTable;
+import com.sixbynine.infosessions.database.sql.SQLType;
 import com.sixbynine.infosessions.database.WebData;
 
 import org.testng.annotations.Test;

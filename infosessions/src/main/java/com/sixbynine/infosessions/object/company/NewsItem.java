@@ -1,9 +1,13 @@
 package com.sixbynine.infosessions.object.company;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sixbynine.infosessions.database.WebData;
 import com.sixbynine.infosessions.interfaces.JSONable;
+import com.sixbynine.infosessions.interfaces.SQLEntity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +19,7 @@ import java.util.Calendar;
 /**
  * Corresponds to the data found in the "news" tag
  */
-public class NewsItem implements Parcelable, JSONable {
+public class NewsItem implements Parcelable, JSONable, SQLEntity {
 
     private String mUrl;
     private String mTitle;
@@ -169,6 +173,30 @@ public class NewsItem implements Parcelable, JSONable {
         @Override
         public NewsItem[] newArray(int size) {
             return new NewsItem[size];
+        }
+    };
+
+    @Override
+    public ContentValues toContentValues() {
+        ContentValues cv = new ContentValues();
+        cv.put("url", mUrl);
+        cv.put("title", mTitle);
+        cv.put("author", mAuthor);
+        cv.put("type", mType);
+        cv.put("postDate", WebData.calendarToSQL(mPostDate));
+        return cv;
+    }
+
+    public static final SQLEntity.Creator<NewsItem> SQL_CREATOR = new SQLEntity.Creator<NewsItem>() {
+        @Override
+        public NewsItem createFromCursor(Cursor cursor) {
+            NewsItem newsItem = new NewsItem();
+            newsItem.setAuthor(getString(cursor, "author"));
+            newsItem.setUrl(getString(cursor, "url"));
+            newsItem.setTitle(getString(cursor, "title"));
+            newsItem.setType(getString(cursor, "type"));
+            newsItem.setPostDate(WebData.sqlStringToCalendar(getString(cursor, "postDate")));
+            return newsItem;
         }
     };
 }

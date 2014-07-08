@@ -203,7 +203,7 @@ public class CompanyDataUtil {
                             JSONArray items = websites.getJSONArray("items");
                             for(int i = 0; i < items.length(); i ++){
                                 JSONObject website = items.getJSONObject(i);
-                                company.addWebsite(new Website(performNullCheck(website.optString("url")), performNullCheck(website.optString("title"))));
+                                company.addWebsite(new Website(performNullCheck(website.optString("url")), performNullCheck(website.optString("title")), i));
                             }
                         }
                     }

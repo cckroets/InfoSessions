@@ -1,9 +1,12 @@
 package com.sixbynine.infosessions.object.company;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.sixbynine.infosessions.interfaces.JSONable;
+import com.sixbynine.infosessions.interfaces.SQLEntity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,7 +14,7 @@ import org.json.JSONObject;
 /**
  * Corresponds to the data values found in the Founders tags
  */
-public class Founder implements Parcelable, JSONable {
+public class Founder implements Parcelable, JSONable, SQLEntity {
 
     private String mName;
     private String mPath;
@@ -21,6 +24,13 @@ public class Founder implements Parcelable, JSONable {
         mPath = path;
     }
 
+    public String getName() {
+        return mName;
+    }
+
+    public String getPath() {
+        return mPath;
+    }
 
     @Override
     public int describeContents() {
@@ -66,6 +76,22 @@ public class Founder implements Parcelable, JSONable {
         @Override
         public Founder[] newArray(int size) {
             return new Founder[size];
+        }
+    };
+
+
+    @Override
+    public ContentValues toContentValues() {
+        ContentValues cv = new ContentValues();
+        cv.put("name", mName);
+        cv.put("path", mPath);
+        return cv;
+    }
+
+    public static final SQLEntity.Creator<Founder> SQL_CREATOR = new SQLEntity.Creator<Founder>() {
+        @Override
+        public Founder createFromCursor(Cursor cursor) {
+            return new Founder(getString(cursor, "name"), getString(cursor, "path"));
         }
     };
 }
