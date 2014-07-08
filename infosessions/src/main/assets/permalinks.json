@@ -1,359 +1,279 @@
 {
-    "meta":{
-        "last_updated":"1404793544000"
+  "meta": {
+    "last_updated": "1404793544000"
+  },
+  "data": [
+    {
+      "id": "2343",
+      "employer": "Twitter",
+      "permalink": "twitter"
     },
-    "data":[
-        {
-            "id":"2379",
-            "employer":"Enflick",
-            "permalink":"enflick"
-        },
-        {
-          "id":"2380",
-          "employer":"Wattpad",
-          "permalink":"wattpad"
-        },
-        {
-          "id":"2399",
-          "employer":"Big Viking Games - CANCELLED*",
-          "permalink":"big-viking-games"
-        },
-        {
-          "id":"2405",
-          "employer":"CGI",
-          "permalink":"cgi"
-        },
-        {
-          "id":"2419",
-          "employer":"Noom",
-          "permalink":"noom"
-        },
-        {
-          "id":"2362",
-          "employer":"Google",
-          "permalink":"google"
-        },
-        {
-          "id":"2401",
-          "employer":"SpinPunch, Inc.",
-          "permalink":"spinpunch"
-        },
-        {
-          "id":"2365",
-          "employer":"A Thinking Ape Technologies, Inc.",
-          "permalink":"a-thinking-ape"
-        },
-        {
-          "id":"2433",
-          "employer":"Facebook",
-          "permalink":"facebook"
-        },
-        {
-          "id":"2404",
-          "employer":"PagerDuty",
-          "permalink":"pagerduty"
-        },
-        {
-          "id":"2445",
-          "employer":"Electronic Arts",
-          "permalink":"electronicarts"
-        },
-        {
-          "id":"2358",
-          "employer":"Zynga",
-          "permalink":"zynga"
-        },
-        {
-          "id":"2348",
-          "employer":"Bazaarvoice",
-          "permalink":"bazaarvoice"
-        },
-        {
-          "id":"2343",
-          "employer":"Twitter",
-          "permalink":"twitter"
-        },
-        {
-          "id":"2397",
-          "employer":"DBRS Global Technology",
-          "permalink":"dbrs"
-        },
-        {
-          "id":"2392",
-          "employer":"Amazon",
-          "permalink":"amazon"
-        },
-        {
-          "id":"2381",
-          "employer":"Bloomberg",
-          "permalink":"bloomberg"
-        },
-        {
-          "id":"2440",
-          "employer":"Facebook",
-          "permalink":"facebook"
-        },
-        {
-          "id":"2411",
-          "employer":"PDT Partners",
-          "permalink":null
-        },
-        {
-          "id":"2396",
-          "employer":"Microsoft",
-          "permalink":"microsoft"
-        },
-        {
-          "id":"2439",
-          "employer":"Fairfax Financial Holdings Ltd",
-          "permalink":"fairfax-financial-holdings"
-        },
-        {
-          "id":"2344",
-          "employer":"Wave",
-          "permalink":"wave-accounting"
-        },
-        {
-          "id":"2395",
-          "employer":"Microsoft Canada Co.",
-          "permalink":"microsoft"
-        },
-        {
-          "id":"2407",
-          "employer":"Stripe",
-          "permalink":"stripe"
-        },
-        {
-          "id":"2400",
-          "employer":"Desire2Learn",
-          "permalink":"desire2learn"
-        },
-        {
-          "id":"2356",
-          "employer":"Kik Interactive, Inc",
-          "permalink":"kik"
-        },
-        {
-          "id":"2442",
-          "employer":"PwC",
-          "permalink":"pwc"
-        },
-        {
-          "id":"2363",
-          "employer":"Relay",
-          "permalink":"relay-2"
-        },
-        {
-          "id":"2424",
-          "employer":"SMART Technologies",
-          "permalink":"smart-technologies"
-        },
-        {
-          "id":"2503",
-          "employer":"CGC, Inc.",
-          "permalink":null
-        },
-        {
-          "id":"2456",
-          "employer":"Polar",
-          "permalink":"polar-me"
-        },
-        {
-          "id":"2449",
-          "employer":"Capital One",
-          "permalink":"capital-one"
-        },
-        {
-          "id":"2511",
-          "employer":"EventMobi",
-          "date":"May 27, 2014",
-          "start_time":"11:30 AM",
-          "end_time":"1:30 PM",
-          "location":"TC 2218",
-          "website":"www.eventmobi.com\/",
-          "audience":"Co-op Students",
-          "programs":"MATH - Computer Science, ENG - System Design, ENG - Software, ENG - Electrical, ENG - Computer",
-          "description":"EventMobi\\'s platform helps events & conferences create their own mobile apps and provides them tools to manage their events more easily. With over 7 Million attendees, and 5000+ events across 40 countries, we are the leading event app platform in the world. Come and check out how we build out products with a small, focused, and talented engineering team and let us show you why EventMobi will be your best co-op term ever."
-        },
-        {
-          "id":"2423",
-          "employer":"LinkedIn",
-          "date":"May 27, 2014",
-          "start_time":"5:00 PM",
-          "end_time":"7:00 PM",
-          "location":"TC 2218",
-          "website":"studentcareers.linkedin.c",
-          "audience":"Co-op Students",
-          "programs":"MATH - Computer Science, MATH - Applied Mathematics",
-          "description":"Want to work on advanced information-retrieval algorithms, massive scalability infrastructure and storage solutions, and large-scale applications for users on web and mobile devices? LinkedIn is looking for co-ops who want to learn, grow and work with some of the brightest technical talent in the world. Come to our information session to learn more."
-        },
-        {
-          "id":"2444",
-          "employer":"Quora",
-          "date":"May 27, 2014",
-          "start_time":"7:30 PM",
-          "end_time":"9:00 PM",
-          "location":"TC 2218",
-          "website":"",
-          "audience":"Co-op and Graduating Students",
-          "programs":"ALL - MATH faculty, ALL - ENG faculty",
-          "description":"Looking for an awesome fall co-op? Join the Quora team to help share and grow the world\\'s knowledge as an engineer, data scientist or designer. As a Quora intern, you\\'ll ship code daily, get mentorship from experienced team members, and make a huge impact. Come hear about the development process and challeges at Quora, discuss past interns\\' projects, and answer questions about life, the universe and everything. Food and swag will be provided. We look forward to seeing you! Apply through JobMine or by emailing university@quora.com."
-        },
-        {
-          "id":"2451",
-          "employer":"Motorola Mobility",
-          "date":"May 28, 2014",
-          "start_time":"11:30 AM",
-          "end_time":"1:30 PM",
-          "location":"DC 1301",
-          "website":"www.motorolacareers.com",
-          "audience":"Co-op and Graduating Students",
-          "programs":"ALL - MATH faculty, ENG - System Design, ENG - Software",
-          "description":"Motorola created the mobile communications industry. We invented most of the protocols and technologies that make mobile communications possible, including the first mobile phone, the first base station, and most everything in between. We\\'re currently looking for forward thinking students at the Junior, Intermediate, and Senior academic levels to join our newly established office in Kitchener-Waterloo. During your co-op term at Motorola Mobility, you\\'ll learn to write code at all levels of the stack (from firmware through to application and server-side work) and develop code to the high standards of our excellent engineers.  Expect to become well versed in every aspect of the development cycle and become proficient in all the steps and processes in building code of the best quality."
-        },
-        {
-          "id":"2488",
-          "employer":"Kenaidan Contracting Ltd.",
-          "date":"May 28, 2014",
-          "start_time":"11:30 AM",
-          "end_time":"1:30 PM",
-          "location":"SCH-Laurel Room",
-          "website":"www.kenaidan.com",
-          "audience":"Co-op Students",
-          "programs":"ENG - Mechanical, ENG - Civil, ENG - Architecture",
-          "description":""
-        },
-        {
-          "id":"2432",
-          "employer":"Genesys Telecommunication Labs",
-          "date":"May 28, 2014",
-          "start_time":"5:00 PM",
-          "end_time":"7:00 PM",
-          "location":"DC 1301",
-          "website":"www.genesys.com",
-          "audience":"Co-op and Graduating Students",
-          "programs":"MATH - Computer Science, ENG - System Design, ENG - Software, ENG - Computer, ARTS - Arts & Business",
-          "description":"Join Genesys and save the world from bad customer service. Genesys is the world\\'s leading provider of customer service and contact software - with more than 2,000 customers in 80 countries. We invite co-op students of all levels to come out to this information session where you will have the opportunity to ask current and past co-ops as well as employers and current engineers about the different positions that are available. Please RSVP soon; pizza and drinks will be provided and swag will be given out."
-        },
-        {
-          "id":"2410",
-          "employer":"Yelp",
-          "date":"May 28, 2014",
-          "start_time":"7:30 PM",
-          "end_time":"9:00 PM",
-          "location":"DC 1302",
-          "website":"",
-          "audience":"Co-op and Graduating Students",
-          "programs":"MATH - Computer Science, ENG - Software, ENG - Computer",
-          "description":""
-        },
-        {
-          "id":"2454",
-          "employer":"TD Securities",
-          "date":"May 29, 2014",
-          "start_time":"5:00 PM",
-          "end_time":"7:00 PM",
-          "location":"TC 2218",
-          "website":"www.td.com",
-          "audience":"Co-op Students",
-          "programs":"MATH - Computing & Financial Management, MATH - Computer Science, MATH - Business Administration, ENG - Software, ENG - Computer",
-          "description":""
-        },
-        {
-          "id":"2546",
-          "employer":"PayPal*",
-          "date":"May 30, 2014",
-          "start_time":"11:30 AM",
-          "end_time":"1:30 PM",
-          "location":"TBD*",
-          "website":"2014.battlehack.org\/toronto",
-          "audience":"Co-op and Graduating Students",
-          "programs":"ENG - Software, ENG - Mechanical, ENG - Computer, ENG - System Design, MATH - Computer Science",
-          "description":"BattleHack is a series of hackathons, targeted around social good, that is held at various cities worldwide, culminating in the World Finals held in Silicon Valley in November. The Winner gets the title of Ultimate Hacker for Good and $100k USD.  This info session will introduce the hackathon series, and it\\'s global debut in Canada.  We will prime the audience on what to expect, what you can win throughout the night, and what you need to know in order to win the competition."
-        },
-        {
-          "id":"2446",
-          "employer":"Wish (ContextLogic)",
-          "date":"June 2, 2014",
-          "start_time":"5:00 PM",
-          "end_time":"7:00 PM",
-          "location":"TC 2218",
-          "website":"www.wish.com",
-          "audience":"Co-op and Graduating Students",
-          "programs":"MATH - Computer Science, ENG - System Design, ENG - Software, ENG - Computer",
-          "description":"Wish has become one of the leading mobile shopping apps, receiving millions of downloads and 5 star ratings on iPhone, iPad and Android. Join us to learn more about how you can make a huge contribution at an early stage technology startup and in the process gain invaluable experience and credibility."
-        },
-        {
-          "id":"2421",
-          "employer":"CIBC Technology",
-          "date":"June 3, 2014",
-          "start_time":"11:30 AM",
-          "end_time":"1:30 PM",
-          "location":"TC 2218",
-          "website":"www.cibc.com\/careers",
-          "audience":"Co-op Students",
-          "programs":"ALL - MATH faculty, ALL - ENG faculty",
-          "description":"Join us to learn about the valuable technology-based learning experiences, networking opportunities and support you\\'ll receive with the Technology Co-op Program!"
-        },
-        {
-          "id":"2420",
-          "employer":"Broadcom Corporation",
-          "date":"June 4, 2014",
-          "start_time":"5:00 PM",
-          "end_time":"7:00 PM",
-          "location":"TC 2218",
-          "website":"www.jobs.broadcom.com",
-          "audience":"Co-op and Graduating Students",
-          "programs":"ENG - System Design, ENG - Software, ENG - Mechanical, ENG - Electrical, ENG - Computer",
-          "description":""
-        },
-        {
-          "id":"2443",
-          "employer":"A9.com (Amazon Subsidiary)",
-          "date":"June 5, 2014",
-          "start_time":"5:00 PM",
-          "end_time":"7:00 PM",
-          "location":"DC 1301",
-          "website":"bit.ly\/A9WLOO614",
-          "audience":"Co-op Students",
-          "programs":"MATH - Statistics, MATH - Computer Science, ENG - System Design, ENG - Software, ENG - Computer",
-          "description":"A9\\'s internship program is Silicon Valley based, and targets students interested in software engineering and analytics. We have a long history of hiring Waterloo co-op students and are looking forward to introducing you to the large-scale problems being worked on by our engineering teams. Check out the event website to find out more about our talk!"
-        },
-        {
-          "id":"2441",
-          "employer":"XL Group",
-          "date":"June 9, 2014",
-          "start_time":"5:00 PM",
-          "end_time":"7:00 PM",
-          "location":"DC 1301",
-          "website":"www.xlgroup.com",
-          "audience":"Co-op Students",
-          "programs":"MATH - Financial Analysis & Risk Management, MATH - Business Administration, MATH - Actuarial Science, ARTS - Financial Management",
-          "description":""
-        },
-        {
-          "id":"2455",
-          "employer":"Cisco Meraki",
-          "date":"June 10, 2014",
-          "start_time":"5:00 PM",
-          "end_time":"7:00 PM",
-          "location":"DC 1301",
-          "website":"www.ciscosf.com",
-          "audience":"Co-op and Graduating Students",
-          "programs":"MATH - Computer Science, ENG - System Design, ENG - Software, ENG - Electrical, ENG - Computer",
-          "description":"Cisco SF is the new name for Meraki, a cloud networking start-up purchased by Cisco in December of 2012. We\\'re rethinking networking from the ground up, broadcasting live from the hip, sunny neighborhood of Mission Bay, San Francisco."
-        },
-        {
-          "id":"2543",
-          "employer":"Lookout Mobile Security",
-          "date":"June 16, 2014",
-          "start_time":"5:00 PM",
-          "end_time":"7:00 PM",
-          "location":"DC 1301",
-          "website":"www.lookout.com",
-          "audience":"Co-op and Graduating Students",
-          "programs":"ENG - Computer",
-          "description":""
-        }
-    ]
+    {
+      "id": "2344",
+      "employer": "Wave",
+      "permalink": "wave-accounting"
+    },
+    {
+      "id": "2348",
+      "employer": "Bazaarvoice",
+      "permalink": "bazaarvoice"
+    },
+    {
+      "id": "2356",
+      "employer": "Kik Interactive, Inc",
+      "permalink": "kik"
+    },
+    {
+      "id": "2358",
+      "employer": "Zynga",
+      "permalink": "zynga"
+    },
+    {
+      "id": "2362",
+      "employer": "Google",
+      "permalink": "google"
+    },
+    {
+      "id": "2363",
+      "employer": "Relay",
+      "permalink": "relay-2"
+    },
+    {
+      "id": "2365",
+      "employer": "A Thinking Ape Technologies, Inc.",
+      "alt_names": [
+        "A Thinking Ape"
+      ],
+      "permalink": "a-thinking-ape"
+    },
+    {
+      "id": "2379",
+      "employer": "Enflick",
+      "permalink": "enflick"
+    },
+    {
+      "id": "2380",
+      "employer": "Wattpad",
+      "permalink": "wattpad"
+    },
+    {
+      "id": "2381",
+      "employer": "Bloomberg",
+      "permalink": "bloomberg"
+    },
+    {
+      "id": "2392",
+      "employer": "Amazon",
+      "permalink": "amazon"
+    },
+    {
+      "id": "2395",
+      "employer": "Microsoft Canada Co.",
+      "permalink": "microsoft"
+    },
+    {
+      "id": "2396",
+      "employer": "Microsoft",
+      "permalink": "microsoft"
+    },
+    {
+      "id": "2397",
+      "employer": "DBRS Global Technology",
+      "alt_names": [
+        "DBRS"
+      ],
+      "permalink": "dbrs"
+    },
+    {
+      "id": "2399",
+      "employer": "Big Viking Games - CANCELLED*",
+      "alt_names": [
+        "Big Viking Games"
+      ],
+      "permalink": "big-viking-games"
+    },
+    {
+      "id": "2400",
+      "employer": "Desire2Learn",
+      "permalink": "desire2learn"
+    },
+    {
+      "id": "2401",
+      "employer": "SpinPunch, Inc.",
+      "alt_names": [
+        "SpinPunch"
+      ],
+      "permalink": "spinpunch"
+    },
+    {
+      "id": "2404",
+      "employer": "PagerDuty",
+      "permalink": "pagerduty"
+    },
+    {
+      "id": "2405",
+      "employer": "CGI",
+      "permalink": "cgi"
+    },
+    {
+      "id": "2407",
+      "employer": "Stripe",
+      "permalink": "stripe"
+    },
+    {
+      "id": "2410",
+      "employer": "Yelp",
+      "permalink": "yelp"
+    },
+    {
+      "id": "2411",
+      "employer": "PDT Partners",
+      "permalink": null
+    },
+    {
+      "id": "2419",
+      "employer": "Noom",
+      "permalink": "noom"
+    },
+    {
+      "id": "2420",
+      "employer": "Broadcom Corporation",
+      "permalink": "broadcom"
+    },
+    {
+      "id": "2421",
+      "employer": "CIBC Technology",
+      "permalink": null
+    },
+    {
+      "id": "2423",
+      "employer": "LinkedIn",
+      "permalink": "linkedin"
+    },
+    {
+      "id": "2424",
+      "employer": "SMART Technologies",
+      "permalink": "smart-technologies"
+    },
+    {
+      "id": "2432",
+      "employer": "Genesys Telecommunication Labs",
+      "permalink": "genesys"
+    },
+    {
+      "id": "2433",
+      "employer": "Facebook",
+      "permalink": "facebook"
+    },
+    {
+      "id": "2439",
+      "employer": "Fairfax Financial Holdings Ltd",
+      "permalink": "fairfax-financial-holdings"
+    },
+    {
+      "id": "2440",
+      "employer": "Facebook",
+      "permalink": "facebook"
+    },
+    {
+      "id": "2441",
+      "employer": "XL Group",
+      "permalink": "xl-group"
+    },
+    {
+      "id": "2442",
+      "employer": "PwC",
+      "permalink": "pwc"
+    },
+    {
+      "id": "2443",
+      "employer": "A9.com (Amazon Subsidiary)",
+      "alt_names": [
+        "A9.com",
+        "A9"
+      ],
+      "permalink": "a9-com"
+    },
+    {
+      "id": "2444",
+      "employer": "Quora",
+      "permalink": "quora"
+    },
+    {
+      "id": "2445",
+      "employer": "Electronic Arts",
+      "permalink": "electronicarts"
+    },
+    {
+      "id": "2446",
+      "employer": "Wish (ContextLogic)",
+      "alt_names": [
+        "Wish"
+      ],
+      "permalink": "wish"
+    },
+    {
+      "id": "2449",
+      "employer": "Capital One",
+      "permalink": "capital-one"
+    },
+    {
+      "id": "2451",
+      "employer": "Motorola Mobility",
+      "alt_names": [
+        "Motorola"
+      ],
+      "permalink": "motorola-mobility"
+    },
+    {
+      "id": "2454",
+      "employer": "TD Securities",
+      "permalink": "td-securities"
+    },
+    {
+      "id": "2455",
+      "employer": "Cisco Meraki",
+      "alt_names": [
+        "Meraki",
+        "Cisco SF"
+      ],
+      "permalink": "meraki"
+    },
+    {
+      "id": "2456",
+      "employer": "Polar",
+      "permalink": "polar-me"
+    },
+    {
+      "id": "2488",
+      "employer": "Kenaidan Contracting Ltd.",
+      "permalink": null
+    },
+    {
+      "id": "2503",
+      "employer": "CGC, Inc.",
+      "permalink": null
+    },
+    {
+      "id": "2511",
+      "employer": "EventMobi",
+      "permalink": "eventmobi-com"
+    },
+    {
+      "id": "2543",
+      "employer": "Lookout Mobile Security",
+      "alt_names": [
+        "Lookout"
+      ],
+      "permalink": "lookout"
+    },
+    {
+      "id": "2546",
+      "employer": "PayPal*",
+      "alt_names": [
+        "PayPal"
+      ],
+      "permalink": "paypal"
+    }
+  ]
 }
