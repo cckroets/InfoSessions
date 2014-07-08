@@ -1,15 +1,19 @@
 package com.sixbynine.infosessions.ui;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.sixbynine.infosessions.BuildConfig;
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.object.InfoSession;
 import com.sixbynine.infosessions.object.company.Company;
@@ -22,8 +26,8 @@ public class CompanyInfoFragment extends Fragment implements InfoSession.OnDataL
     private Callback mCallback;
     private ProgressBar mProgressBar;
     private ScrollView mScrollView;
+    private ImageView mLogoImageView;
 
-    private TextView mCompanyNameTextView;
 
     public interface Callback {
         public InfoSession getSelectedInfoSession();
@@ -52,7 +56,8 @@ public class CompanyInfoFragment extends Fragment implements InfoSession.OnDataL
 
         mScrollView = (ScrollView) view.findViewById(R.id.scroll_view);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-        mCompanyNameTextView = (TextView) mScrollView.findViewById(R.id.company_name_text_view);
+
+        mLogoImageView = (ImageView) view.findViewById(R.id.image_view_logo);
 
         if (mCallback.getSelectedInfoSession() != null) {
             if (mCallback.getSelectedInfoSession().getCompanyInfo() == null) {
@@ -69,6 +74,7 @@ public class CompanyInfoFragment extends Fragment implements InfoSession.OnDataL
             mScrollView.setVisibility(View.GONE);
         }
 
+
         return view;
     }
 
@@ -82,6 +88,15 @@ public class CompanyInfoFragment extends Fragment implements InfoSession.OnDataL
     private void populateFields(InfoSession infoSession) {
         if (infoSession == null) return;
         Company company = infoSession.getCompanyInfo();
-        mCompanyNameTextView.setText(company.getName());
+
+        Bitmap logo = company.getPrimaryImageBitmap();
+        if (logo == null) {
+            if (BuildConfig.DEBUG) Log.w("InfoSessions", "Logo was null");
+        } else {
+            int logoHeight = getResources().getDimensionPixelOffset(R.dimen.company_logo_height);
+            double aspectRatio = logo.getWidth() / logo.getHeight();
+            int newWidth = (int) (aspectRatio * logoHeight);
+            mLogoImageView.setImageBitmap(Bitmap.createScaledBitmap(logo, newWidth, logoHeight, false));
+        }
     }
 }
