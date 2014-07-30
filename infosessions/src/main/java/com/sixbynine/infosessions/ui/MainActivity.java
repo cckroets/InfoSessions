@@ -17,6 +17,7 @@ import com.sixbynine.infosessions.database.WebData;
 import com.sixbynine.infosessions.net.CompanyDataUtil;
 import com.sixbynine.infosessions.net.InfoSessionUtil;
 import com.sixbynine.infosessions.net.Keys;
+import com.sixbynine.infosessions.net.PermalinkFetcher;
 import com.sixbynine.infosessions.object.company.Company;
 import com.sixbynine.infosessions.object.InfoSession;
 import com.sixbynine.infosessions.object.InfoSessionWaterlooApiDAO;
@@ -102,24 +103,45 @@ public class MainActivity extends ActionBarActivity implements InfoSessionListFr
             Log.d("InfoSessions", infoSession.getCompanyInfo().getName() + " data loaded from db");
         } catch (DataNotFoundException e) {
             // If the database does not have the data, load it from the web
-            Log.d("InfoSessions", "DataNotFound:" + e.getMessage());
-            CompanyDataUtil.getCompanyData(infoSession.getWaterlooApiDAO(),
-                    new CompanyDataUtil.CompanyDataUtilCallback() {
+            PermalinkFetcher.getPermalink(infoSession, new PermalinkFetcher.Callback(){
                 @Override
-                public void onSuccess(InfoSessionWaterlooApiDAO infoSessionWaterlooApiDAO,
-                                      Company crunchbaseApiDAO) {
-                    infoSession.setCompanyInfo(crunchbaseApiDAO);
-                    WebData.saveCompanyInfoToDB(getApplicationContext(), infoSession);
-                    Log.d("InfoSessions", crunchbaseApiDAO.getName() + " data loaded from web");
+                public void onSuccess(InfoSession a_infoSession, String permalink) {
+                    CompanyDataUtil.getCompanyData(infoSession.getWaterlooApiDAO(),
+                            permalink,
+                            new CompanyDataUtil.CompanyDataUtilCallback() {
+                                @Override
+                                public void onSuccess(InfoSessionWaterlooApiDAO infoSessionWaterlooApiDAO,
+                                                      Company crunchbaseApiDAO) {
+                                    infoSession.setCompanyInfo(crunchbaseApiDAO);
+                                    WebData.saveCompanyInfoToDB(getApplicationContext(), infoSession);
+                                    Log.d("InfoSessions", crunchbaseApiDAO.getName() + " data loaded from web");
+                                }
+
+                                @Override
+                                public void onFailure(Throwable e) {
+                                    Log.e("InfoSessions", "Did not load companyInfo: " +
+                                            infoSession.getWaterlooApiDAO().getEmployer());
+                                    e.printStackTrace();
+                                }
+                            });
                 }
 
                 @Override
                 public void onFailure(Throwable e) {
-                    Log.e("InfoSessions", "Did not load companyInfo: " +
-                            infoSession.getWaterlooApiDAO().getEmployer());
-                    e.printStackTrace();
+                    if(e == null){
+                        Log.e("InfoSessions", "No entry online for: " +
+                                infoSession.getWaterlooApiDAO().getEmployer());
+                        e.printStackTrace();
+                    }else{
+                        Log.e("InfoSessions", "Did not load companyInfo: " +
+                                infoSession.getWaterlooApiDAO().getEmployer());
+                        e.printStackTrace();
+                    }
+
                 }
             });
+
+
         }
     }
 

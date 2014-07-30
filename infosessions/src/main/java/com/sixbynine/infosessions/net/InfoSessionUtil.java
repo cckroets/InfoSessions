@@ -62,7 +62,6 @@ public class InfoSessionUtil {
                     startCal.setTimeInMillis(date.getTimeInMillis());
                     startCal.set(Calendar.HOUR_OF_DAY, (int) (startTime / 60));
                     startCal.set(Calendar.MINUTE, (int) (startTime % 60));
-                    //startCal.setTimeInMillis(date.getTimeInMillis() + startTime);
                     infoSession.setStartTime(startCal);
 
                     long endTime = parseTime(raw.getString("end_time"));
@@ -70,7 +69,6 @@ public class InfoSessionUtil {
                     endCal.setTimeInMillis(date.getTimeInMillis());
                     endCal.set(Calendar.HOUR_OF_DAY, (int) (endTime / 60));
                     endCal.set(Calendar.MINUTE, (int) (endTime % 60));
-                    //endCal.setTimeInMillis(date.getTimeInMillis() + endTime);
                     infoSession.setEndTime(endCal);
 
                     infoSession.setLocation(raw.getString("location"));
@@ -116,44 +114,6 @@ public class InfoSessionUtil {
         Calendar cal = new GregorianCalendar();
         cal.setTime(d);
         return cal;
-
-      /*
-        String[] parts = date.split(",");
-        String[] monthDay = parts[0].split(" ");
-        int year = Integer.parseInt(parts[1].trim());
-        int day = Integer.parseInt(monthDay[1]);
-        String monthString = monthDay[0];
-        int month = 0;
-        if (monthString.equals("January")) {
-            month = Calendar.JANUARY;
-        } else if (monthString.equalsIgnoreCase("February")) {
-            month = Calendar.FEBRUARY;
-        } else if (monthString.equalsIgnoreCase("March")) {
-            month = Calendar.MARCH;
-        } else if (monthString.equalsIgnoreCase("April")) {
-            month = Calendar.APRIL;
-        } else if (monthString.equalsIgnoreCase("May")) {
-            month = Calendar.MAY;
-        } else if (monthString.equalsIgnoreCase("June")) {
-            month = Calendar.JUNE;
-        } else if (monthString.equalsIgnoreCase("July")) {
-            month = Calendar.JULY;
-        } else if (monthString.equalsIgnoreCase("August")) {
-            month = Calendar.AUGUST;
-        } else if (monthString.equalsIgnoreCase("September")) {
-            month = Calendar.SEPTEMBER;
-        } else if (monthString.equalsIgnoreCase("October")) {
-            month = Calendar.OCTOBER;
-        } else if (monthString.equalsIgnoreCase("November")) {
-            month = Calendar.NOVEMBER;
-        } else if (monthString.equalsIgnoreCase("December")) {
-            month = Calendar.DECEMBER;
-        } else {
-            throw new IllegalStateException("Month not formatted properly: " + monthString);
-        }
-
-        return new GregorianCalendar(year, month, day);
-    */
 
     }
 

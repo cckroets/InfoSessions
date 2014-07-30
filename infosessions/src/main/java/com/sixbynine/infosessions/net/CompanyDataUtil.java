@@ -39,12 +39,12 @@ public class CompanyDataUtil {
         public void onFailure(Throwable e);
     }
 
-    public static void getCompanyData(InfoSessionWaterlooApiDAO waterlooApiDAO, CompanyDataUtilCallback callback) {
-        AsyncCompanyDataFetcher fetcher = sAsyncCompanyDataFetchers.get(waterlooApiDAO.getEmployer());
+    public static void getCompanyData(InfoSessionWaterlooApiDAO waterlooApiDAO, String permalink, CompanyDataUtilCallback callback) {
+        AsyncCompanyDataFetcher fetcher = sAsyncCompanyDataFetchers.get(permalink);
 
         if (fetcher == null || fetcher.getStatus().equals(AsyncTask.Status.FINISHED)) {
-            fetcher = new AsyncCompanyDataFetcher(waterlooApiDAO);
-            sAsyncCompanyDataFetchers.put(waterlooApiDAO.getEmployer(),fetcher);
+            fetcher = new AsyncCompanyDataFetcher(waterlooApiDAO, permalink);
+            sAsyncCompanyDataFetchers.put(permalink,fetcher);
             fetcher.execute(callback);
         }
     }
@@ -242,9 +242,11 @@ public class CompanyDataUtil {
     private static class AsyncCompanyDataFetcher extends AsyncTask<CompanyDataUtilCallback, Void, Void> {
 
         private InfoSessionWaterlooApiDAO infoSessionWaterlooApiDAO;
+        private String mPermalink;
 
-        public AsyncCompanyDataFetcher(InfoSessionWaterlooApiDAO infoSessionWaterlooApiDAO) {
+        public AsyncCompanyDataFetcher(InfoSessionWaterlooApiDAO infoSessionWaterlooApiDAO, String permalink) {
             this.infoSessionWaterlooApiDAO = infoSessionWaterlooApiDAO;
+            mPermalink = permalink;
         }
 
         @Override
@@ -255,11 +257,7 @@ public class CompanyDataUtil {
                 throw new IllegalArgumentException("Provided callback is null");
             }
             CompanyDataUtilCallback callback = callbacks[0];
-            if (infoSessionWaterlooApiDAO.getEmployer().contains(" ") == false) {
-                CrunchbaseApiRestClient.get("/organization/" + infoSessionWaterlooApiDAO.getEmployer(), null, new CallProcessor(callback, infoSessionWaterlooApiDAO, infoSessionWaterlooApiDAO.getEmployer()));
-            } else {
-                Log.w("InfoSessions", "skipping " + infoSessionWaterlooApiDAO.getEmployer() + " since it has a space");
-            }
+            CrunchbaseApiRestClient.get("/organization/" + mPermalink, null, new CallProcessor(callback, infoSessionWaterlooApiDAO, infoSessionWaterlooApiDAO.getEmployer()));
             return null;
         }
 
