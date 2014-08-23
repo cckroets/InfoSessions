@@ -72,6 +72,7 @@ public class AddressSQL implements SQLEntity {
             address.setAddressLine(0, getString(cursor, "addressLine"));
             address.setAdminArea(getString(cursor, "adminArea"));
             address.setCountryCode(getString(cursor, "country"));
+            address.setLocality(getString(cursor, "locality"));
             return new AddressSQL(address);
         }
     };
