@@ -1,17 +1,20 @@
 package com.sixbynine.infosessions.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -23,6 +26,8 @@ import com.sixbynine.infosessions.BuildConfig;
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.object.InfoSession;
 import com.sixbynine.infosessions.object.InfoSessionWaterlooApiDAO;
+import com.sixbynine.infosessions.object.social.SocialMediaWebsite;
+import com.sixbynine.infosessions.object.social.SocialMedium;
 import com.sixbynine.infosessions.object.company.Company;
 import com.sixbynine.infosessions.object.company.Website;
 import com.sixbynine.infosessions.object.company.WebsiteCatalogue;
@@ -43,6 +48,7 @@ public class CompanyInfoFragment extends Fragment implements InfoSession.OnDataL
 
     private Callback mCallback;
     private ProgressBar mProgressBar;
+    private MenuItem mFavourite;
 
     private ScrollView mScrollView;
     private ImageView mLogoImageView;
@@ -79,6 +85,52 @@ public class CompanyInfoFragment extends Fragment implements InfoSession.OnDataL
     public void onDetach() {
         super.onDetach();
         mCallback = null;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        mFavourite = menu.findItem(R.id.action_favourite);
+        int sid = mCallback.getSelectedInfoSession().getWaterlooApiDAO().getId();
+        boolean fav = getSharedPreferences().getBoolean(sid + "", false);
+        if (BuildConfig.DEBUG) Log.d("FAV", sid + (fav ? " is favourite" : " is not favourite"));
+        mFavourite.setChecked(! fav);
+        onFavouritePress();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_favourite) {
+            onFavouritePress();
+            return true;
+        }
+        return false;
+    }
+
+    private void onFavouritePress() {
+        // Must maintain checked state in code
+        mFavourite.setChecked(! mFavourite.isChecked());
+        boolean isFav = mFavourite.isChecked();
+
+        // Change star icon
+        mFavourite.setIcon(isFav ?
+                android.R.drawable.star_big_on :
+                android.R.drawable.star_big_off);
+
+        if (mCallback.getSelectedInfoSession() != null) {
+            InfoSession session = mCallback.getSelectedInfoSession();
+            session.setFavourite(isFav);
+        }
+    }
+
+    private SharedPreferences getSharedPreferences() {
+        return getActivity().getSharedPreferences("com.sixbynine.infosessions", Context.MODE_PRIVATE);
     }
 
     @Override
@@ -150,13 +202,13 @@ public class CompanyInfoFragment extends Fragment implements InfoSession.OnDataL
         return sDateFormat.format(date.getTime());
     }
 
-    private static Map<String, Integer> sWebsiteIcons = new HashMap<String, Integer>();
+    private static Map<String, SocialMedium> sWebsiteIcons = new HashMap<String, SocialMedium>();
     static {
-        sWebsiteIcons.put("facebook", R.drawable.facebook);
-        sWebsiteIcons.put("twitter", R.drawable.twitter);
-        sWebsiteIcons.put("pinterest", R.drawable.pinterest);
-        sWebsiteIcons.put("instagram", R.drawable.instagram);
-        sWebsiteIcons.put("linkedin", R.drawable.linkedin);
+        sWebsiteIcons.put("facebook", new SocialMediaWebsite(R.drawable.facebook));
+        sWebsiteIcons.put("twitter", new SocialMediaWebsite(R.drawable.twitter));
+        sWebsiteIcons.put("pinterest", new SocialMediaWebsite(R.drawable.pinterest));
+        sWebsiteIcons.put("instagram", new SocialMediaWebsite(R.drawable.instagram));
+        sWebsiteIcons.put("linkedin", new SocialMediaWebsite(R.drawable.linkedin));
         // TODO: Homepage and Angellist
     }
 
@@ -164,22 +216,32 @@ public class CompanyInfoFragment extends Fragment implements InfoSession.OnDataL
 
         mCompanySocialMedia.removeAllViews();
         for (final Website website : websites) {
-            Integer iconId = sWebsiteIcons.get(website.getTitle());
-            if (iconId != null) {
+            final SocialMedium medium = sWebsiteIcons.get(website.getTitle());
+            if (medium != null) {
                 ImageView mediaButton = new ImageView(this.getActivity());
-                mediaButton.setImageResource(iconId);
+                mediaButton.setImageResource(medium.getResource());
                 mediaButton.setPadding(10,0,0,0);
                 mediaButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // TODO
-                        Toast toast = Toast.makeText(getActivity(), website.getUrl(), Toast.LENGTH_SHORT);
-                        toast.show();
+                        Intent socialIntent = medium.getIntent(website.getUrl(), getActivity());
+                        startActivity(socialIntent);
+                        Toast.makeText(getActivity(),website.getUrl(),Toast.LENGTH_LONG).show();
                     }
                 });
                 mCompanySocialMedia.addView(mediaButton);
             }
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Set favourite in saved preferences
+        InfoSession session = mCallback.getSelectedInfoSession();
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putBoolean(session.getWaterlooApiDAO().getId() + "", session.isFavourite());
+        editor.commit();
     }
 
     private void populateFields(InfoSession infoSession) {

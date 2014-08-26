@@ -52,9 +52,15 @@ public class CompanyInfoActivity extends ActionBarActivity implements CompanyInf
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_favourite) {
+            // Handle the favourite button inside of the fragment
+            return false;
         }
         return super.onOptionsItemSelected(item);
+
     }
+
+
 
     @Override
     public InfoSession getSelectedInfoSession() {

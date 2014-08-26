@@ -2,6 +2,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.CompanyInfoActivity">
+
+    <item
+        android:id="@+id/action_favourite"
+        android:title="Favourite"
+        android:icon="@android:drawable/btn_star_big_off"
+        android:checkable="true"
+        app:showAsAction="always" />
+
     <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
