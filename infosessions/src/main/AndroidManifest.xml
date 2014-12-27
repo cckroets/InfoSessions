@@ -16,8 +16,11 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="roboguice.modules"
+            android:value="com.sixbynine.infosessions.injection.InfoSessionsModule"/>
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".app.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.CompanyInfoActivity"
+            android:name=".app.CompanyInfoActivity"
             android:label="@string/title_activity_company_info"></activity>
     </application>
 
