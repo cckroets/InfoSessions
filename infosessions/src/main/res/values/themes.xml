@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme. Contains attributes true of all versions-->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    </style>
+
+    <!-- App Theme, add customizations per version here -->
+    <style name="AppTheme" parent="AppBaseTheme"/>
+
+</resources>

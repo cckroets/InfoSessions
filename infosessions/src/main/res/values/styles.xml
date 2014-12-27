@@ -1,10 +1,5 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-    </style>
-
     <style name="InfoSessionCompanyLabel">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">#ff9a9a9a</item>
