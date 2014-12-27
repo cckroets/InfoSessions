@@ -213,23 +213,24 @@ public class CompanyInfoFragment extends Fragment implements InfoSession.OnDataL
     }
 
     private void populateSocialMedia(WebsiteCatalogue websites) {
-
         mCompanySocialMedia.removeAllViews();
-        for (final Website website : websites) {
-            final SocialMedium medium = sWebsiteIcons.get(website.getTitle());
-            if (medium != null) {
-                ImageView mediaButton = new ImageView(this.getActivity());
-                mediaButton.setImageResource(medium.getResource());
-                mediaButton.setPadding(10,0,0,0);
-                mediaButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent socialIntent = medium.getIntent(website.getUrl(), getActivity());
-                        startActivity(socialIntent);
-                        Toast.makeText(getActivity(),website.getUrl(),Toast.LENGTH_LONG).show();
-                    }
-                });
-                mCompanySocialMedia.addView(mediaButton);
+        if(websites != null) {
+            for (final Website website : websites) {
+                final SocialMedium medium = sWebsiteIcons.get(website.getTitle());
+                if (medium != null) {
+                    ImageView mediaButton = new ImageView(this.getActivity());
+                    mediaButton.setImageResource(medium.getResource());
+                    mediaButton.setPadding(10, 0, 0, 0);
+                    mediaButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent socialIntent = medium.getIntent(website.getUrl(), getActivity());
+                            startActivity(socialIntent);
+                            Toast.makeText(getActivity(), website.getUrl(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    mCompanySocialMedia.addView(mediaButton);
+                }
             }
         }
     }
