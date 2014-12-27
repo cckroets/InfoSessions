@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -61,30 +62,33 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         final WaterlooInfoSession infoSession = getItem(i);
 
         if (view == null) {
-            view = LayoutInflater.from(getContext()).inflate(R.layout.info_session, viewGroup, false);
+            view = LayoutInflater.from(getContext()).inflate(R.layout.info_session_row, viewGroup, false);
             viewHolder = new ViewHolder();
-            viewHolder.dateHeader = (TextView) view.findViewById(R.id.dateHeader);
-            viewHolder.companyName = (TextView) view.findViewById(R.id.companyName);
-            viewHolder.startTime = (TextView) view.findViewById(R.id.startTime);
+            //viewHolder.dateHeader = (TextView) view.findViewById(R.id.dateHeader);
+            viewHolder.companyName = (TextView) view.findViewById(R.id.company_name);
+            viewHolder.startTime = (TextView) view.findViewById(R.id.start_time);
             viewHolder.location = (TextView) view.findViewById(R.id.location);
-            viewHolder.companyLogo = (ImageView) view.findViewById(R.id.companyLogo);
-            viewHolder.cardLayout = (InfoSessionCardLayout) view.findViewById(R.id.card);
+            viewHolder.companyLogo = (ImageView) view.findViewById(R.id.company_logo);
+            viewHolder.shareButton = (ImageButton) view.findViewById(R.id.share_button);
+            viewHolder.timerButton = (ImageButton) view.findViewById(R.id.timer_button);
+            viewHolder.favoriteButton = (ImageButton) view.findViewById(R.id.favorite_button);
+            //viewHolder.cardLayout = (InfoSessionCardLayout) view.findViewById(R.id.card);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
 
         final Date date = infoSession.getStartTime().getTime();
-        if (isFirstOfDay(i)) {
+        /*if (isFirstOfDay(i)) {
             viewHolder.dateHeader.setVisibility(View.VISIBLE);
             viewHolder.dateHeader.setText(HEADER_DATE_FORMAT.format(date));
         } else {
             viewHolder.dateHeader.setVisibility(View.GONE);
-        }
+        }*/
         viewHolder.companyName.setText(infoSession.getCompanyName());
         viewHolder.startTime.setText(TIME_DATE_FORMAT.format(date));
         viewHolder.location.setText(infoSession.getLocation());
-        viewHolder.cardLayout.setLastCategory(isLastOfDay(i));
+        //viewHolder.cardLayout.setLastCategory(isLastOfDay(i));
 
         return view;
     }
@@ -96,12 +100,15 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
     }
 
     static class ViewHolder {
-        TextView dateHeader;
+        //TextView dateHeader;
         TextView companyName;
         TextView startTime;
         TextView location;
         ImageView companyLogo;
-        InfoSessionCardLayout cardLayout;
+        //InfoSessionCardLayout cardLayout;
+        ImageButton timerButton;
+        ImageButton shareButton;
+        ImageButton favoriteButton;
     }
 }
 

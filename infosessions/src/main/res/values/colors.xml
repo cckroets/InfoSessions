@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+    <!-- theme colors -->
+    <color name="primary">#00BCD4</color>
+    <color name="primaryDark">#0097A7</color>
+    <color name="accent">#4CAF50</color>
+
     <color name="info_sessions_fragment_bg">#caececec</color>
     <color name="shadow_color">#caa2a2a2</color>
 </resources>
