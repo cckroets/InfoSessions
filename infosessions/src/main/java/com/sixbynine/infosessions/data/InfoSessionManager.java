@@ -99,6 +99,11 @@ public final class InfoSessionManager {
     }
 
     public void getCompanyData(String permalink, final ResponseHandler<Company> callback) {
+        if (permalink == null) {
+            Log.e(TAG, "getCompanyData called with null permalink");
+            callback.onFailure(new IllegalArgumentException("permalink == null"));
+            return;
+        }
         Company company = mCompanyCache.get(permalink);
         if (company != null) {
             callbackSuccess(callback, company);
@@ -111,11 +116,12 @@ public final class InfoSessionManager {
             mCompanyCache.put(permalink, company);
             return;
         }
-        callbackFailure(callback, null);
+
+        loadCompanyData(permalink, callback);
         Log.e(TAG, "getCompanyData failed : " + permalink);
     }
 
-    private void loadCompanyData(String permalink, final ResponseHandler<Company> callback) {
+    private void loadCompanyData(final String permalink, final ResponseHandler<Company> callback) {
         mCrunchbaseAPI.getOrganization(permalink, new Callback<Company>() {
             @Override
             public void success(Company company, Response response) {
@@ -126,7 +132,8 @@ public final class InfoSessionManager {
             @Override
             public void failure(RetrofitError error) {
                 callbackFailure(callback, error);
-                Log.e(TAG, error.getMessage());
+                Log.e(TAG, error.getMessage() != null ? error.getMessage() : "unknown failure : "
+                        + permalink);
             }
         });
     }

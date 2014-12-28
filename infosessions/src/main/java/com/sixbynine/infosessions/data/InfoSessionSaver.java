@@ -61,6 +61,7 @@ public final class InfoSessionSaver {
 
     public Company getCompany(String permalink) {
         final String companyJson = mPreferenceManager.getString(permalink);
+        Log.d(TAG, "companyJson = " + companyJson);
         if (companyJson == null) {
             return null;
         }
