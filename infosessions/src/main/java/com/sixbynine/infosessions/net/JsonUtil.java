@@ -12,7 +12,11 @@ public final class JsonUtil {
     }
 
     public static long getLong(JsonElement element) {
-        final Number rawNum = element.getAsNumber();
-        return rawNum == null ? 0 : rawNum.longValue();
+        return element == null || element.getAsNumber() == null ? 0 : element.getAsNumber()
+                .longValue();
+    }
+
+    public static String getString(JsonElement element) {
+        return element == null || element.isJsonNull() ? null : element.getAsString();
     }
 }

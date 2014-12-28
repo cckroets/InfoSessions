@@ -7,7 +7,6 @@ import com.google.inject.name.Named;
 import com.sixbynine.infosessions.net.PermalinkAPI;
 
 import retrofit.RestAdapter;
-import retrofit.converter.Converter;
 import retrofit.converter.GsonConverter;
 
 /**

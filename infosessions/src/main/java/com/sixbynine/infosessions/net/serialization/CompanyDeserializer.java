@@ -1,12 +1,14 @@
 package com.sixbynine.infosessions.net.serialization;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.sixbynine.infosessions.model.company.Address;
 import com.sixbynine.infosessions.model.company.Company;
 import com.sixbynine.infosessions.model.company.Website;
@@ -29,26 +31,34 @@ public class CompanyDeserializer implements JsonDeserializer<Company> {
     @Override
     public Company deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
 
-        final JsonObject jsonObject = (JsonObject) json;
-        final JsonObject data = jsonObject.getAsJsonObject("data");
-        final JsonObject properties = data.getAsJsonObject("properties");
-        final JsonObject relationships = data.getAsJsonObject("relationships");
+        try {
+            final JsonObject jsonObject = (JsonObject) json;
+            final JsonObject data = jsonObject.getAsJsonObject("data");
+            final JsonObject properties = data.getAsJsonObject("properties");
+            final JsonObject relationships = data.getAsJsonObject("relationships");
 
-        // Properties
-        final String permalink = properties.get("permalink").getAsString();
-        final String longDesc = properties.get("description").getAsString();
-        final String shortDesc = properties.get("short_description").getAsString();
-        final String url = properties.get("homepage_url").getAsString();
-        final String name = properties.get("name").getAsString();
-        final long employeeCount = JsonUtil.getLong(properties.get("number_of_employees"));
+            // Properties
+            final String permalink = JsonUtil.getString(properties.get("permalink"));
+            final String longDesc = JsonUtil.getString(properties.get("description"));
+            final String shortDesc = JsonUtil.getString(properties.get("short_description"));
+            final String url = JsonUtil.getString(properties.get("homepage_url"));
+            final String name = JsonUtil.getString(properties.get("name"));
+            final long employeeCount = JsonUtil.getLong(properties.get("number_of_employees"));
 
-        // Relationships
-        final String primaryImageUrl = deserializePrimaryImageUrl(relationships.getAsJsonObject("primary_image"));
-        final Address address = deserializeAddress(relationships.getAsJsonObject("headquarters"));
-        final List<Website> websites = deserializeWebsites(relationships.getAsJsonObject("websites"));
+            // Relationships
+            final String primaryImageUrl = deserializePrimaryImageUrl(relationships.getAsJsonObject("primary_image"));
+            final Address address = deserializeAddress(relationships.getAsJsonObject("headquarters"));
+            final List<Website> websites = deserializeWebsites(relationships.getAsJsonObject("websites"));
 
-        return new Company(permalink, url, name, longDesc, shortDesc, employeeCount,
-                primaryImageUrl, address, websites);
+            return new Company(permalink, url, name, longDesc, shortDesc, employeeCount,
+                    primaryImageUrl, address, websites);
+        } catch (NullPointerException | JsonParseException e) {
+            e.printStackTrace();
+            Log.e(CompanyDeserializer.class.getName(), e.getMessage());
+            return null;
+        }
+
+
     }
 
 
@@ -103,15 +113,15 @@ public class CompanyDeserializer implements JsonDeserializer<Company> {
         if (firstAddress == null) {
             return null;
         }
-        final String country = firstAddress.get("country").getAsString();
-        final String region = firstAddress.get("region").getAsString();
-        final String city = firstAddress.get("city").getAsString();
+        final String country = JsonUtil.getString(firstAddress.get("country"));
+        final String region = JsonUtil.getString(firstAddress.get("region"));
+        final String city = JsonUtil.getString(firstAddress.get("city"));
         return new Address(city, region, country);
     }
 
     public Website deserializeWebsite(JsonObject websiteJson) {
-        final String url = websiteJson.get("url").getAsString();
-        final String title = websiteJson.get("title").getAsString();
+        final String url = JsonUtil.getString(websiteJson.get("url"));
+        final String title = JsonUtil.getString(websiteJson.get("title"));
         return new Website(url, title);
     }
 

@@ -118,7 +118,6 @@ public final class InfoSessionManager {
         }
 
         loadCompanyData(permalink, callback);
-        Log.e(TAG, "getCompanyData failed : " + permalink);
     }
 
     private void loadCompanyData(final String permalink, final ResponseHandler<Company> callback) {
@@ -132,8 +131,8 @@ public final class InfoSessionManager {
             @Override
             public void failure(RetrofitError error) {
                 callbackFailure(callback, error);
-                Log.e(TAG, error.getMessage() != null ? error.getMessage() : "unknown failure : "
-                        + permalink);
+                Log.e(TAG, error.getMessage() != null ? error.getMessage() : "loading " +
+                        permalink + " unknown failure");
             }
         });
     }

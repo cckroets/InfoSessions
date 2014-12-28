@@ -68,12 +68,6 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
     }
 
     @Override
-    public WaterlooInfoSession getItem(int position) {
-        final WaterlooInfoSession session = super.getItem(position);
-        return session;
-    }
-
-    @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         final ViewHolder viewHolder;
         final WaterlooInfoSession infoSession = getItem(i);
