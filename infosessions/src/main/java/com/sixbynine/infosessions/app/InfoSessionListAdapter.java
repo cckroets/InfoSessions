@@ -16,7 +16,7 @@ import com.sixbynine.infosessions.data.InfoSessionManager;
 import com.sixbynine.infosessions.data.ResponseHandler;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.company.Company;
-import com.squareup.picasso.Callback;
+import com.sixbynine.infosessions.ui.ViewUtil;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -95,9 +95,10 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         mInfoSessionManager.getCompanyFromSession(infoSession.getId(), new ResponseHandler<Company>() {
             @Override
             public void onSuccess(Company object) {
-                Picasso.with(getContext()).load("https://res.cloudinary" +
-                        ".com/crunchbase-production/" + object.getPrimaryImageUrl()).into(viewHolder
-                        .companyLogo);
+                Picasso.with(getContext())
+                        .load("https://res.cloudinary.com/crunchbase-production/" + object.getPrimaryImageUrl())
+                        .transform(ViewUtil.createLogoTransformation())
+                        .into(viewHolder.companyLogo);
             }
 
             @Override
