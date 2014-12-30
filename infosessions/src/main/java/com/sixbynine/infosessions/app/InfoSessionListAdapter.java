@@ -18,6 +18,12 @@ import com.sixbynine.infosessions.data.InfoSessionSaver;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
 import com.sixbynine.infosessions.ui.SwipeDismissListViewTouchListener;
+import com.sixbynine.infosessions.data.InfoSessionManager;
+import com.sixbynine.infosessions.data.ResponseHandler;
+import com.sixbynine.infosessions.model.WaterlooInfoSession;
+import com.sixbynine.infosessions.model.company.Company;
+import com.sixbynine.infosessions.ui.ViewUtil;
+import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,12 +31,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import roboguice.RoboGuice;
+
 /**
  * @author curtiskroetsch
  */
 public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
 
+    @Inject
     InfoSessionPreferenceManager mInfoSessionPreferenceManager;
+
+    @Inject
+    InfoSessionManager mInfoSessionManager;
 
     public interface InfoSessionActionListener{
         public void onFavoriteClicked(WaterlooInfoSession infoSession);
@@ -46,11 +58,10 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
     private InfoSessionActionListener mListener;
     private ListView mListView;
 
-    public InfoSessionListAdapter(Context context, List<WaterlooInfoSession> sessions, ListView listView, InfoSessionPreferenceManager preferenceManager) {
+    public InfoSessionListAdapter(Context context, List<WaterlooInfoSession> sessions, ListView listView) {
         super(context, R.layout.info_session, R.id.companyName, sessions);
         mListView = listView;
-        mInfoSessionPreferenceManager = preferenceManager;
-
+        RoboGuice.getInjector(getContext()).injectMembersWithoutViews(this);
         SwipeDismissListViewTouchListener touchListener =
                 new SwipeDismissListViewTouchListener(
                         mListView,
@@ -96,7 +107,7 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
         final WaterlooInfoSession infoSession = getItem(i);
         final WaterlooInfoSessionPreferences preferences =
                 mInfoSessionPreferenceManager.getPreferences(infoSession);
@@ -119,6 +130,22 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         }
 
         final Date date = infoSession.getStartTime().getTime();
+        viewHolder.companyLogo.setImageBitmap(null);
+        Picasso.with(getContext()).cancelRequest(viewHolder.companyLogo);
+        mInfoSessionManager.getCompanyFromSession(infoSession.getId(), new ResponseHandler<Company>() {
+            @Override
+            public void onSuccess(Company object) {
+                Picasso.with(getContext())
+                        .load("https://res.cloudinary.com/crunchbase-production/" + object.getPrimaryImageUrl())
+                        .transform(ViewUtil.createLogoTransformation())
+                        .into(viewHolder.companyLogo);
+            }
+
+            @Override
+            public void onFailure(Exception error) {
+
+            }
+        });
         /*if (isFirstOfDay(i)) {
             viewHolder.dateHeader.setVisibility(View.VISIBLE);
             viewHolder.dateHeader.setText(HEADER_DATE_FORMAT.format(date));

@@ -57,7 +57,7 @@ public class InfoSessionListFragment extends RoboFragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mHandler = new Handler();
-        mAdapter = new InfoSessionListAdapter(getActivity(), new ArrayList<WaterlooInfoSession>(), mListView, mInfoSessionPreferenceManager);
+        mAdapter = new InfoSessionListAdapter(getActivity(), new ArrayList<WaterlooInfoSession>(), mListView);
         mAdapter.setActionListener(this);
         mListView.setAdapter(mAdapter);
 
