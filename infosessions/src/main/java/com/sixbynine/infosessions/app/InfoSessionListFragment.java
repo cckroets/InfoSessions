@@ -14,11 +14,14 @@ import android.widget.Toast;
 import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.data.InfoSessionManager;
+import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
 import com.sixbynine.infosessions.data.ResponseHandler;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionCollection;
+import com.sixbynine.infosessions.ui.SwipeDismissListViewTouchListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
@@ -27,10 +30,14 @@ import roboguice.inject.InjectView;
 /**
  * @author curtiskroetsch
  */
-public class InfoSessionListFragment extends RoboFragment implements AbsListView.OnItemClickListener {
+public class InfoSessionListFragment extends RoboFragment implements
+        InfoSessionListAdapter.InfoSessionActionListener{
 
     @Inject
     InfoSessionManager mInfoSessionManager;
+
+    @Inject
+    InfoSessionPreferenceManager mInfoSessionPreferenceManager;
 
     @InjectView(R.id.listView)
     ListView mListView;
@@ -38,6 +45,8 @@ public class InfoSessionListFragment extends RoboFragment implements AbsListView
     InfoSessionListAdapter mAdapter;
 
     Handler mHandler;
+
+    List<WaterlooInfoSession> mAllSessions;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,16 +57,17 @@ public class InfoSessionListFragment extends RoboFragment implements AbsListView
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mHandler = new Handler();
-        mAdapter = new InfoSessionListAdapter(getActivity(), new ArrayList<WaterlooInfoSession>());
+        mAdapter = new InfoSessionListAdapter(getActivity(), new ArrayList<WaterlooInfoSession>(), mListView, mInfoSessionPreferenceManager);
+        mAdapter.setActionListener(this);
         mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(this);
 
         mInfoSessionManager.getWaterlooInfoSessions(new ResponseHandler<WaterlooInfoSessionCollection>() {
             @Override
             public void onSuccess(WaterlooInfoSessionCollection object) {
-                mAdapter.clear();
-                mAdapter.addAll(object.getInfoSessions());
-                mAdapter.notifyDataSetChanged();
+                if(getActivity() != null){
+                    mAllSessions = object.getInfoSessions();
+                    updateDisplayState(MainActivity.DisplayState.UNDISMISSED, null);
+                }
             }
 
             @Override
@@ -68,9 +78,55 @@ public class InfoSessionListFragment extends RoboFragment implements AbsListView
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        Toast.makeText(getActivity(), "Clicked : " + mAdapter.getItem(position).getCompanyName(),
-                Toast.LENGTH_SHORT).show();
+    public void onFavoriteClicked(WaterlooInfoSession infoSession) {
+        mInfoSessionPreferenceManager.editPreferences(infoSession)
+                .toggleFavorited()
+                .commit();
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onShareClicked(WaterlooInfoSession infoSession) {
+        Toast.makeText(getActivity(), infoSession.getCompanyName() + " shared", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onTimerClicked(WaterlooInfoSession infoSession) {
+        Toast.makeText(getActivity(), infoSession.getCompanyName() + " timer", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDismiss(WaterlooInfoSession infoSession) {
+        mInfoSessionPreferenceManager.editPreferences(infoSession)
+                .toggleDismissed()
+                .commit();
+        mAdapter.remove(infoSession);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onInfoSessionClicked(WaterlooInfoSession infoSession) {
+        Toast.makeText(getActivity(), infoSession.getCompanyName() + " clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    public void updateDisplayState(MainActivity.DisplayState displayState, String query){
+        mAdapter.clear();
+        switch(displayState){
+            case UNDISMISSED:
+                mAdapter.addAll(mInfoSessionPreferenceManager.getUndismissedInfoSessions(mAllSessions));
+                break;
+            case DISMISSED:
+                mAdapter.addAll(mInfoSessionPreferenceManager.getDismissedInfoSessions(mAllSessions));
+                break;
+            case QUERY:
+                for(WaterlooInfoSession infoSession : mAllSessions){
+                    if(infoSession.getCompanyName().toUpperCase().contains(query.toUpperCase())){
+                        mAdapter.add(infoSession);
+                    }
+                }
+                break;
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
 }

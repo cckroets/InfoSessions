@@ -8,11 +8,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
+import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
+import com.sixbynine.infosessions.data.InfoSessionSaver;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
-import com.sixbynine.infosessions.ui.InfoSessionCardLayout;
+import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
+import com.sixbynine.infosessions.ui.SwipeDismissListViewTouchListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,11 +30,44 @@ import java.util.List;
  */
 public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
 
+    InfoSessionPreferenceManager mInfoSessionPreferenceManager;
+
+    public interface InfoSessionActionListener{
+        public void onFavoriteClicked(WaterlooInfoSession infoSession);
+        public void onShareClicked(WaterlooInfoSession infoSession);
+        public void onTimerClicked(WaterlooInfoSession infoSession);
+        public void onDismiss(WaterlooInfoSession infoSession);
+        public void onInfoSessionClicked(WaterlooInfoSession infoSession);
+    }
+
     private static final DateFormat HEADER_DATE_FORMAT = new SimpleDateFormat("EEEE MMM d, yyyy");
     private static final DateFormat TIME_DATE_FORMAT = new SimpleDateFormat("EEE MMM d, h:mma");
 
-    public InfoSessionListAdapter(Context context, List<WaterlooInfoSession> sessions) {
+    private InfoSessionActionListener mListener;
+    private ListView mListView;
+
+    public InfoSessionListAdapter(Context context, List<WaterlooInfoSession> sessions, ListView listView, InfoSessionPreferenceManager preferenceManager) {
         super(context, R.layout.info_session, R.id.companyName, sessions);
+        mListView = listView;
+        mInfoSessionPreferenceManager = preferenceManager;
+
+        SwipeDismissListViewTouchListener touchListener =
+                new SwipeDismissListViewTouchListener(
+                        mListView,
+                        new SwipeDismissListViewTouchListener.OnDismissCallback() {
+                            @Override
+                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+                                for (int position : reverseSortedPositions) {
+                                    if(mListener != null){
+                                        mListener.onDismiss(getItem(position));
+                                    }
+                                }
+                            }
+                        });
+        mListView.setOnTouchListener(touchListener);
+        // Setting this scroll listener is required to ensure that during ListView scrolling,
+        // we don't look for swipes.
+        mListView.setOnScrollListener(touchListener.makeScrollListener());
     }
 
     private int getDayOfYear(int row) {
@@ -60,6 +98,8 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
     public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHolder viewHolder;
         final WaterlooInfoSession infoSession = getItem(i);
+        final WaterlooInfoSessionPreferences preferences =
+                mInfoSessionPreferenceManager.getPreferences(infoSession);
 
         if (view == null) {
             view = LayoutInflater.from(getContext()).inflate(R.layout.info_session_row, viewGroup, false);
@@ -88,9 +128,38 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         viewHolder.companyName.setText(infoSession.getCompanyName());
         viewHolder.startTime.setText(TIME_DATE_FORMAT.format(date));
         viewHolder.location.setText(infoSession.getLocation());
+        if(preferences.isFavorited()){
+            viewHolder.favoriteButton.setImageResource(R.drawable.ic_action_favorite);
+        }else{
+            viewHolder.favoriteButton.setImageResource(R.drawable.ic_action_favorite_outline);
+        }
+
         //viewHolder.cardLayout.setLastCategory(isLastOfDay(i));
 
+        viewHolder.favoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mListener != null) mListener.onFavoriteClicked(infoSession);
+            }
+        });
+        viewHolder.shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mListener != null) mListener.onShareClicked(infoSession);
+            }
+        });
+        viewHolder.timerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) mListener.onTimerClicked(infoSession);
+            }
+        });
+
         return view;
+    }
+
+    public void setActionListener(InfoSessionActionListener listener){
+        mListener = listener;
     }
 
     @Override
