@@ -13,6 +13,7 @@ import com.sixbynine.infosessions.model.EmployerInfo;
 import com.sixbynine.infosessions.model.PermalinkMap;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionCollection;
 import com.sixbynine.infosessions.model.company.Company;
+import com.sixbynine.infosessions.util.Logger;
 import com.squareup.otto.Subscribe;
 
 import java.util.Map;
@@ -42,9 +43,13 @@ public final class InfoSessionSaver {
     @Subscribe
     public void onCompanyLoaded(CompanyLoadedEvent event) {
         final Company company = event.getData();
-        final String companyJson = mGson.toJson(company, Company.class);
-        Log.d(TAG, "saving " + company + ": " + companyJson);
-        mPreferenceManager.putString(company.getPermalink(), companyJson);
+        if(company != null) {
+            final String companyJson = mGson.toJson(company, Company.class);
+            Log.d(TAG, "saving " + company + ": " + companyJson);
+            mPreferenceManager.putString(company.getPermalink(), companyJson);
+        }else{
+            Logger.e("null company loaded");
+        }
     }
 
     @Subscribe

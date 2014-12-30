@@ -23,6 +23,7 @@ import com.sixbynine.infosessions.data.ResponseHandler;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.company.Company;
 import com.sixbynine.infosessions.ui.ViewUtil;
+import com.sixbynine.infosessions.util.Logger;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -62,7 +63,7 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         super(context, R.layout.info_session, R.id.companyName, sessions);
         mListView = listView;
         RoboGuice.getInjector(getContext()).injectMembersWithoutViews(this);
-        SwipeDismissListViewTouchListener touchListener =
+        /*SwipeDismissListViewTouchListener touchListener =
                 new SwipeDismissListViewTouchListener(
                         mListView,
                         new SwipeDismissListViewTouchListener.OnDismissCallback() {
@@ -78,7 +79,7 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         mListView.setOnTouchListener(touchListener);
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
-        mListView.setOnScrollListener(touchListener.makeScrollListener());
+        mListView.setOnScrollListener(touchListener.makeScrollListener());*/
     }
 
     private int getDayOfYear(int row) {
@@ -123,6 +124,7 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
             viewHolder.shareButton = (ImageButton) view.findViewById(R.id.share_button);
             viewHolder.timerButton = (ImageButton) view.findViewById(R.id.timer_button);
             viewHolder.favoriteButton = (ImageButton) view.findViewById(R.id.favorite_button);
+            viewHolder.clickableRegion = view.findViewById(R.id.clickable_region_container);
             //viewHolder.cardLayout = (InfoSessionCardLayout) view.findViewById(R.id.card);
             view.setTag(viewHolder);
         } else {
@@ -135,10 +137,14 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         mInfoSessionManager.getCompanyFromSession(infoSession.getId(), new ResponseHandler<Company>() {
             @Override
             public void onSuccess(Company object) {
-                Picasso.with(getContext())
-                        .load("https://res.cloudinary.com/crunchbase-production/" + object.getPrimaryImageUrl())
-                        .transform(ViewUtil.createLogoTransformation())
-                        .into(viewHolder.companyLogo);
+                if(object != null) {
+                    Picasso.with(getContext())
+                            .load("https://res.cloudinary.com/crunchbase-production/" + object.getPrimaryImageUrl())
+                            .transform(ViewUtil.createLogoTransformation())
+                            .into(viewHolder.companyLogo);
+                }else{
+                    Logger.e("Null object returned for %s", infoSession.getCompanyName());
+                }
             }
 
             @Override
@@ -181,6 +187,12 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
                 if (mListener != null) mListener.onTimerClicked(infoSession);
             }
         });
+        viewHolder.clickableRegion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mListener != null) mListener.onInfoSessionClicked(infoSession);
+            }
+        });
 
         return view;
     }
@@ -205,6 +217,7 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         ImageButton timerButton;
         ImageButton shareButton;
         ImageButton favoriteButton;
+        View clickableRegion;
     }
 }
 
