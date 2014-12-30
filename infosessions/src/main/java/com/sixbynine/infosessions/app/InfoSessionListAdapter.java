@@ -37,10 +37,13 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
 
     private static final DateFormat HEADER_DATE_FORMAT = new SimpleDateFormat("EEEE MMM d, yyyy");
     private static final DateFormat TIME_DATE_FORMAT = new SimpleDateFormat("EEE MMM d, h:mma");
+
     @Inject
     InfoSessionPreferenceManager mInfoSessionPreferenceManager;
+
     @Inject
     InfoSessionManager mInfoSessionManager;
+
     private InfoSessionActionListener mListener;
     private ListView mListView;
 
@@ -109,6 +112,7 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
             viewHolder.shareButton = (ImageButton) view.findViewById(R.id.share_button);
             viewHolder.timerButton = (ImageButton) view.findViewById(R.id.timer_button);
             viewHolder.favoriteButton = (ImageButton) view.findViewById(R.id.favorite_button);
+            viewHolder.hitTarget = view.findViewById(R.id.clickable_region_container);
             //viewHolder.cardLayout = (InfoSessionCardLayout) view.findViewById(R.id.card);
             view.setTag(viewHolder);
         } else {
@@ -150,7 +154,12 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         }
 
         //viewHolder.cardLayout.setLastCategory(isLastOfDay(i));
-
+        viewHolder.hitTarget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) mListener.onInfoSessionClicked(infoSession);
+            }
+        });
         viewHolder.favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,6 +206,7 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
 
     static class ViewHolder {
         //TextView dateHeader;
+        View hitTarget;
         TextView companyName;
         TextView startTime;
         TextView location;

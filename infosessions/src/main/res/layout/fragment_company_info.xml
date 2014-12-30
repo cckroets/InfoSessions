@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
@@ -46,11 +48,11 @@
                         android:text="Company:"/>
 
                     <TextView
-                        android:id="@+id/companyName"
+                        android:id="@+id/company_name"
                         android:textAppearance="@style/InfoSessionCompanyValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Google"
+                        tools:text="Google"
                         android:gravity="left"
                         android:ellipsize="end"
                         android:padding="4dp"
@@ -66,7 +68,7 @@
                         android:text="Headquarters:"/>
 
                     <TextView
-                        android:id="@+id/companyHQ"
+                        android:id="@+id/company_hq"
                         android:textAppearance="@style/InfoSessionCompanyValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -86,11 +88,11 @@
                         android:text="Website:"/>
 
                     <TextView
-                        android:id="@+id/companyWebsite"
+                        android:id="@+id/company_website"
                         android:textAppearance="@style/InfoSessionCompanyValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="www.google.com"
+                        tools:text="www.google.com"
                         android:gravity="left"
                         android:padding="4dp"
                         android:ellipsize="end"
@@ -106,17 +108,17 @@
                         android:text="Description:"/>
 
                     <TextView
-                        android:id="@+id/companyDesc"
+                        android:id="@+id/company_desc"
                         android:textAppearance="@style/InfoSessionCompanyValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="4dp"
-                        android:text="Some really long long long long long loong description"
+                        tools:text="Some really long long long long long loong description"
                         android:gravity="left"/>
                 </TableRow>
 
                 <LinearLayout
-                    android:id="@+id/companySocialMedia"
+                    android:id="@+id/company_social_media"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -181,11 +183,11 @@
                         android:text="Date:"/>
 
                     <TextView
-                        android:id="@+id/sessionDate"
+                        android:id="@+id/session_date"
                         android:textAppearance="@style/InfoSessionCompanyValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="September 27, 2014"
+                        tools:text="September 27, 2014"
                         android:gravity="left"
                         android:ellipsize="end"
                         android:padding="4dp"
@@ -201,11 +203,11 @@
                         android:text="Time:"/>
 
                     <TextView
-                        android:id="@+id/sessionTime"
+                        android:id="@+id/session_time"
                         android:textAppearance="@style/InfoSessionCompanyValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="7:00 - 9:00pm"
+                        tools:text="7:00 - 9:00pm"
                         android:gravity="left"
                         android:padding="4dp"
                         android:ellipsize="end"
@@ -221,18 +223,18 @@
                         android:text="Location:"/>
 
                     <TextView
-                        android:id="@+id/sessionLocation"
+                        android:id="@+id/session_location"
                         android:textAppearance="@style/InfoSessionCompanyValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="4dp"
-                        android:text="TC 2018"
+                        tools:text="TC 2018"
                         android:gravity="left"/>
                 </TableRow>
 
                 <TableRow>
                     <CheckBox
-                        android:id="@+id/sessionCoop"
+                        android:id="@+id/session_coop"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="4dp"
@@ -242,7 +244,7 @@
                         android:text="Co-ops" />
 
                     <CheckBox
-                        android:id="@+id/sessionGraduate"
+                        android:id="@+id/session_graduate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="4dp"
@@ -265,12 +267,12 @@
                 android:text="Session Information" />
 
             <TextView
-                android:id="@+id/sessionDesc"
+                android:id="@+id/session_desc"
                 android:padding="20dp"
                 android:background="@drawable/info_session_end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Google provides search and advertising services, which together aim to organize and monetize the world's information. In addition to its dominant search engine, it offers a plethora of online tools and platforms including: Gmail, Maps, YouTube, and Google+, the company's extension into the social space. Most of its Web-based products are free, funded by Google's highly integrated online advertising platforms AdWords and AdSense. Google promotes the idea that advertising should be highly targeted and relevant to users thus providing them with a rich source of information.
+                tools:text="Google provides search and advertising services, which together aim to organize and monetize the world's information. In addition to its dominant search engine, it offers a plethora of online tools and platforms including: Gmail, Maps, YouTube, and Google+, the company's extension into the social space. Most of its Web-based products are free, funded by Google's highly integrated online advertising platforms AdWords and AdSense. Google promotes the idea that advertising should be highly targeted and relevant to users thus providing them with a rich source of information.
 
 Google has also made strong moves into the web-based apps space with acquisitions of Jotspot (documents), 2Web Technologies (spreadsheets) and Zenter (presentations). The company has also made a splash with the acquisitions of YouTube, DoubleClick and Feedburner."/>
 

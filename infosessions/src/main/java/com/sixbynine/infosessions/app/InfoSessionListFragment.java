@@ -28,7 +28,7 @@ import roboguice.inject.InjectView;
  * @author curtiskroetsch
  */
 public class InfoSessionListFragment extends RoboFragment implements
-        InfoSessionListAdapter.InfoSessionActionListener{
+        InfoSessionListAdapter.InfoSessionActionListener {
 
     @Inject
     InfoSessionManager mInfoSessionManager;
@@ -103,10 +103,18 @@ public class InfoSessionListFragment extends RoboFragment implements
 
     @Override
     public void onInfoSessionClicked(WaterlooInfoSession infoSession) {
-        Toast.makeText(getActivity(), infoSession.getCompanyName() + " clicked", Toast.LENGTH_SHORT).show();
+        if (isAdded()) {
+            Toast.makeText(getActivity(), infoSession.getCompanyName(), Toast.LENGTH_SHORT).show();
+            final CompanyInfoFragment fragment = CompanyInfoFragment.createInstance(infoSession);
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .addToBackStack(null)
+                    .add(R.id.fragment_container, fragment)
+                    .commit();
+        }
     }
 
-    public void updateDisplayState(MainActivity.DisplayState displayState, String query){
+    public void updateDisplayState(MainActivity.DisplayState displayState, String query) {
         mAdapter.clear();
         switch (displayState) {
             case UNDISMISSED:
@@ -116,8 +124,8 @@ public class InfoSessionListFragment extends RoboFragment implements
                 mAdapter.addAll(mInfoSessionPreferenceManager.getDismissedInfoSessions(mAllSessions));
                 break;
             case QUERY:
-                for (WaterlooInfoSession infoSession : mAllSessions){
-                    if (infoSession.getCompanyName().toUpperCase().contains(query.toUpperCase())){
+                for (WaterlooInfoSession infoSession : mAllSessions) {
+                    if (infoSession.getCompanyName().toUpperCase().contains(query.toUpperCase())) {
                         mAdapter.add(infoSession);
                     }
                 }
