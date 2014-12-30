@@ -13,16 +13,13 @@ import android.widget.TextView;
 
 import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
-import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
-import com.sixbynine.infosessions.data.InfoSessionSaver;
-import com.sixbynine.infosessions.model.WaterlooInfoSession;
-import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
-import com.sixbynine.infosessions.ui.SwipeDismissListViewTouchListener;
 import com.sixbynine.infosessions.data.InfoSessionManager;
+import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
 import com.sixbynine.infosessions.data.ResponseHandler;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
+import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
 import com.sixbynine.infosessions.model.company.Company;
-import com.sixbynine.infosessions.ui.ViewUtil;
+import com.sixbynine.infosessions.ui.SwipeDismissListViewTouchListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -38,23 +35,12 @@ import roboguice.RoboGuice;
  */
 public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
 
-    @Inject
-    InfoSessionPreferenceManager mInfoSessionPreferenceManager;
-
-    @Inject
-    InfoSessionManager mInfoSessionManager;
-
-    public interface InfoSessionActionListener{
-        public void onFavoriteClicked(WaterlooInfoSession infoSession);
-        public void onShareClicked(WaterlooInfoSession infoSession);
-        public void onTimerClicked(WaterlooInfoSession infoSession);
-        public void onDismiss(WaterlooInfoSession infoSession);
-        public void onInfoSessionClicked(WaterlooInfoSession infoSession);
-    }
-
     private static final DateFormat HEADER_DATE_FORMAT = new SimpleDateFormat("EEEE MMM d, yyyy");
     private static final DateFormat TIME_DATE_FORMAT = new SimpleDateFormat("EEE MMM d, h:mma");
-
+    @Inject
+    InfoSessionPreferenceManager mInfoSessionPreferenceManager;
+    @Inject
+    InfoSessionManager mInfoSessionManager;
     private InfoSessionActionListener mListener;
     private ListView mListView;
 
@@ -69,7 +55,7 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
                             @Override
                             public void onDismiss(ListView listView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-                                    if(mListener != null){
+                                    if (mListener != null) {
                                         mListener.onDismiss(getItem(position));
                                     }
                                 }
@@ -135,9 +121,11 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         mInfoSessionManager.getCompanyFromSession(infoSession.getId(), new ResponseHandler<Company>() {
             @Override
             public void onSuccess(Company object) {
+                if (getContext() == null) {
+                    return;
+                }
                 Picasso.with(getContext())
                         .load("https://res.cloudinary.com/crunchbase-production/" + object.getPrimaryImageUrl())
-                        .transform(ViewUtil.createLogoTransformation())
                         .into(viewHolder.companyLogo);
             }
 
@@ -155,9 +143,9 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         viewHolder.companyName.setText(infoSession.getCompanyName());
         viewHolder.startTime.setText(TIME_DATE_FORMAT.format(date));
         viewHolder.location.setText(infoSession.getLocation());
-        if(preferences.isFavorited()){
+        if (preferences.isFavorited()) {
             viewHolder.favoriteButton.setImageResource(R.drawable.ic_action_favorite);
-        }else{
+        } else {
             viewHolder.favoriteButton.setImageResource(R.drawable.ic_action_favorite_outline);
         }
 
@@ -166,13 +154,13 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         viewHolder.favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mListener != null) mListener.onFavoriteClicked(infoSession);
+                if (mListener != null) mListener.onFavoriteClicked(infoSession);
             }
         });
         viewHolder.shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mListener != null) mListener.onShareClicked(infoSession);
+                if (mListener != null) mListener.onShareClicked(infoSession);
             }
         });
         viewHolder.timerButton.setOnClickListener(new View.OnClickListener() {
@@ -185,7 +173,7 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         return view;
     }
 
-    public void setActionListener(InfoSessionActionListener listener){
+    public void setActionListener(InfoSessionActionListener listener) {
         mListener = listener;
     }
 
@@ -193,6 +181,18 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
         Log.d("InfoSessions", "notifyDataSetChanged called");
+    }
+
+    public interface InfoSessionActionListener {
+        public void onFavoriteClicked(WaterlooInfoSession infoSession);
+
+        public void onShareClicked(WaterlooInfoSession infoSession);
+
+        public void onTimerClicked(WaterlooInfoSession infoSession);
+
+        public void onDismiss(WaterlooInfoSession infoSession);
+
+        public void onInfoSessionClicked(WaterlooInfoSession infoSession);
     }
 
     static class ViewHolder {

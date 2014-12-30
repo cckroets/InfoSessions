@@ -6,8 +6,6 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,7 +16,6 @@ import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
 import com.sixbynine.infosessions.data.ResponseHandler;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionCollection;
-import com.sixbynine.infosessions.ui.SwipeDismissListViewTouchListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +61,7 @@ public class InfoSessionListFragment extends RoboFragment implements
         mInfoSessionManager.getWaterlooInfoSessions(new ResponseHandler<WaterlooInfoSessionCollection>() {
             @Override
             public void onSuccess(WaterlooInfoSessionCollection object) {
-                if(getActivity() != null){
+                if (getActivity() != null) {
                     mAllSessions = object.getInfoSessions();
                     updateDisplayState(MainActivity.DisplayState.UNDISMISSED, null);
                 }
@@ -111,7 +108,7 @@ public class InfoSessionListFragment extends RoboFragment implements
 
     public void updateDisplayState(MainActivity.DisplayState displayState, String query){
         mAdapter.clear();
-        switch(displayState){
+        switch (displayState) {
             case UNDISMISSED:
                 mAdapter.addAll(mInfoSessionPreferenceManager.getUndismissedInfoSessions(mAllSessions));
                 break;
@@ -119,8 +116,8 @@ public class InfoSessionListFragment extends RoboFragment implements
                 mAdapter.addAll(mInfoSessionPreferenceManager.getDismissedInfoSessions(mAllSessions));
                 break;
             case QUERY:
-                for(WaterlooInfoSession infoSession : mAllSessions){
-                    if(infoSession.getCompanyName().toUpperCase().contains(query.toUpperCase())){
+                for (WaterlooInfoSession infoSession : mAllSessions){
+                    if (infoSession.getCompanyName().toUpperCase().contains(query.toUpperCase())){
                         mAdapter.add(infoSession);
                     }
                 }
