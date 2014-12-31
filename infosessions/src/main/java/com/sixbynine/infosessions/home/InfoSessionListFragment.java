@@ -35,6 +35,12 @@ public class InfoSessionListFragment extends RoboFragment implements
     private static final String GROUP_KEY = "group";
     private static final String SESSIONS_KEY = "sessions";
 
+    @Inject
+    InfoSessionManager mInfoSessionManager;
+
+    @Inject
+    InfoSessionPreferenceManager mInfoSessionPreferenceManager;
+
     @InjectView(R.id.listView)
     ListView mListView;
     @InjectView(R.id.nothing_text_view)
@@ -95,6 +101,7 @@ public class InfoSessionListFragment extends RoboFragment implements
         mAdapter.setActionListener(this);
         mListView.setAdapter(mAdapter);
         mNothingHereTextView.setVisibility(mAdapter.getCount() > 0? View.GONE : View.VISIBLE);
+
     }
 
     @Override
@@ -139,8 +146,20 @@ public class InfoSessionListFragment extends RoboFragment implements
     }
 
     /*public void updateDisplayState(MainActivity.DisplayState displayState, String query){
+        if (isAdded()) {
+            Toast.makeText(getActivity(), infoSession.getCompanyName(), Toast.LENGTH_SHORT).show();
+            final CompanyInfoFragment fragment = CompanyInfoFragment.createInstance(infoSession);
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .addToBackStack(null)
+                    .add(R.id.fragment_container, fragment)
+                    .commit();
+        }
+    }
+
+    public void updateDisplayState(MainActivity.DisplayState displayState, String query) {
         mAdapter.clear();
-        switch(displayState){
+        switch (displayState) {
             case UNDISMISSED:
                 mAdapter.addAll(mInfoSessionPreferenceManager.getUndismissedInfoSessions(mAllSessions));
                 break;
@@ -148,8 +167,8 @@ public class InfoSessionListFragment extends RoboFragment implements
                 mAdapter.addAll(mInfoSessionPreferenceManager.getDismissedInfoSessions(mAllSessions));
                 break;
             case QUERY:
-                for(WaterlooInfoSession infoSession : mAllSessions){
-                    if(infoSession.getCompanyName().toUpperCase().contains(query.toUpperCase())){
+                for (WaterlooInfoSession infoSession : mAllSessions) {
+                    if (infoSession.getCompanyName().toUpperCase().contains(query.toUpperCase())) {
                         mAdapter.add(infoSession);
                     }
                 }

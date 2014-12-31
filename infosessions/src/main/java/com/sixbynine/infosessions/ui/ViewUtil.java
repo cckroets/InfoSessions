@@ -39,7 +39,7 @@ public final class ViewUtil {
 
     public static Transformation createLogoTransformation() {
         return new RoundedTransformationBuilder()
-                .borderColor(Color.BLACK)
+                .borderColor(Color.WHITE)
                 .borderWidthDp(2)
                 .cornerRadiusDp(2)
                 .oval(false)
