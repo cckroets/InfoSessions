@@ -2,6 +2,7 @@ package com.sixbynine.infosessions.home;
 
 import android.content.Context;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,6 +105,17 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
+        }
+
+        // set padding for top and bottom views
+        int dp4 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, view.getResources().getDisplayMetrics());
+        int dp8 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, view.getResources().getDisplayMetrics());
+        if(i == 0){
+            view.setPadding(dp8,dp8,dp8,dp4);
+        }else if(i == getCount() - 1){
+            view.setPadding(dp8,dp4,dp8,dp8);
+        }else{
+            view.setPadding(dp8, dp4, dp8, dp4);
         }
 
         final Date date = infoSession.getStartTime().getTime();
