@@ -1,11 +1,22 @@
 package com.sixbynine.infosessions.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.inject.Inject;
+import com.sixbynine.infosessions.app.MyApplication;
+import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
+
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import roboguice.RoboGuice;
 
 /**
  * @author curtiskroetsch
  */
-public class WaterlooInfoSession {
+public class WaterlooInfoSession implements Parcelable{
 
     private String mId;
     private String mCompanyName;
@@ -29,6 +40,32 @@ public class WaterlooInfoSession {
         this.mForGraduates = forGraduates;
         this.mPrograms = programs;
         this.mDescription = description;
+    }
+
+    private WaterlooInfoSession(Parcel in){
+        String[] s = new String[6];
+        in.readStringArray(s);
+
+        mId = s[0];
+        mCompanyName = s[1];
+        mLocation = s[2];
+        mWebsite = s[3];
+        mPrograms = s[4];
+        mDescription = s[5];
+
+        boolean[] b = new boolean[2];
+        in.readBooleanArray(b);
+
+        mForCoops = b[0];
+        mForGraduates = b[1];
+
+        long[] l = new long[2];
+        in.readLongArray(l);
+
+        mStartTime = Calendar.getInstance();
+        mStartTime.setTimeInMillis(l[0]);
+        mEndTime = Calendar.getInstance();
+        mEndTime.setTimeInMillis(l[1]);
     }
 
     public String getId() {
@@ -69,5 +106,75 @@ public class WaterlooInfoSession {
 
     public String getDescription() {
         return mDescription;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        String[] s = new String[6];
+        s[0] = mId;
+        s[1] = mCompanyName;
+        s[2] = mLocation;
+        s[3] = mWebsite;
+        s[4] = mPrograms;
+        s[5] = mDescription;
+        dest.writeStringArray(s);
+
+        boolean[] b = new boolean[2];
+        b[0] = mForCoops;
+        b[1] = mForGraduates;
+        dest.writeBooleanArray(b);
+
+        long[] l = new long[2];
+        l[0] = mStartTime.getTimeInMillis();
+        l[1] = mEndTime.getTimeInMillis();
+        dest.writeLongArray(l);
+    }
+
+    public static final Creator<WaterlooInfoSession> CREATOR = new Creator<WaterlooInfoSession>() {
+        @Override
+        public WaterlooInfoSession createFromParcel(Parcel source) {
+            return new WaterlooInfoSession(source);
+        }
+
+        @Override
+        public WaterlooInfoSession[] newArray(int size) {
+            return new WaterlooInfoSession[size];
+        }
+    };
+
+    /**
+     * Abstract class that provides the ability to filter a list of {@link com.sixbynine.infosessions.model.WaterlooInfoSession}
+     */
+    public static abstract class Filter{
+        @Inject
+        InfoSessionPreferenceManager manager;
+
+        public Filter(){
+            RoboGuice.getInjector(MyApplication.getInstance()).injectMembersWithoutViews(this);
+        }
+
+        /**
+         *
+         * @param i the info session to check
+         * @param p the associated user preference for the info session
+         * @return true if the info session matches the criteria of the filter, false otherwise
+         */
+        public abstract boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p);
+
+        public ArrayList<WaterlooInfoSession> filter(List<WaterlooInfoSession> infoSessions){
+            ArrayList<WaterlooInfoSession> result = new ArrayList<>();
+            for(WaterlooInfoSession i : infoSessions){
+                WaterlooInfoSessionPreferences p = manager.getPreferences(i);
+                if(matches(i, p)){
+                    result.add(i);
+                }
+            }
+            return result;
+        }
     }
 }

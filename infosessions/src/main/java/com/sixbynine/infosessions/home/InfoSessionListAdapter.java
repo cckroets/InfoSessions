@@ -1,4 +1,4 @@
-package com.sixbynine.infosessions.app;
+package com.sixbynine.infosessions.home;
 
 import android.content.Context;
 import android.util.Log;
@@ -14,13 +14,10 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
-import com.sixbynine.infosessions.data.InfoSessionSaver;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
-import com.sixbynine.infosessions.ui.SwipeDismissListViewTouchListener;
 import com.sixbynine.infosessions.data.InfoSessionManager;
 import com.sixbynine.infosessions.data.ResponseHandler;
-import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.company.Company;
 import com.sixbynine.infosessions.ui.ViewUtil;
 import com.sixbynine.infosessions.util.Logger;
@@ -63,23 +60,6 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         super(context, R.layout.info_session, R.id.companyName, sessions);
         mListView = listView;
         RoboGuice.getInjector(getContext()).injectMembersWithoutViews(this);
-        /*SwipeDismissListViewTouchListener touchListener =
-                new SwipeDismissListViewTouchListener(
-                        mListView,
-                        new SwipeDismissListViewTouchListener.OnDismissCallback() {
-                            @Override
-                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-                                for (int position : reverseSortedPositions) {
-                                    if(mListener != null){
-                                        mListener.onDismiss(getItem(position));
-                                    }
-                                }
-                            }
-                        });
-        mListView.setOnTouchListener(touchListener);
-        // Setting this scroll listener is required to ensure that during ListView scrolling,
-        // we don't look for swipes.
-        mListView.setOnScrollListener(touchListener.makeScrollListener());*/
     }
 
     private int getDayOfYear(int row) {

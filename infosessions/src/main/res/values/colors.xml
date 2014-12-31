@@ -7,4 +7,5 @@
 
     <color name="info_sessions_fragment_bg">#caececec</color>
     <color name="shadow_color">#caa2a2a2</color>
+    <color name="background_tab_pressed">#6633B5E5</color>
 </resources>

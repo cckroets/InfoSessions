@@ -9,5 +9,31 @@
     <string name="action_view_undismissed">View Undismissed</string>
     <string name="action_search">Search</string>
     <string name="dismissed_sessions">Dismissed Sessions</string>
+    <string name="search_info_sessions">Search Info Sessions</string>
+    <string name="nothing_here_text">There doesn\'t seem to be anything here</string>
+
+    <!-- TAB TITLES -->
+    <string name="tab_all">All</string>
+    <string name="tab_favorites">Favourites</string>
+    <string name="tab_coop">Co-op</string>
+    <string name="tab_graduate">Graduate</string>
+
+    <!-- Faculty Names -->
+    <string name="mathematics">Mathematics</string>
+    <string name="engineering">Engineering</string>
+    <string name="science">Science</string>
+    <string name="environment">Environment</string>
+    <string name="arts">Arts</string>
+    <string name="applied_health_sciences">Applied Health Sciences</string>
+    <string name="chartered_accounting">Chartered Accounting</string>
+
+    <string name="mathematics_short">MATH</string>
+    <string name="engineering_short">ENG</string>
+    <string name="science_short">SCI</string>
+    <string name="environment_short">ENV</string>
+    <string name="arts_short">ARTS</string>
+    <string name="applied_health_sciences_short">AHS</string>
+    <string name="chartered_accounting_short">CA</string>
+
 
 </resources>
