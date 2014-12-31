@@ -1,5 +1,6 @@
 package com.sixbynine.infosessions.search;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,10 +40,10 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
 
     private SearchView mSearchView;
 
-    public static void launchActivity(Context context, ArrayList<WaterlooInfoSession> sessions){
-        Intent intent = new Intent(context, SearchActivity.class);
+    public static void launchActivityForResult(Activity activity, int code, ArrayList<WaterlooInfoSession> sessions){
+        Intent intent = new Intent(activity, SearchActivity.class);
         intent.putParcelableArrayListExtra(SESSIONS_KEY, sessions);
-        context.startActivity(intent);
+        activity.startActivityForResult(intent, code);
     }
 
     @Override
@@ -84,6 +85,7 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case android.R.id.home:
+                setResult(RESULT_OK);
                 finish();
                 return true;
         }
