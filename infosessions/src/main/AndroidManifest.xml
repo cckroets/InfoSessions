@@ -31,6 +31,9 @@
             android:label="@string/title_activity_company_info"/>
 
         <activity android:name=".search.SearchActivity"/>
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="@string/action_settings"/>
     </application>
 
 </manifest>

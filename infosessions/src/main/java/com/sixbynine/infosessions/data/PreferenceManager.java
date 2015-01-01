@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +12,7 @@ import java.util.Set;
 /**
  * @author curtiskroetsch
  */
+@Singleton
 public final class PreferenceManager {
 
     private static final String PREFS_NAME = "infosessions";
@@ -57,5 +59,9 @@ public final class PreferenceManager {
 
     public void putStrings(String key, Set<String> strings) {
         mSharedPreferences.edit().putStringSet(key, strings).apply();
+    }
+
+    public final class Keys{
+        public static final String INTERESTED_PROGRAMS = "programs-key";
     }
 }

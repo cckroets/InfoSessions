@@ -17,4 +17,16 @@
         <attr name="pstsShouldExpand" format="boolean" />
         <attr name="pstsTextAllCaps" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="CheckableTextView">
+        <attr name="ctvLines" format="enum">
+            <enum name="one" value="1"/>
+            <enum name="two" value="2"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="HeaderSubheaderView">
+        <attr name="hsvHeaderText" format="string"/>
+        <attr name="hsvSubHeaderText" format="string"/>
+    </declare-styleable>
 </resources>

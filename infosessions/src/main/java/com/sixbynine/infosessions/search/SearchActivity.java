@@ -1,7 +1,6 @@
 package com.sixbynine.infosessions.search;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -15,7 +14,7 @@ import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.app.BaseActivity;
 import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
 import com.sixbynine.infosessions.home.InfoSessionListFragment;
-import com.sixbynine.infosessions.model.InfoSessionGroup;
+import com.sixbynine.infosessions.model.group.InfoSessionGroup;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
 

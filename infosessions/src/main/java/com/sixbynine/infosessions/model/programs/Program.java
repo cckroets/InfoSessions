@@ -1,5 +1,11 @@
 package com.sixbynine.infosessions.model.programs;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by stevenkideckel on 14-12-30.
  */
@@ -13,7 +19,7 @@ public enum Program {
     MATH_FINANCE(Faculty.MATH, "Mathematical Finance"),
     MATH_ECON(Faculty.MATH, "Mathematical Economics"),
     MATH_BUS(Faculty.MATH, "Math & Business"),
-    ITM(Faculty.MATH, "Information Technology Management"),
+    MATH_ITM(Faculty.MATH, "Information Technology Management"),
     MATH_ACCOUNTING(Faculty.MATH, "Accounting"),
     CFM(Faculty.MATH, "Computing & Financial Management"),
     FARM(Faculty.MATH, "Financial Analysis & Risk Management"),
@@ -26,7 +32,7 @@ public enum Program {
     SOFTWARE(Faculty.ENG, "Software"),
     COMPUTER(Faculty.ENG, "Computer"),
     MANAGEMENT(Faculty.ENG, "Management"),
-    ELECTRIC(Faculty.ENG, "Electrical"),
+    ELECTRICAL(Faculty.ENG, "Electrical"),
     MECHANICAL(Faculty.ENG, "Mechanical"),
     NANO(Faculty.ENG, "Nanotechnology"),
     TRON(Faculty.ENG, "Mechatronics"),
@@ -55,6 +61,29 @@ public enum Program {
 
     public String getName() {
         return name;
+    }
+
+    /**
+     * Returns a map of each faculty to a sorted list of the programs available
+     * @return a map of each faculty to the programs in the faculty
+     */
+    public static Map<Faculty, ArrayList<Program>> getFacultyMap(){
+        Map<Faculty, ArrayList<Program>> map = new HashMap<>();
+        for(Faculty f : Faculty.values()){
+            map.put(f, new ArrayList<Program>());
+        }
+        for(Program p : values()){
+            map.get(p.faculty).add(p);
+        }
+        for(Faculty f : Faculty.values()){
+            Collections.sort(map.get(f), new Comparator<Program>() {
+                @Override
+                public int compare(Program lhs, Program rhs) {
+                    return lhs.getName().compareTo(rhs.getName());
+                }
+            });
+        }
+        return map;
     }
 
     public static Program fromName(String name){

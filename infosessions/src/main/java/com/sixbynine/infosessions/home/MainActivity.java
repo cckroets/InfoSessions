@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import com.sixbynine.infosessions.data.ResponseHandler;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionCollection;
 import com.sixbynine.infosessions.search.SearchActivity;
+import com.sixbynine.infosessions.settings.SettingsActivity;
 import com.sixbynine.infosessions.ui.PagerSlidingTabStrip;
 
 import java.util.ArrayList;
@@ -29,8 +31,6 @@ import roboguice.inject.InjectView;
 
 @ContentView(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements InfoSessionListFragment.Callback{
-    @InjectView(R.id.extended_action_bar)
-    ViewGroup mExtendedActionBar;
     @InjectView(R.id.toolbar)
     Toolbar mToolbar;
     @InjectView(R.id.tabs)
@@ -45,6 +45,7 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
     InfoSessionManager mInfoSessionManager;
 
     private static final int SEARCH_REQUEST_CODE = 0;
+    private static final int SETTINGS_REQUEST_CODE = 1;
 
 
     ArrayList<WaterlooInfoSession> mInfoSessions;
@@ -53,7 +54,7 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(mToolbar); //I used a toolbar here since I was having issues disabling the drop shadow from action bar
 
         mInfoSessionManager.getWaterlooInfoSessions(new ResponseHandler<WaterlooInfoSessionCollection>() {
             @Override
@@ -62,8 +63,10 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
                 mPagerAdapter = new InfoSessionsTabsPagerAdapter(getSupportFragmentManager(), mInfoSessions);
                 mPager.setAdapter(mPagerAdapter);
                 mTabs.setViewPager(mPager);
-                ViewCompat.setElevation(mExtendedActionBar, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                        4, getResources().getDisplayMetrics()));
+                ViewCompat.setElevation(mToolbar, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                        8, getResources().getDisplayMetrics()));
+                ViewCompat.setElevation(mTabs, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                        8, getResources().getDisplayMetrics()));
             }
 
             @Override
@@ -87,6 +90,7 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.action_settings:
+                SettingsActivity.launchActivityForResult(this, SETTINGS_REQUEST_CODE);
                 return true;
             case R.id.action_search:
                 SearchActivity.launchActivityForResult(this, SEARCH_REQUEST_CODE, mInfoSessions);
@@ -141,8 +145,15 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == SEARCH_REQUEST_CODE){
-            updateListFragments(); //if the user favorites a session while searching, that should be reflected when they return
+        switch(requestCode){
+            case SEARCH_REQUEST_CODE:
+                updateListFragments(); //if the user favorites a session while searching, that should be reflected when they return
+                break;
+            case SETTINGS_REQUEST_CODE:
+                mPagerAdapter.refreshData();
+                mTabs.notifyDataSetChanged();
+                updateListFragments();
+                break;
         }
     }
 }

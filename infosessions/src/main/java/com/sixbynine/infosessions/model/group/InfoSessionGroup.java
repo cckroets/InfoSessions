@@ -1,4 +1,4 @@
-package com.sixbynine.infosessions.model;
+package com.sixbynine.infosessions.model.group;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,13 +6,19 @@ import android.support.annotation.IntDef;
 
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.app.MyApplication;
+import com.sixbynine.infosessions.data.PreferenceManager;
+import com.sixbynine.infosessions.model.WaterlooInfoSession;
+import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
 import com.sixbynine.infosessions.model.programs.Faculty;
 import com.sixbynine.infosessions.model.programs.Program;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by stevenkideckel on 14-12-30.
  */
-public class InfoSessionGroup implements Parcelable{
+public final class InfoSessionGroup implements Parcelable{
     public static final InfoSessionGroup ALL = new InfoSessionGroup(0, R.string.tab_all, new WaterlooInfoSession.Filter() {
         @Override
         public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
@@ -44,9 +50,9 @@ public class InfoSessionGroup implements Parcelable{
     public @interface Type{}
 
     //The type of group, used for serialization
-    private static final int CONSTANT = 0;
-    private static final int PROGRAM = 1;
-    private static final int FACULTY = 2;
+    public static final int CONSTANT = 0;
+    public static final int PROGRAM = 1;
+    public static final int FACULTY = 2;
 
     int id;
     String title;
@@ -61,7 +67,7 @@ public class InfoSessionGroup implements Parcelable{
      * @param titleRes the String resource for the title
      * @param filter the filter used to match items
      */
-    private InfoSessionGroup(int id, int titleRes, WaterlooInfoSession.Filter filter){
+    InfoSessionGroup(int id, int titleRes, WaterlooInfoSession.Filter filter){
         this.id = id;
         this.title = MyApplication.getInstance().getString(titleRes);
         this.filter = filter;
@@ -74,7 +80,7 @@ public class InfoSessionGroup implements Parcelable{
      * @param filter the filter used to match items
      * @param type the type of group that this is
      */
-    private InfoSessionGroup(String title, WaterlooInfoSession.Filter filter, @Type int type){
+     InfoSessionGroup(String title, WaterlooInfoSession.Filter filter, @Type int type){
         this.id = -1;
         this.title = title;
         this.filter = filter;
@@ -123,12 +129,7 @@ public class InfoSessionGroup implements Parcelable{
                 case FACULTY:
                     return createGroupForFaculty(Faculty.fromName(source.readString()));
                 case CONSTANT:
-                    int id = source.readInt();
-                    for(InfoSessionGroup g : CONSTANTS){
-                        if(g.id == id){
-                            return g;
-                        }
-                    }
+                    return fromId(source.readInt());
             }
             return null;
         }
@@ -138,6 +139,15 @@ public class InfoSessionGroup implements Parcelable{
             return new InfoSessionGroup[size];
         }
     };
+
+    static InfoSessionGroup fromId(int id){
+        for(InfoSessionGroup g : CONSTANTS){
+            if(g.id == id){
+                return g;
+            }
+        }
+        throw new IllegalArgumentException("Trying to create InfoSessionGroup from invalid id: " + id);
+    }
 
     public static InfoSessionGroup createGroupForFaculty(final Faculty faculty){
         InfoSessionGroup group = new InfoSessionGroup(faculty.name(), new WaterlooInfoSession.Filter() {
@@ -151,7 +161,7 @@ public class InfoSessionGroup implements Parcelable{
     }
 
     public static InfoSessionGroup createGroupForProgram(final Program program){
-        InfoSessionGroup group = new InfoSessionGroup(program.name(), new WaterlooInfoSession.Filter() {
+        InfoSessionGroup group = new InfoSessionGroup(program.name().replaceAll("_", " "), new WaterlooInfoSession.Filter() {
             @Override
             public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
                 return matchesFaculty(i, program.getFaculty()) || matchesProgram(i, program);
@@ -169,20 +179,24 @@ public class InfoSessionGroup implements Parcelable{
         return i.getPrograms().contains(program.getFaculty().name() + " - " + program.getName());
     }
 
-    public static InfoSessionGroup[] getGroups(){
-        return new InfoSessionGroup[]{
-                ALL,
-                FAVORITES,
-                COOP,
-                GRADUATE,
-                //TODO use different defaults, let user modify
-                //I've added these just to demonstrate how we can use the class
-                createGroupForProgram(Program.CS),
-                createGroupForFaculty(Faculty.MATH),
-                createGroupForProgram(Program.ACTSCI),
-                createGroupForFaculty(Faculty.ENG),
-                createGroupForFaculty(Faculty.ARTS),
-                createGroupForFaculty(Faculty.ENV),
-        };
+    public static List<InfoSessionGroup> getGroups(PreferenceManager preferenceManager){
+        List<InfoSessionGroup> tabs = new ArrayList<>();
+        tabs.add(ALL);
+        tabs.add(FAVORITES);
+        tabs.add(COOP);
+        tabs.add(GRADUATE);
+
+        for(String s : preferenceManager.getStrings(PreferenceManager.Keys.INTERESTED_PROGRAMS)){
+            try{
+                Program p = Program.fromName(s);
+                tabs.add(createGroupForProgram(p));
+                continue;
+            }catch(Exception e){
+
+            }
+            Faculty f = Faculty.fromName(s);
+            tabs.add(createGroupForFaculty(f));
+        }
+        return tabs;
     }
 }

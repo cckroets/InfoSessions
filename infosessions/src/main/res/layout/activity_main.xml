@@ -7,28 +7,20 @@
     android:orientation="vertical"
     tools:context="com.sixbynine.infosessions.home.MainActivity">
 
-    <LinearLayout
-        android:id="@+id/extended_action_bar"
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <com.sixbynine.infosessions.ui.PagerSlidingTabStrip
+        android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <include android:id="@+id/toolbar"
-            layout="@layout/toolbar"/>
-
-        <com.sixbynine.infosessions.ui.PagerSlidingTabStrip
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="48dip"
-            android:background="?attr/colorPrimary"
-            android:textColor="@color/white_tab_color"
-            app:pstsIndicatorColor="@android:color/white"
-            app:pstsDividerColor="#00000000"
-            app:pstsIndicatorHeight="4dp"
-            app:pstsTabPaddingLeftRight="12dp"/>
-
-        </LinearLayout>
-
+        android:layout_height="48dip"
+        android:background="?attr/colorPrimary"
+        android:textColor="@color/white_tab_color"
+        app:pstsDividerColor="#00000000"
+        app:pstsIndicatorColor="@android:color/white"
+        app:pstsIndicatorHeight="4dp"
+        app:pstsTabPaddingLeftRight="12dp" />
 
 
     <android.support.v4.view.ViewPager
