@@ -60,8 +60,9 @@ public class InfoSessionListFragment extends RoboFragment implements
     public interface Callback{
         public void onFavoriteClicked(WaterlooInfoSession infoSession);
         public void onShareClicked(WaterlooInfoSession infoSession);
-        public void onTimerClicked(WaterlooInfoSession infoSession);
+        public void onAlarmClicked(WaterlooInfoSession infoSession);
         public void onDismiss(WaterlooInfoSession infoSession);
+        public void onCalendarClicked(WaterlooInfoSession infoSession);
         public void onInfoSessionClicked(WaterlooInfoSession infoSession);
     }
 
@@ -137,8 +138,13 @@ public class InfoSessionListFragment extends RoboFragment implements
     }
 
     @Override
-    public void onTimerClicked(WaterlooInfoSession infoSession) {
-        mCallback.onTimerClicked(infoSession);
+    public void onAlarmClicked(WaterlooInfoSession infoSession) {
+        mCallback.onAlarmClicked(infoSession);
+    }
+
+    @Override
+    public void onCalendarClicked(WaterlooInfoSession infoSession) {
+        mCallback.onCalendarClicked(infoSession);
     }
 
     @Override

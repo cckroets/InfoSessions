@@ -22,6 +22,7 @@ import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionCollection;
 import com.sixbynine.infosessions.search.SearchActivity;
 import com.sixbynine.infosessions.settings.SettingsActivity;
+import com.sixbynine.infosessions.ui.InfoSessionUtil;
 import com.sixbynine.infosessions.ui.PagerSlidingTabStrip;
 import com.sixbynine.infosessions.util.StoreUtils;
 
@@ -124,8 +125,13 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
     }
 
     @Override
-    public void onTimerClicked(WaterlooInfoSession infoSession) {
-        Toast.makeText(this, infoSession.getCompanyName() + " timer", Toast.LENGTH_SHORT).show();
+    public void onAlarmClicked(WaterlooInfoSession infoSession) {
+        Toast.makeText(this, infoSession.getCompanyName() + " alarm", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCalendarClicked(WaterlooInfoSession infoSession) {
+        InfoSessionUtil.launchCalendarIntent(this, infoSession);
     }
 
     @Override

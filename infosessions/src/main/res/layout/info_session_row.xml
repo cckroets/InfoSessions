@@ -103,12 +103,20 @@
                     android:src="@drawable/ic_action_favorite_outline"/>
 
                 <ImageButton
-                    android:id="@+id/timer_button"
+                    android:id="@+id/alarm_button"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_image_timer"/>
+                    android:src="@drawable/ic_action_alarm_add"/>
+
+                <ImageButton
+                    android:id="@+id/calendar_button"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_action_calendar_day"/>
 
                 <ImageButton
                     android:id="@+id/share_button"

@@ -42,5 +42,14 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
 
+    <!-- Tooltips for the buttons on the card -->
+    <string name="favorite_tooltip">Add To Favourites</string>
+    <string name="alarm_tooltip">Set A Reminder</string>
+    <string name="calendar_tooltip">Add To Calendar</string>
+    <string name="share_tooltip">Share</string>
+
+    <!-- Calendar Strings -->
+    <string name="event_header">%1$s Info Session</string>
+
 
 </resources>

@@ -2,14 +2,12 @@ package com.sixbynine.infosessions.home;
 
 import android.content.Context;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
@@ -18,12 +16,10 @@ import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
 import com.sixbynine.infosessions.data.InfoSessionManager;
-import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
 import com.sixbynine.infosessions.data.ResponseHandler;
 
-import com.sixbynine.infosessions.model.WaterlooInfoSession;
-import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
 import com.sixbynine.infosessions.model.company.Company;
+import com.sixbynine.infosessions.ui.CheatSheet;
 import com.sixbynine.infosessions.util.Logger;
 import com.squareup.picasso.Picasso;
 
@@ -89,18 +85,13 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
 
         if (view == null) {
             view = LayoutInflater.from(getContext()).inflate(R.layout.info_session_row, viewGroup, false);
-            viewHolder = new ViewHolder();
-            //viewHolder.dateHeader = (TextView) view.findViewById(R.id.dateHeader);
-            viewHolder.companyName = (TextView) view.findViewById(R.id.company_name);
-            viewHolder.startTime = (TextView) view.findViewById(R.id.start_time);
-            viewHolder.location = (TextView) view.findViewById(R.id.location);
-            viewHolder.companyLogo = (ImageView) view.findViewById(R.id.company_logo);
-            viewHolder.shareButton = (ImageButton) view.findViewById(R.id.share_button);
-            viewHolder.timerButton = (ImageButton) view.findViewById(R.id.timer_button);
-            viewHolder.favoriteButton = (ImageButton) view.findViewById(R.id.favorite_button);
-            viewHolder.clickableRegion = view.findViewById(R.id.clickable_region_container);
-            //viewHolder.cardLayout = (InfoSessionCardLayout) view.findViewById(R.id.card);
+            viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
+
+            CheatSheet.setup(viewHolder.favoriteButton, R.string.favorite_tooltip);
+            CheatSheet.setup(viewHolder.alarmButton, R.string.alarm_tooltip);
+            CheatSheet.setup(viewHolder.calendarButton, R.string.calendar_tooltip);
+            CheatSheet.setup(viewHolder.shareButton, R.string.share_tooltip);
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
@@ -140,7 +131,6 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
             viewHolder.favoriteButton.setImageResource(R.drawable.ic_action_favorite_outline);
         }
 
-        //viewHolder.cardLayout.setLastCategory(isLastOfDay(i));
         viewHolder.favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,10 +143,16 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
                 if (mListener != null) mListener.onShareClicked(infoSession);
             }
         });
-        viewHolder.timerButton.setOnClickListener(new View.OnClickListener() {
+        viewHolder.alarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null) mListener.onTimerClicked(infoSession);
+                if (mListener != null) mListener.onAlarmClicked(infoSession);
+            }
+        });
+        viewHolder.calendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) mListener.onCalendarClicked(infoSession);
             }
         });
         viewHolder.clickableRegion.setOnClickListener(new View.OnClickListener() {
@@ -184,7 +180,9 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
 
         public void onShareClicked(WaterlooInfoSession infoSession);
 
-        public void onTimerClicked(WaterlooInfoSession infoSession);
+        public void onAlarmClicked(WaterlooInfoSession infoSession);
+
+        public void onCalendarClicked(WaterlooInfoSession infoSession);
 
         public void onDismiss(WaterlooInfoSession infoSession);
 
@@ -197,11 +195,24 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         TextView startTime;
         TextView location;
         ImageView companyLogo;
-        //InfoSessionCardLayout cardLayout;
-        ImageButton timerButton;
+        ImageButton alarmButton;
+        ImageButton calendarButton;
         ImageButton shareButton;
         ImageButton favoriteButton;
         View clickableRegion;
+
+        ViewHolder(View view){
+            //viewHolder.dateHeader = (TextView) view.findViewById(R.id.dateHeader);
+            companyName = (TextView) view.findViewById(R.id.company_name);
+            startTime = (TextView) view.findViewById(R.id.start_time);
+            location = (TextView) view.findViewById(R.id.location);
+            companyLogo = (ImageView) view.findViewById(R.id.company_logo);
+            shareButton = (ImageButton) view.findViewById(R.id.share_button);
+            alarmButton = (ImageButton) view.findViewById(R.id.alarm_button);
+            favoriteButton = (ImageButton) view.findViewById(R.id.favorite_button);
+            calendarButton = (ImageButton) view.findViewById(R.id.calendar_button);
+            clickableRegion = view.findViewById(R.id.clickable_region_container);
+        }
     }
 }
 

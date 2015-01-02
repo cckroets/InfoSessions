@@ -17,6 +17,7 @@ import com.sixbynine.infosessions.home.InfoSessionListFragment;
 import com.sixbynine.infosessions.model.group.InfoSessionGroup;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
+import com.sixbynine.infosessions.ui.InfoSessionUtil;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,7 @@ import roboguice.inject.ContentView;
 
 /**
  * Created by stevenkideckel on 14-12-30.
+ * TODO make sure this handles clicks correctly
  */
 @ContentView(R.layout.activity_search)
 public class SearchActivity extends BaseActivity implements InfoSessionListFragment.Callback{
@@ -133,13 +135,18 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
     }
 
     @Override
-    public void onTimerClicked(WaterlooInfoSession infoSession) {
+    public void onAlarmClicked(WaterlooInfoSession infoSession) {
 
     }
 
     @Override
     public void onDismiss(WaterlooInfoSession infoSession) {
 
+    }
+
+    @Override
+    public void onCalendarClicked(WaterlooInfoSession infoSession) {
+        InfoSessionUtil.launchCalendarIntent(this, infoSession);
     }
 
     @Override
