@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
+    <in.srain.cube.views.GridViewWithHeaderAndFooter
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -12,7 +12,12 @@
         android:dividerHeight="0dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
+        android:columnWidth="380dp"
+        android:numColumns="auto_fit"
         android:background="@color/info_sessions_fragment_bg"
+        android:horizontalSpacing="20dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
         />
 
     <TextView

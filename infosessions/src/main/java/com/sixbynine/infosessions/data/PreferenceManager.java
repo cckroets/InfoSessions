@@ -41,6 +41,14 @@ public final class PreferenceManager {
         return mSharedPreferences.getLong(key, def);
     }
 
+    public boolean getBoolean(String key) {
+        return mSharedPreferences.getBoolean(key, false);
+    }
+
+    public boolean getBoolean(String key, boolean def) {
+        return mSharedPreferences.getBoolean(key, def);
+    }
+
     public Set<String> getStrings(String key) {
         return mSharedPreferences.getStringSet(key, new HashSet<String>());
     }
@@ -53,6 +61,10 @@ public final class PreferenceManager {
         mSharedPreferences.edit().putInt(key, value).apply();
     }
 
+    public void putBoolean(String key, boolean value) {
+        mSharedPreferences.edit().putBoolean(key, value).apply();
+    }
+
     public void putLong(String key, long value) {
         mSharedPreferences.edit().putLong(key, value).apply();
     }
@@ -63,5 +75,7 @@ public final class PreferenceManager {
 
     public final class Keys{
         public static final String INTERESTED_PROGRAMS = "programs-key";
+        public static final String SHOW_COOP_TAB = "show-coop-tab-key";
+        public static final String SHOW_GRADUATE_TAB = "show-grad-tab-key";
     }
 }

@@ -3,18 +3,49 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
+
+    <TextView
+        style="@style/SettingsHeaderTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tabs"/>
+
+    <View style="@style/SettingsHeader"/>
 
     <com.sixbynine.infosessions.ui.HeaderSubheaderView
         android:id="@+id/settings_program"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
         android:background="?attr/selectableItemBackground"
         app:hsvHeaderText="@string/interested_programs"/>
     
     <View style="@style/SettingsDivider"/>
+
+    <com.sixbynine.infosessions.ui.CheckableTextView
+        android:id="@+id/settings_coop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:text="@string/show_coop_tab"
+        app:ctvLines="one"
+        />
+
+    <View style="@style/SettingsDivider"/>
+
+    <com.sixbynine.infosessions.ui.CheckableTextView
+        android:id="@+id/settings_graduate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:text="@string/show_graduate_tab"
+        app:ctvLines="one"
+        />
+
+    <View style="@style/SettingsDivider"/>
+
 
 
 </LinearLayout>

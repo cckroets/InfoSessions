@@ -23,6 +23,7 @@ import com.sixbynine.infosessions.model.WaterlooInfoSessionCollection;
 import com.sixbynine.infosessions.search.SearchActivity;
 import com.sixbynine.infosessions.settings.SettingsActivity;
 import com.sixbynine.infosessions.ui.PagerSlidingTabStrip;
+import com.sixbynine.infosessions.util.StoreUtils;
 
 import java.util.ArrayList;
 
@@ -94,6 +95,9 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
                 return true;
             case R.id.action_search:
                 SearchActivity.launchActivityForResult(this, SEARCH_REQUEST_CODE, mInfoSessions);
+                return true;
+            case R.id.action_rate:
+                startActivity(StoreUtils.getStoreIntent());
                 return true;
         }
         // Handle action bar item clicks here. The action bar will

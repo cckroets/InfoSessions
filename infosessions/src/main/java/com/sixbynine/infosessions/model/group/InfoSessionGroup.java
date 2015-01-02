@@ -183,8 +183,14 @@ public final class InfoSessionGroup implements Parcelable{
         List<InfoSessionGroup> tabs = new ArrayList<>();
         tabs.add(ALL);
         tabs.add(FAVORITES);
-        tabs.add(COOP);
-        tabs.add(GRADUATE);
+
+        if(preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_COOP_TAB, true)){
+            tabs.add(COOP);
+        }
+
+        if(preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE_TAB, true)){
+            tabs.add(GRADUATE);
+        }
 
         for(String s : preferenceManager.getStrings(PreferenceManager.Keys.INTERESTED_PROGRAMS)){
             try{

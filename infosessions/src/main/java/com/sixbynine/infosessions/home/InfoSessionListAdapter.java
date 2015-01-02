@@ -50,11 +50,9 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
     InfoSessionManager mInfoSessionManager;
 
     private InfoSessionActionListener mListener;
-    private ListView mListView;
 
-    public InfoSessionListAdapter(Context context, List<WaterlooInfoSession> sessions, ListView listView) {
+    public InfoSessionListAdapter(Context context, List<WaterlooInfoSession> sessions) {
         super(context, R.layout.info_session, R.id.companyName, sessions);
-        mListView = listView;
         RoboGuice.getInjector(getContext()).injectMembersWithoutViews(this);
     }
 
@@ -105,17 +103,6 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
-        }
-
-        // set padding for top and bottom views
-        int dp4 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, view.getResources().getDisplayMetrics());
-        int dp8 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, view.getResources().getDisplayMetrics());
-        if(i == 0){
-            view.setPadding(dp8,dp8,dp8,dp4);
-        }else if(i == getCount() - 1){
-            view.setPadding(dp8,dp4,dp8,dp8);
-        }else{
-            view.setPadding(dp8, dp4, dp8, dp4);
         }
 
         final Date date = infoSession.getStartTime().getTime();

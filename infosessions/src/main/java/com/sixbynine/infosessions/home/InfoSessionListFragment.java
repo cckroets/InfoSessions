@@ -2,11 +2,14 @@ package com.sixbynine.infosessions.home;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +23,7 @@ import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.srain.cube.views.GridViewWithHeaderAndFooter;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 
@@ -39,7 +43,7 @@ public class InfoSessionListFragment extends RoboFragment implements
     InfoSessionPreferenceManager mInfoSessionPreferenceManager;
 
     @InjectView(R.id.listView)
-    ListView mListView;
+    AbsListView mListView; //this is listview for smaller screens, gridview for larger screens
     @InjectView(R.id.nothing_text_view)
     TextView mNothingHereTextView;
 
@@ -89,16 +93,37 @@ public class InfoSessionListFragment extends RoboFragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        /*
+         * This is a hack to add space at the top of the list/grid view
+         * Adding margin to listview causes overscroll makes overscroll look weird,
+         * Adding padding to listview causes blank space at top when scrolling
+         * Adding padding to first view doesn't work on GridView
+         * sorry :(
+         */
+        if(mListView instanceof ListView){
+            ((ListView) mListView).addHeaderView(getSpace(view.getContext()));
+            ((ListView) mListView).addFooterView(getSpace(view.getContext()));
+        }else if(mListView instanceof GridViewWithHeaderAndFooter){
+            ((GridViewWithHeaderAndFooter) mListView).addHeaderView(getSpace(view.getContext()));
+            ((GridViewWithHeaderAndFooter) mListView).addFooterView(getSpace(view.getContext()));
+        }
+
         Bundle args = getArguments();
         mGroup = args.getParcelable(GROUP_KEY);
         mAllSessions = args.getParcelableArrayList(SESSIONS_KEY);
 
         mHandler = new Handler();
-        mAdapter = new InfoSessionListAdapter(getActivity(), mGroup.getFilter().filter(mAllSessions), mListView);
+        mAdapter = new InfoSessionListAdapter(getActivity(), mGroup.getFilter().filter(mAllSessions));
         mAdapter.setActionListener(this);
         mListView.setAdapter(mAdapter);
         mNothingHereTextView.setVisibility(mAdapter.getCount() > 0? View.GONE : View.VISIBLE);
+    }
 
+    private static View getSpace(Context context){
+        View space = new View(context);
+        space.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT,
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, context.getResources().getDisplayMetrics())));
+        return space;
     }
 
     @Override

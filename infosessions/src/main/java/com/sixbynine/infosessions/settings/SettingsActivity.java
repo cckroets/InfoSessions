@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -21,6 +22,7 @@ import com.sixbynine.infosessions.app.MyApplication;
 import com.sixbynine.infosessions.data.PreferenceManager;
 import com.sixbynine.infosessions.model.programs.Faculty;
 import com.sixbynine.infosessions.model.programs.Program;
+import com.sixbynine.infosessions.ui.CheckableTextView;
 import com.sixbynine.infosessions.ui.HeaderSubheaderView;
 
 import java.util.ArrayList;
@@ -40,15 +42,18 @@ import roboguice.inject.InjectView;
  * Created by stevenkideckel on 14-12-31.
  */
 @ContentView(R.layout.activity_settings)
-public class SettingsActivity extends RoboActionBarActivity implements View.OnClickListener{
-
+public class SettingsActivity extends RoboActionBarActivity implements View.OnClickListener {
     @InjectView(R.id.settings_program)
     HeaderSubheaderView mProgramView;
+    @InjectView(R.id.settings_coop)
+    CheckableTextView mCoopCheckableTextView;
+    @InjectView(R.id.settings_graduate)
+    CheckableTextView mGraduateCheckableTextView;
 
     @Inject
     PreferenceManager mPreferenceManager;
 
-    public static void launchActivityForResult(Activity activity, int requestCode){
+    public static void launchActivityForResult(Activity activity, int requestCode) {
         Intent intent = new Intent(activity, SettingsActivity.class);
         activity.startActivityForResult(intent, requestCode);
     }
@@ -58,12 +63,26 @@ public class SettingsActivity extends RoboActionBarActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mProgramView.setOnClickListener(this);
+        mCoopCheckableTextView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mPreferenceManager.putBoolean(PreferenceManager.Keys.SHOW_COOP_TAB, isChecked);
+                syncViews();
+            }
+        });
+        mGraduateCheckableTextView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mPreferenceManager.putBoolean(PreferenceManager.Keys.SHOW_GRADUATE_TAB, isChecked);
+                syncViews();
+            }
+        });
         syncViews();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
@@ -73,37 +92,32 @@ public class SettingsActivity extends RoboActionBarActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.settings_program:
-               onProgramClicked();
+                onProgramClicked();
                 break;
         }
     }
 
-    private void syncViews(){
+    private void syncViews() {
         Set<String> programs = mPreferenceManager.getStrings(PreferenceManager.Keys.INTERESTED_PROGRAMS);
         String text;
-        switch(programs.size()){
-            case 0:
-                text="None selected";
-                break;
-            case 1:
-                Iterator<String> iter = programs.iterator();
-                text = getNameOfProgramOrFaculty(iter.next());
-                break;
-            case 2:
-                Iterator<String> iter2 = programs.iterator();
-                text = getNameOfProgramOrFaculty(iter2.next());
-                text += ", " + getNameOfProgramOrFaculty(iter2.next());
-                break;
-            default:
-                text = "Multiple Selected";
-
+        if (programs.isEmpty()) {
+            text = getString(R.string.none_selected);
+        } else {
+            Iterator<String> iter = programs.iterator();
+            text = getNameOfProgramOrFaculty(iter.next());
+            while (iter.hasNext()) {
+                text += ", " + getNameOfProgramOrFaculty(iter.next());
+            }
         }
         mProgramView.setSubheaderText(text);
+
+        mCoopCheckableTextView.setChecked(mPreferenceManager.getBoolean(PreferenceManager.Keys.SHOW_COOP_TAB, true));
+        mGraduateCheckableTextView.setChecked(mPreferenceManager.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE_TAB, true));
     }
 
-    private void onProgramClicked(){
+    private void onProgramClicked() {
         final Set<String> programs = mPreferenceManager.getStrings(PreferenceManager.Keys.INTERESTED_PROGRAMS);
         final ListView listView = new ListView(this);
         final ProgramListAdapter adapter = new ProgramListAdapter(this, programs);
@@ -130,79 +144,15 @@ public class SettingsActivity extends RoboActionBarActivity implements View.OnCl
                 })
                 .create()
                 .show();
-
-
-        /*//assemble a String array from the available programs and faculties to choose from
-        Map<Faculty, ArrayList<Program>> facultyMap = Program.getFacultyMap();
-
-        int size = Faculty.values().length;
-        for(ArrayList<Program> list : facultyMap.values()){
-            size += list.size();
-        }
-
-        String[] choices = new String[size];
-        boolean[] selected = new boolean[size];
-        final Map<Integer, Object> indexMap = new HashMap<>(size);
-        int index = 0;
-        for(Faculty f : Faculty.values()){
-            indexMap.put(index, f);
-            choices[index] = getResources().getString(R.string.faculty_all, f.name());
-            selected[index] = programs.contains(f.name());
-            index++;
-            for(Program p : facultyMap.get(f)){
-                indexMap.put(index, p);
-                choices[index] = f.name() + " - " + p.getName();
-                selected[index] = programs.contains(p.name());
-                index++;
-            }
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.select_programs)
-                .setMultiChoiceItems(choices, selected, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        Object o = indexMap.get(which);
-                        if(isChecked){
-                            if(o instanceof Program){
-                                programs.add(((Program) o).name());
-                            }else if(o instanceof Faculty){
-                                programs.add(((Faculty) o).name());
-                            }
-                        }else{
-                            if(o instanceof Program){
-                                programs.remove(((Program) o).name());
-                            }else if(o instanceof Faculty){
-                                programs.remove(((Faculty) o).name());
-                            }
-                        }
-                    }
-                })
-                .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mPreferenceManager.putStrings(KEY_PROGRAMS, programs);
-                        syncViews();
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .create()
-                .show();*/
-
     }
 
-    private static String getNameOfProgramOrFaculty(String name){
-        try{
+    private static String getNameOfProgramOrFaculty(String name) {
+        try {
             Program program = Program.fromName(name);
-            if(program != null){
+            if (program != null) {
                 return program.getName() + " (" + program.getFaculty().name() + ")";
             }
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
 

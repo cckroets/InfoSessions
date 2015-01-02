@@ -31,8 +31,21 @@
 
     <style name="SettingsDivider">
         <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:background">#88888888</item>
+    </style>
+
+    <style name="SettingsHeader">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">#888888</item>
+    </style>
+
+    <style name="SettingsHeaderTextView">
+        <item name="android:textColor">?attr/colorAccent</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
     </style>
 
 </resources>

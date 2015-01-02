@@ -14,7 +14,8 @@
         cardview:cardCornerRadius="4dp"
         cardview:cardElevation="2dp"
         cardview:cardPreventCornerOverlap="true"
-        cardview:cardUseCompatPadding="true">
+        cardview:cardUseCompatPadding="true"
+        cardview:cardBackgroundColor="@android:color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
