@@ -1,6 +1,7 @@
 package com.sixbynine.infosessions.home;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,6 +89,9 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
             viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
 
+            if(Build.VERSION.SDK_INT < 14){
+                viewHolder.calendarButton.setVisibility(View.GONE); //calendar intent only works in 14 and higher
+            }
             CheatSheet.setup(viewHolder.favoriteButton, R.string.favorite_tooltip);
             CheatSheet.setup(viewHolder.alarmButton, R.string.alarm_tooltip);
             CheatSheet.setup(viewHolder.calendarButton, R.string.calendar_tooltip);

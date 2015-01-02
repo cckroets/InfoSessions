@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.app.BaseActivity;
+import com.sixbynine.infosessions.app.CompanyInfoActivity;
 import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
 import com.sixbynine.infosessions.home.InfoSessionListFragment;
 import com.sixbynine.infosessions.model.group.InfoSessionGroup;
@@ -151,6 +152,8 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
 
     @Override
     public void onInfoSessionClicked(WaterlooInfoSession infoSession) {
-
+        Intent intent = new Intent(this, CompanyInfoActivity.class);
+        intent.putExtra(CompanyInfoActivity.INFO_SESSION_KEY, infoSession);
+        startActivity(intent);
     }
 }

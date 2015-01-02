@@ -28,7 +28,7 @@ import roboguice.inject.InjectView;
 /**
  * Created by stevenkideckel on 2014-06-12.
  */
-public class CompanyInfoFragment extends RoboFragment {
+public class  CompanyInfoFragment extends RoboFragment {
 
     private static final String KEY_SESSION = "session";
 

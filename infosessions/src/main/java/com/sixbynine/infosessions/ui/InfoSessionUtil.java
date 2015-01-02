@@ -1,8 +1,10 @@
 package com.sixbynine.infosessions.ui;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Build;
 import android.provider.CalendarContract;
 
 import com.sixbynine.infosessions.R;
@@ -16,6 +18,7 @@ import java.util.GregorianCalendar;
  */
 public class InfoSessionUtil {
 
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public static void launchCalendarIntent(Context context, WaterlooInfoSession infoSession){
         Resources res = context.getResources();
 
