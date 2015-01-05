@@ -1,7 +1,9 @@
 package com.sixbynine.infosessions.app;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,6 +22,7 @@ import com.sixbynine.infosessions.data.InfoSessionManager;
 import com.sixbynine.infosessions.data.ResponseHandler;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.company.Company;
+import com.sixbynine.infosessions.model.company.Website;
 
 import java.text.SimpleDateFormat;
 
@@ -28,7 +32,7 @@ import roboguice.inject.InjectView;
 /**
  * Created by stevenkideckel on 2014-06-12.
  */
-public class  CompanyInfoFragment extends RoboFragment {
+public class CompanyInfoFragment extends RoboFragment {
 
     private static final String KEY_SESSION = "session";
 
@@ -155,7 +159,36 @@ public class  CompanyInfoFragment extends RoboFragment {
         mCompanyDescription.setText(mCompany.getDescription());
         mCompanyWebsite.setText(mCompany.getHomePageUrl());
         mCompanyHq.setText(mCompany.getHeadquarters().getCity());
+        getActivity().setTitle(mCompany.getName());
+        updateSocialMedia();
+    }
+
+    private void updateSocialMedia() {
         mSocialMedia.removeAllViews();
+        for (final Website website : mCompany.getWebsites()) {
+            if (website.getType() == null) {
+                continue;
+            }
+            Log.d(CompanyInfoFragment.class.getName(), website.getType().name() + " : " + website
+                    .getUrl());
+            final ImageView logo = new ImageView(getActivity());
+            logo.setImageResource(website.getType().getLogoDrawableId());
+            logo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(website.getUrl()));
+                    startActivity(intent);
+                }
+            });
+            final int size = getResources().getDimensionPixelSize(R.dimen
+                    .company_social_media_size);
+            final int marginEnd = getResources().getDimensionPixelSize(R.dimen
+                    .company_social_media_margin);
+
+            final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(size, size);
+            params.setMargins(0, 0, marginEnd, 0);
+            mSocialMedia.addView(logo, params);
+        }
     }
 
     private String getTimeString() {

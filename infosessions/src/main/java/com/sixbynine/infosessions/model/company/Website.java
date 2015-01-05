@@ -1,5 +1,7 @@
 package com.sixbynine.infosessions.model.company;
 
+import android.util.Log;
+
 /**
  * Corresponds to the "websites" section of the Crunchbase API.
  */
@@ -11,7 +13,7 @@ public class Website {
     public Website(String url, String title) {
         mUrl = url;
         try {
-            mType = SocialMedia.valueOf(title);
+            mType = SocialMedia.valueOf(title.toUpperCase());
         } catch (IllegalArgumentException e) {
             mType = null;
         }
