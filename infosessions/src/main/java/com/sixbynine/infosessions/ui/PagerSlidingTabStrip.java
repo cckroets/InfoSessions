@@ -42,6 +42,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sixbynine.infosessions.R;
+import com.sixbynine.infosessions.util.Logger;
 
 import java.util.Locale;
 
@@ -93,6 +94,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     private int tabTextColor = 0xFF666666;
     private Typeface tabTypeface = null;
     private int tabTypefaceStyle = Typeface.BOLD;
+    private static final float MIN_ALPHA = 0.6f;
 
     private int lastScrollX = 0;
 
@@ -365,16 +367,19 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             currentPosition = position;
             currentPositionOffset = positionOffset;
 
             for(int i = 0; i < tabCount; i ++){
                 View v = tabsContainer.getChildAt(i);
-                if(currentPosition == i){
-                    v.setAlpha(1f);
+                if(i == currentPosition){
+                    float diff = 1f - MIN_ALPHA;
+                    v.setAlpha(MIN_ALPHA + (1 - positionOffset) * diff);
+                }else if(i == currentPosition + 1){
+                    float diff = 1f - MIN_ALPHA;
+                    v.setAlpha(MIN_ALPHA + positionOffset * diff);
                 }else{
-                    v.setAlpha(0.6f);
+                    v.setAlpha(MIN_ALPHA);
                 }
             }
 

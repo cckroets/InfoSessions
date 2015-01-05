@@ -40,8 +40,6 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
     @Inject
     InfoSessionPreferenceManager mInfoSessionPreferenceManager;
 
-    private SearchView mSearchView;
-
     public static void launchActivityForResult(Activity activity, int code, ArrayList<WaterlooInfoSession> sessions){
         Intent intent = new Intent(activity, SearchActivity.class);
         intent.putParcelableArrayListExtra(SESSIONS_KEY, sessions);
@@ -70,11 +68,11 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
-        mSearchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        mSearchView.setOnQueryTextListener(mOnQueryTextListener);
-        mSearchView.setIconifiedByDefault(false);
-        mSearchView.setIconified(false);
-        mSearchView.setQueryHint(getResources().getString(R.string.search_info_sessions));
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        searchView.setOnQueryTextListener(mOnQueryTextListener);
+        searchView.setIconifiedByDefault(false);
+        searchView.setIconified(false);
+        searchView.setQueryHint(getResources().getString(R.string.search_info_sessions));
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
