@@ -7,6 +7,9 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.TextView;
 
 import com.makeramen.RoundedTransformationBuilder;
 import com.squareup.picasso.Transformation;
@@ -17,6 +20,11 @@ import com.squareup.picasso.Transformation;
 public final class ViewUtil {
 
     private ViewUtil() {
+    }
+
+    public static void setTextOrGone(TextView view, String text) {
+        view.setVisibility(TextUtils.isEmpty(text) ? View.GONE : View.VISIBLE);
+        view.setText(text);
     }
 
     public static Drawable getTintedDrawable(Resources resources, @DrawableRes int drawableId, int color) {

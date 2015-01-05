@@ -25,6 +25,7 @@ import com.sixbynine.infosessions.data.ResponseHandler;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.company.Company;
 import com.sixbynine.infosessions.model.company.Website;
+import com.sixbynine.infosessions.ui.ViewUtil;
 
 import java.text.SimpleDateFormat;
 
@@ -150,7 +151,7 @@ public class CompanyInfoFragment extends RoboFragment {
         mSessionLocation.setText(mWaterlooInfoSession.getLocation());
         mSessionCoop.setChecked(mWaterlooInfoSession.isForCoops());
         mSessionGraduate.setChecked(mWaterlooInfoSession.isForGraduates());
-        mSessionDescription.setText(Html.fromHtml(mWaterlooInfoSession.getDescription()));
+        ViewUtil.setTextOrGone(mSessionDescription, mWaterlooInfoSession.getDescription());
     }
 
     private void updateCompanyInfo() {
@@ -158,9 +159,9 @@ public class CompanyInfoFragment extends RoboFragment {
             return;
         }
         mCompanyName.setText(mCompany.getName());
-        mCompanyDescription.setText(mCompany.getShortDescription());
         mCompanyWebsite.setText(mCompany.getHomePageUrl());
         mCompanyHq.setText(mCompany.getHeadquarters().getCity());
+        ViewUtil.setTextOrGone(mCompanyDescription, mCompany.getShortDescription());
         getActivity().setTitle(mCompany.getName());
         updateSocialMedia();
     }
