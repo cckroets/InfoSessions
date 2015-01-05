@@ -20,6 +20,12 @@
         <item name="android:shadowRadius">1</item>
     </style>
 
+    <style name="InfoSessionCompanyValuePrimary" parent="InfoSessionCompanyValue">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ff005093</item>
+    </style>
+
     <style name="InfoSessionCompanyName">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">#333333</item>

@@ -3,8 +3,6 @@ package com.sixbynine.infosessions.app;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -23,6 +22,7 @@ import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.data.InfoSessionManager;
 import com.sixbynine.infosessions.data.ResponseHandler;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
+import com.sixbynine.infosessions.model.company.Address;
 import com.sixbynine.infosessions.model.company.Company;
 import com.sixbynine.infosessions.model.company.Website;
 import com.sixbynine.infosessions.ui.ViewUtil;
@@ -52,9 +52,6 @@ public class CompanyInfoFragment extends RoboFragment {
     @InjectView(R.id.company_desc)
     TextView mCompanyDescription;
 
-    @InjectView(R.id.company_website)
-    TextView mCompanyWebsite;
-
     @InjectView(R.id.company_social_media)
     LinearLayout mSocialMedia;
 
@@ -75,6 +72,9 @@ public class CompanyInfoFragment extends RoboFragment {
 
     @InjectView(R.id.session_desc)
     TextView mSessionDescription;
+
+    @InjectView(R.id.company_row_hq)
+    TableRow mTableRowHq;
 
     @Inject
     InfoSessionManager mInfoSessionManager;
@@ -159,11 +159,39 @@ public class CompanyInfoFragment extends RoboFragment {
             return;
         }
         mCompanyName.setText(mCompany.getName());
-        mCompanyWebsite.setText(mCompany.getHomePageUrl());
-        mCompanyHq.setText(mCompany.getHeadquarters().getCity());
+        mCompanyName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mCompany.getHomePageUrl() != null) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mCompany.getHomePageUrl())));
+                }
+            }
+        });
         ViewUtil.setTextOrGone(mCompanyDescription, mCompany.getShortDescription());
         getActivity().setTitle(mCompany.getName());
         updateSocialMedia();
+        updateHeadquarters();
+    }
+
+    private void updateHeadquarters() {
+        final Address hq = mCompany.getHeadquarters();
+        if (hq == null) {
+            mTableRowHq.setVisibility(View.GONE);
+        } else if (hq.getCity() != null && hq.getRegion() != null) {
+            final String addr = hq.getCity() + ", " + hq.getRegion();
+            mCompanyHq.setText(addr);
+        } else if (hq.getCity() != null && hq.getCountry() != null) {
+            final String addr = hq.getCity() + ", " + hq.getCountry();
+            mCompanyHq.setText(addr);
+        } else if (hq.getRegion() != null) {
+            mCompanyHq.setText(hq.getRegion());
+        } else if (hq.getCity() != null) {
+            mCompanyHq.setText(hq.getCity());
+        } else if (hq.getCountry() != null) {
+            mCompanyHq.setText(hq.getCountry());
+        } else {
+            mTableRowHq.setVisibility(View.GONE);
+        }
     }
 
     private void updateSocialMedia() {

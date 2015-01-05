@@ -1,277 +1,242 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
+<ScrollView
+    android:id="@+id/scroll_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <ScrollView
-        android:id="@+id/scroll_view"
-        xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
 
-
-        <LinearLayout
+        <ImageView
+            android:id="@+id/image_view_logo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:orientation="vertical">
+            android:scaleType="centerCrop"/>
 
-            <ImageView
-                android:id="@+id/image_view_logo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="centerCrop"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Overview"
+            android:textAppearance="@style/InfoSessionCompanyName"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Overview"
-                android:textAppearance="@style/InfoSessionCompanyName"/>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/info_session_end"
+            android:padding="16dp"
+            android:shrinkColumns="1"
+            android:stretchColumns="*">
 
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/info_session_end"
-                android:padding="20dp"
-                android:shrinkColumns="1"
-                android:stretchColumns="*">
-
-                <TableRow>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:text="Company:"
-                        android:textAppearance="@style/InfoSessionCompanyLabel"/>
-
-                    <TextView
-                        android:id="@+id/company_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:maxLines="1"
-                        android:padding="4dp"
-                        android:textAppearance="@style/InfoSessionCompanyValue"
-                        tools:text="Google"/>
-                </TableRow>
-
-                <TableRow>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:text="Headquarters:"
-                        android:textAppearance="@style/InfoSessionCompanyLabel"/>
-
-                    <TextView
-                        android:id="@+id/company_hq"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:maxLines="1"
-                        android:padding="4dp"
-                        android:text="Mountain View, CA"
-                        android:textAppearance="@style/InfoSessionCompanyValue"/>
-                </TableRow>
-
-                <TableRow>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:text="Website:"
-                        android:textAppearance="@style/InfoSessionCompanyLabel"/>
-
-                    <TextView
-                        android:id="@+id/company_website"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:maxLines="1"
-                        android:padding="4dp"
-                        android:textAppearance="@style/InfoSessionCompanyValue"
-                        tools:text="www.google.com"/>
-                </TableRow>
+            <TableRow>
 
                 <TextView
-                    android:id="@+id/company_desc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
-                    android:maxLines="15"
+                    android:text="Company:"
+                    android:textAppearance="@style/InfoSessionCompanyLabel"/>
+
+                <TextView
+                    android:id="@+id/company_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    tools:text="Some really long long long long long loong description"/>
+                    android:gravity="left"
+                    android:maxLines="1"
+                    android:padding="4dp"
+                    android:textAppearance="@style/InfoSessionCompanyValuePrimary"
+                    tools:text="Google"/>
+            </TableRow>
 
-                <LinearLayout
-                    android:id="@+id/company_social_media"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingLeft="4dp"
-                    android:paddingTop="8dp">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginRight="10dp"
-                        android:src="@drawable/ic_logo_facebook"/>
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginRight="10dp"
-                        android:src="@drawable/ic_logo_twitter"/>
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginRight="10dp"
-                        android:src="@drawable/ic_logo_instagram"/>
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginRight="10dp"
-                        android:src="@drawable/ic_logo_linkedin"/>
-                </LinearLayout>
-
-            </TableLayout>
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="20dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Info Session"
-                android:textAppearance="@style/InfoSessionCompanyName"/>
-
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/info_session_end"
-                android:padding="20dp"
-                android:shrinkColumns="1"
-                android:stretchColumns="*">
-
-
-                <TableRow>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:text="Date:"
-                        android:textAppearance="@style/InfoSessionCompanyLabel"/>
-
-                    <TextView
-                        android:id="@+id/session_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:maxLines="1"
-                        android:padding="4dp"
-                        android:textAppearance="@style/InfoSessionCompanyValue"
-                        tools:text="September 27, 2014"/>
-                </TableRow>
-
-                <TableRow>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:text="Time:"
-                        android:textAppearance="@style/InfoSessionCompanyLabel"/>
-
-                    <TextView
-                        android:id="@+id/session_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:maxLines="1"
-                        android:padding="4dp"
-                        android:textAppearance="@style/InfoSessionCompanyValue"
-                        tools:text="7:00 - 9:00pm"/>
-                </TableRow>
-
-                <TableRow>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:text="Location:"
-                        android:textAppearance="@style/InfoSessionCompanyLabel"/>
-
-                    <TextView
-                        android:id="@+id/session_location"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:padding="4dp"
-                        android:textAppearance="@style/InfoSessionCompanyValue"
-                        tools:text="TC 2018"/>
-                </TableRow>
-
-                <TableRow>
-
-                    <CheckBox
-                        android:id="@+id/session_coop"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:clickable="false"
-                        android:gravity="center_vertical"
-                        android:padding="4dp"
-                        android:text="Co-ops"/>
-
-                    <CheckBox
-                        android:id="@+id/session_graduate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:clickable="false"
-                        android:gravity="center_vertical"
-                        android:padding="4dp"
-                        android:text="Graduates"/>
-                </TableRow>
+            <TableRow android:id="@+id/company_row_hq">
 
                 <TextView
-                    android:id="@+id/session_desc"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
-                    tools:text="Google provides search and advertising services, which together aim to organize and monetize the world's information. In addition to its dominant search engine, it offers a plethora of online tools and platforms including: Gmail, Maps, YouTube, and Google+, the company's extension into the social space. Most of its Web-based products are free, funded by Google's highly integrated online advertising platforms AdWords and AdSense. Google promotes the idea that advertising should be highly targeted and relevant to users thus providing them with a rich source of information. Google has also made strong moves into the web-based apps space with acquisitions of Jotspot (documents), 2Web Technologies (spreadsheets) and Zenter (presentations). The company has also made a splash with the acquisitions of YouTube, DoubleClick and Feedburner."/>
+                    android:text="Headquarters:"
+                    android:textAppearance="@style/InfoSessionCompanyLabel"/>
 
-            </TableLayout>
+                <TextView
+                    android:id="@+id/company_hq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:maxLines="2"
+                    android:padding="4dp"
+                    android:text="Mountain View, California"
+                    android:textAppearance="@style/InfoSessionCompanyValue"/>
+            </TableRow>
 
-            <View
+            <TextView
+                android:id="@+id/company_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="15"
+                android:padding="4dp"
+                tools:text="Some really long long long long long loong description"/>
+
+            <LinearLayout
+                android:id="@+id/company_social_media"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="4dp"
+                android:paddingTop="8dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_logo_facebook"/>
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_logo_twitter"/>
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_logo_instagram"/>
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_logo_linkedin"/>
+            </LinearLayout>
+
+        </TableLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Info Session"
+            android:textAppearance="@style/InfoSessionCompanyName"/>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/info_session_end"
+            android:padding="16dp"
+            android:shrinkColumns="1"
+            android:stretchColumns="*">
+
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Date:"
+                    android:textAppearance="@style/InfoSessionCompanyLabel"/>
+
+                <TextView
+                    android:id="@+id/session_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:maxLines="1"
+                    android:padding="4dp"
+                    android:textAppearance="@style/InfoSessionCompanyValue"
+                    tools:text="September 27, 2014"/>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Time:"
+                    android:textAppearance="@style/InfoSessionCompanyLabel"/>
+
+                <TextView
+                    android:id="@+id/session_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:maxLines="1"
+                    android:padding="4dp"
+                    android:textAppearance="@style/InfoSessionCompanyValue"
+                    tools:text="7:00 - 9:00pm"/>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Location:"
+                    android:textAppearance="@style/InfoSessionCompanyLabel"/>
+
+                <TextView
+                    android:id="@+id/session_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:padding="4dp"
+                    android:textAppearance="@style/InfoSessionCompanyValue"
+                    tools:text="TC 2018"/>
+            </TableRow>
+
+            <TableRow>
+
+                <CheckBox
+                    android:id="@+id/session_coop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:clickable="false"
+                    android:gravity="center_vertical"
+                    android:padding="4dp"
+                    android:text="Co-ops"/>
+
+                <CheckBox
+                    android:id="@+id/session_graduate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:clickable="false"
+                    android:gravity="center_vertical"
+                    android:padding="4dp"
+                    android:text="Graduates"/>
+            </TableRow>
+
+            <TextView
+                android:id="@+id/session_desc"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"/>
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                tools:text="Google provides search and advertising services, which together aim to organize and monetize the world's information. In addition to its dominant search engine, it offers a plethora of online tools and platforms including: Gmail, Maps, YouTube, and Google+, the company's extension into the social space. Most of its Web-based products are free, funded by Google's highly integrated online advertising platforms AdWords and AdSense. Google promotes the idea that advertising should be highly targeted and relevant to users thus providing them with a rich source of information. Google has also made strong moves into the web-based apps space with acquisitions of Jotspot (documents), 2Web Technologies (spreadsheets) and Zenter (presentations). The company has also made a splash with the acquisitions of YouTube, DoubleClick and Feedburner."/>
 
-        </LinearLayout>
-    </ScrollView>
+        </TableLayout>
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
 
-</FrameLayout>
+    </LinearLayout>
+</ScrollView>
