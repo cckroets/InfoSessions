@@ -159,9 +159,8 @@ public class  CompanyInfoFragment extends RoboFragment {
     }
 
     private String getTimeString() {
-        return DateUtils.formatDateRange(getActivity(),
-                mWaterlooInfoSession.getStartTime().getTimeInMillis(),
-                mWaterlooInfoSession.getEndTime().getTimeInMillis(),
-                DateUtils.FORMAT_NO_MONTH_DAY | DateUtils.FORMAT_NO_YEAR);
+        final String startTime = sStartTimeFormat.format(mWaterlooInfoSession.getStartTime().getTime());
+        final String endTime = sEndTimeFormat.format(mWaterlooInfoSession.getEndTime().getTime());
+        return startTime + " - " + endTime;
     }
 }
