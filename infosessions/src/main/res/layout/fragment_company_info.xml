@@ -108,6 +108,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
+                    android:maxLines="15"
+                    android:ellipsize="end"
                     tools:text="Some really long long long long long loong description"/>
 
                 <LinearLayout

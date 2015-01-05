@@ -3,6 +3,8 @@ package com.sixbynine.infosessions.app;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -148,7 +150,7 @@ public class CompanyInfoFragment extends RoboFragment {
         mSessionLocation.setText(mWaterlooInfoSession.getLocation());
         mSessionCoop.setChecked(mWaterlooInfoSession.isForCoops());
         mSessionGraduate.setChecked(mWaterlooInfoSession.isForGraduates());
-        mSessionDescription.setText(mWaterlooInfoSession.getDescription());
+        mSessionDescription.setText(Html.fromHtml(mWaterlooInfoSession.getDescription()));
     }
 
     private void updateCompanyInfo() {
@@ -156,7 +158,7 @@ public class CompanyInfoFragment extends RoboFragment {
             return;
         }
         mCompanyName.setText(mCompany.getName());
-        mCompanyDescription.setText(mCompany.getDescription());
+        mCompanyDescription.setText(mCompany.getShortDescription());
         mCompanyWebsite.setText(mCompany.getHomePageUrl());
         mCompanyHq.setText(mCompany.getHeadquarters().getCity());
         getActivity().setTitle(mCompany.getName());
