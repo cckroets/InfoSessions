@@ -27,6 +27,7 @@ import com.sixbynine.infosessions.ui.HeaderSubheaderView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -120,7 +121,7 @@ public class SettingsActivity extends RoboActionBarActivity implements View.OnCl
     private void onProgramClicked() {
         final Set<String> programs = mPreferenceManager.getStrings(PreferenceManager.Keys.INTERESTED_PROGRAMS);
         final ListView listView = new ListView(this);
-        final ProgramListAdapter adapter = new ProgramListAdapter(this, programs);
+        final ProgramListAdapter adapter = new ProgramListAdapter(this, new HashSet<>(programs));
         listView.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
         listView.setAdapter(adapter);
         listView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
