@@ -5,13 +5,13 @@
     <FrameLayout
         android:id="@+id/textContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/checkBoxContainer">
 
         <com.sixbynine.infosessions.ui.HeaderSubheaderView
             android:id="@+id/two_line_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"/>
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/one_line_view"
@@ -21,7 +21,6 @@
             android:textColor="@android:color/black"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
-            android:background="?attr/selectableItemBackground"
             android:text="Hello"/>
 
     </FrameLayout>
@@ -29,7 +28,7 @@
     <FrameLayout
         android:id="@+id/checkBoxContainer"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_alignTop="@+id/textContainer"
         android:layout_alignBottom="@+id/textContainer"
         android:layout_alignParentRight="true">
@@ -38,7 +37,7 @@
             android:id="@+id/checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
+            android:layout_gravity="center_vertical"    />
 
     </FrameLayout>
 

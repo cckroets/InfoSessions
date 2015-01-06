@@ -20,6 +20,7 @@ import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.app.MyApplication;
 import com.sixbynine.infosessions.data.PreferenceManager;
+import com.sixbynine.infosessions.model.NotificationPreference;
 import com.sixbynine.infosessions.model.programs.Faculty;
 import com.sixbynine.infosessions.model.programs.Program;
 import com.sixbynine.infosessions.ui.CheckableTextView;
@@ -50,6 +51,12 @@ public class SettingsActivity extends RoboActionBarActivity implements View.OnCl
     CheckableTextView mCoopCheckableTextView;
     @InjectView(R.id.settings_graduate)
     CheckableTextView mGraduateCheckableTextView;
+    @InjectView(R.id.settings_vibrate)
+    CheckableTextView mVibrateCheckableTextView;
+    @InjectView(R.id.settings_sound)
+    CheckableTextView mSoundCheckableTextView;
+    @InjectView(R.id.settings_light)
+    CheckableTextView mLightCheckableTextView;
 
     @Inject
     PreferenceManager mPreferenceManager;
@@ -76,6 +83,42 @@ public class SettingsActivity extends RoboActionBarActivity implements View.OnCl
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mPreferenceManager.putBoolean(PreferenceManager.Keys.SHOW_GRADUATE_TAB, isChecked);
                 syncViews();
+            }
+        });
+        mVibrateCheckableTextView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                NotificationPreference pref = NotificationPreference.getNotificationPreference(mPreferenceManager);
+                if(isChecked){
+                    pref.add(NotificationPreference.VIBRATE);
+                }else{
+                    pref.remove(NotificationPreference.VIBRATE);
+                }
+                NotificationPreference.saveNotificationPreference(pref, mPreferenceManager);
+            }
+        });
+        mSoundCheckableTextView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                NotificationPreference pref = NotificationPreference.getNotificationPreference(mPreferenceManager);
+                if(isChecked){
+                    pref.add(NotificationPreference.SOUND);
+                }else{
+                    pref.remove(NotificationPreference.SOUND);
+                }
+                NotificationPreference.saveNotificationPreference(pref, mPreferenceManager);
+            }
+        });
+        mLightCheckableTextView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                NotificationPreference pref = NotificationPreference.getNotificationPreference(mPreferenceManager);
+                if(isChecked){
+                    pref.add(NotificationPreference.LIGHTS);
+                }else{
+                    pref.remove(NotificationPreference.LIGHTS);
+                }
+                NotificationPreference.saveNotificationPreference(pref, mPreferenceManager);
             }
         });
         syncViews();
@@ -116,6 +159,11 @@ public class SettingsActivity extends RoboActionBarActivity implements View.OnCl
 
         mCoopCheckableTextView.setChecked(mPreferenceManager.getBoolean(PreferenceManager.Keys.SHOW_COOP_TAB, true));
         mGraduateCheckableTextView.setChecked(mPreferenceManager.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE_TAB, true));
+
+        NotificationPreference pref = NotificationPreference.getNotificationPreference(mPreferenceManager);
+        mVibrateCheckableTextView.setChecked(pref.hasVibrate());
+        mSoundCheckableTextView.setChecked(pref.hasSound());
+        mLightCheckableTextView.setChecked(pref.hasLights());
     }
 
     private void onProgramClicked() {

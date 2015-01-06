@@ -72,11 +72,11 @@ public class CheckableTextView extends RelativeLayout implements Checkable, View
     protected void onFinishInflate() {
         super.onFinishInflate();
 
+
+        setOnClickListener(this);
         //Roboguice doesn't work in edit mode
         mHeaderSubheaderView = (HeaderSubheaderView) findViewById(R.id.two_line_view);
-        mHeaderSubheaderView.setOnClickListener(this);
         mOneLineTextView = (TextView) findViewById(R.id.one_line_view);
-        mOneLineTextView.setOnClickListener(this);
         mCheckbox = (CheckBox) findViewById(R.id.checkbox);
 
         if(mNumLines == 1){

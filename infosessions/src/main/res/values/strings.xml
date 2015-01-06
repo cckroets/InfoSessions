@@ -30,10 +30,14 @@
 
     <!-- Settings -->
     <string name="tabs">TABS</string>
-    <string name="interested_programs">Program</string>
+    <string name="alerts">ALERTS</string>
+    <string name="interested_programs">Programs</string>
     <string name="none_selected">None Selected</string>
     <string name="show_coop_tab">Show Co-op Tab</string>
     <string name="show_graduate_tab">Show Graduate Tab</string>
+    <string name="alerts_vibrate">Vibrate</string>
+    <string name="alerts_light">Light</string>
+    <string name="alerts_sound">Sound</string>
 
     <string name="faculty_all">ALL - %1$s</string>
     <string name="select_programs">Select Programs</string>
