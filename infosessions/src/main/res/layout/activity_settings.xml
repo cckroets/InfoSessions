@@ -15,18 +15,9 @@
             style="@style/SettingsHeaderTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/tabs" />
+            android:text="@string/info_sessions" />
 
         <View style="@style/SettingsHeader" />
-
-        <com.sixbynine.infosessions.ui.HeaderSubheaderView
-            android:id="@+id/settings_program"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            app:hsvHeaderText="@string/interested_programs" />
-
-        <View style="@style/SettingsDivider" />
 
         <com.sixbynine.infosessions.ui.CheckableTextView
             android:id="@+id/settings_coop"
@@ -47,6 +38,28 @@
             android:text="@string/show_graduate_tab" />
 
         <View style="@style/SettingsDivider" />
+
+
+
+        <TextView
+            style="@style/SettingsHeaderTextView"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tabs" />
+
+        <View style="@style/SettingsHeader" />
+
+        <com.sixbynine.infosessions.ui.HeaderSubheaderView
+            android:id="@+id/settings_program"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            app:hsvHeaderText="@string/interested_programs" />
+
+        <View style="@style/SettingsDivider" />
+
+
 
         <TextView
             style="@style/SettingsHeaderTextView"

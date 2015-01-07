@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.inject.Inject;
 import com.sixbynine.infosessions.app.MyApplication;
 import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
+import com.sixbynine.infosessions.data.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -154,6 +155,9 @@ public class WaterlooInfoSession implements Parcelable{
         @Inject
         InfoSessionPreferenceManager manager;
 
+        @Inject
+        PreferenceManager preferenceManager;
+
         public Filter(){
             RoboGuice.getInjector(MyApplication.getInstance()).injectMembersWithoutViews(this);
         }
@@ -164,13 +168,13 @@ public class WaterlooInfoSession implements Parcelable{
          * @param p the associated user preference for the info session
          * @return true if the info session matches the criteria of the filter, false otherwise
          */
-        public abstract boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p);
+        public abstract boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p, PreferenceManager m);
 
         public ArrayList<WaterlooInfoSession> filter(List<WaterlooInfoSession> infoSessions){
             ArrayList<WaterlooInfoSession> result = new ArrayList<>();
             for(WaterlooInfoSession i : infoSessions){
                 WaterlooInfoSessionPreferences p = manager.getPreferences(i);
-                if(matches(i, p)){
+                if(matches(i, p, preferenceManager)){
                     result.add(i);
                 }
             }

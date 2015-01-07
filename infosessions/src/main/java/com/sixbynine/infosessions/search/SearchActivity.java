@@ -14,6 +14,7 @@ import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.app.BaseActivity;
 import com.sixbynine.infosessions.app.CompanyInfoActivity;
 import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
+import com.sixbynine.infosessions.data.PreferenceManager;
 import com.sixbynine.infosessions.home.InfoSessionListAdapter;
 import com.sixbynine.infosessions.home.InfoSessionListFragment;
 import com.sixbynine.infosessions.model.group.InfoSessionGroup;
@@ -113,7 +114,7 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
             final String query = s;
             WaterlooInfoSession.Filter filter = new WaterlooInfoSession.Filter(){
                 @Override
-                public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
+                public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p, PreferenceManager m) {
                     return i.getCompanyName().toUpperCase().contains(query.toUpperCase());
                 }
             };

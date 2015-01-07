@@ -12,7 +12,7 @@ import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
 
 @ContentView(R.layout.activity_company_info)
-public class CompanyInfoActivity extends RoboActionBarActivity {
+public class CompanyInfoActivity extends BaseActivity {
 
     public static final String INFO_SESSION_KEY = "key-info-session";
 

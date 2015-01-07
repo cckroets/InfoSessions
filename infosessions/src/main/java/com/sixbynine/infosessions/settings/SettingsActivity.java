@@ -15,11 +15,9 @@ import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.data.PreferenceManager;
 import com.sixbynine.infosessions.alarm.NotificationPreference;
-import com.sixbynine.infosessions.event.data.InfoSessionPreferencesModifiedEvent;
 import com.sixbynine.infosessions.model.programs.Program;
 import com.sixbynine.infosessions.ui.CheckableTextView;
 import com.sixbynine.infosessions.ui.HeaderSubheaderView;
-import com.squareup.otto.Subscribe;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -63,14 +61,20 @@ public class SettingsActivity extends RoboActionBarActivity implements View.OnCl
         mCoopCheckableTextView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mPreferenceManager.putBoolean(PreferenceManager.Keys.SHOW_COOP_TAB, isChecked);
+                if(!isChecked && !mGraduateCheckableTextView.isChecked()){
+                    mGraduateCheckableTextView.setChecked(true);
+                }
+                mPreferenceManager.putBoolean(PreferenceManager.Keys.SHOW_COOP, isChecked);
                 syncViews();
             }
         });
         mGraduateCheckableTextView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mPreferenceManager.putBoolean(PreferenceManager.Keys.SHOW_GRADUATE_TAB, isChecked);
+                if(!isChecked && !mCoopCheckableTextView.isChecked()){
+                    mCoopCheckableTextView.setChecked(true);
+                }
+                mPreferenceManager.putBoolean(PreferenceManager.Keys.SHOW_GRADUATE, isChecked);
                 syncViews();
             }
         });
@@ -132,6 +136,12 @@ public class SettingsActivity extends RoboActionBarActivity implements View.OnCl
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        setResult(RESULT_OK);
+    }
+
     private void syncViews() {
         Set<String> programs = mPreferenceManager.getStrings(PreferenceManager.Keys.INTERESTED_PROGRAMS);
         String text;
@@ -146,8 +156,8 @@ public class SettingsActivity extends RoboActionBarActivity implements View.OnCl
         }
         mProgramView.setSubheaderText(text);
 
-        mCoopCheckableTextView.setChecked(mPreferenceManager.getBoolean(PreferenceManager.Keys.SHOW_COOP_TAB, true));
-        mGraduateCheckableTextView.setChecked(mPreferenceManager.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE_TAB, true));
+        mCoopCheckableTextView.setChecked(mPreferenceManager.getBoolean(PreferenceManager.Keys.SHOW_COOP, true));
+        mGraduateCheckableTextView.setChecked(mPreferenceManager.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE, true));
 
         NotificationPreference pref = NotificationPreference.getNotificationPreference(mPreferenceManager);
         mVibrateCheckableTextView.setChecked(pref.hasVibrate());

@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.IntDef;
 
+import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.app.MyApplication;
 import com.sixbynine.infosessions.data.PreferenceManager;
@@ -21,25 +22,25 @@ import java.util.List;
 public final class InfoSessionGroup implements Parcelable{
     public static final InfoSessionGroup ALL = new InfoSessionGroup(0, R.string.tab_all, new WaterlooInfoSession.Filter() {
         @Override
-        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
+        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p, PreferenceManager m) {
             return true;
         }
     });
     public static final InfoSessionGroup FAVORITES = new InfoSessionGroup(1, R.string.tab_favorites, new WaterlooInfoSession.Filter() {
         @Override
-        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
+        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p, PreferenceManager m) {
             return p.isFavorited();
         }
     });
     public static final InfoSessionGroup COOP = new InfoSessionGroup(2, R.string.tab_coop, new WaterlooInfoSession.Filter() {
         @Override
-        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
+        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p, PreferenceManager m) {
             return i.isForCoops();
         }
     });
     public static final InfoSessionGroup GRADUATE = new InfoSessionGroup(3, R.string.tab_graduate, new WaterlooInfoSession.Filter() {
         @Override
-        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
+        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p, PreferenceManager m) {
             return i.isForGraduates();
         }
     });
@@ -152,8 +153,8 @@ public final class InfoSessionGroup implements Parcelable{
     public static InfoSessionGroup createGroupForFaculty(final Faculty faculty){
         InfoSessionGroup group = new InfoSessionGroup(faculty.name(), new WaterlooInfoSession.Filter() {
             @Override
-            public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
-                return matchesFaculty(i, faculty);
+            public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p, PreferenceManager m) {
+                return matchesCoopGradPreference(m, i) && matchesFaculty(i, faculty);
             }
         }, FACULTY);
         group.faculty = faculty;
@@ -163,12 +164,17 @@ public final class InfoSessionGroup implements Parcelable{
     public static InfoSessionGroup createGroupForProgram(final Program program){
         InfoSessionGroup group = new InfoSessionGroup(program.name().replaceAll("_", " "), new WaterlooInfoSession.Filter() {
             @Override
-            public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
-                return matchesFaculty(i, program.getFaculty()) || matchesProgram(i, program);
+            public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p, PreferenceManager m) {
+                return matchesCoopGradPreference(m, i) && (matchesFaculty(i, program.getFaculty()) || matchesProgram(i, program));
             }
         }, PROGRAM);
         group.program = program;
         return group;
+    }
+
+    private static boolean matchesCoopGradPreference(PreferenceManager m, WaterlooInfoSession i){
+        return (m.getBoolean(PreferenceManager.Keys.SHOW_COOP, true) && i.isForCoops()
+                || m.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE, true) && i.isForGraduates());
     }
 
     private static boolean matchesFaculty(WaterlooInfoSession i, Faculty faculty){
@@ -181,15 +187,21 @@ public final class InfoSessionGroup implements Parcelable{
 
     public static List<InfoSessionGroup> getGroups(PreferenceManager preferenceManager){
         List<InfoSessionGroup> tabs = new ArrayList<>();
-        tabs.add(ALL);
-        tabs.add(FAVORITES);
 
-        if(preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_COOP_TAB, true)){
+        if(preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_COOP, true) &&
+                preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE, true)){
+            tabs.add(ALL);
+            tabs.add(FAVORITES);
             tabs.add(COOP);
-        }
-
-        if(preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE_TAB, true)){
             tabs.add(GRADUATE);
+        }else if(preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_COOP, true)){
+            tabs.add(COOP);
+            tabs.add(FAVORITES);
+        }else if(preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE, true)){
+            tabs.add(GRADUATE);
+            tabs.add(FAVORITES);
+        }else{
+            tabs.add(FAVORITES);
         }
 
         for(String s : preferenceManager.getStrings(PreferenceManager.Keys.INTERESTED_PROGRAMS)){

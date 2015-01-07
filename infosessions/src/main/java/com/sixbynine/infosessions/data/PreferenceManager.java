@@ -75,8 +75,8 @@ public final class PreferenceManager {
 
     public final class Keys{
         public static final String INTERESTED_PROGRAMS = "programs-key";
-        public static final String SHOW_COOP_TAB = "show-coop-tab-key";
-        public static final String SHOW_GRADUATE_TAB = "show-grad-tab-key";
+        public static final String SHOW_COOP = "show-coop-tab-key";
+        public static final String SHOW_GRADUATE = "show-grad-tab-key";
         public static final String ALERT_PREFERENCE = "alert-preference";
     }
 }

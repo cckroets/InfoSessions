@@ -30,11 +30,12 @@
 
     <!-- Settings -->
     <string name="tabs">TABS</string>
-    <string name="alerts">ALERTS</string>
+    <string name="alerts">NOTIFICATIONS</string>
+    <string name="info_sessions">INFO SESSIONS</string>
     <string name="interested_programs">Programs</string>
     <string name="none_selected">None Selected</string>
-    <string name="show_coop_tab">Show Co-op Tab</string>
-    <string name="show_graduate_tab">Show Graduate Tab</string>
+    <string name="show_coop_tab">Show Co-op Sessions</string>
+    <string name="show_graduate_tab">Show Graduate Sessions</string>
     <string name="alerts_vibrate">Vibrate</string>
     <string name="alerts_light">Light</string>
     <string name="alerts_sound">Sound</string>
