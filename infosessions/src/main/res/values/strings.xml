@@ -45,15 +45,45 @@
     <!-- Simple Words -->
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="add">Add</string>
 
     <!-- Tooltips for the buttons on the card -->
-    <string name="favorite_tooltip">Add To Favourites</string>
-    <string name="alarm_tooltip">Set A Reminder</string>
+    <string name="add_favorite">Add To Favourites</string>
+    <string name="remove_favorite">Remove From Favourites</string>
+    <string name="add_reminder">Add Reminder</string>
+    <string name="remove_reminder">Remove Reminder</string>
     <string name="calendar_tooltip">Add To Calendar</string>
     <string name="share_tooltip">Share</string>
 
     <!-- Calendar Strings -->
     <string name="event_header">%1$s Info Session</string>
+    <string name="time_in_place">%1$s in %2$s</string>
+
+    <!-- Alarm Strings -->
+    <string name="remove_alarm">Remove reminder?</string>
+    <string name="remove_alarm_message_minutes">The current reminder is set to go off %1$d minutes before the info session</string>
+    <string name="remove_alarm_message_hours">The current reminder is set to go off %1$d hours before the info session</string>
+    <string name="alarm_choices_title">Add Reminder</string>
+    <string name="alarm_choices_prompt">How long before the event should the reminder go off?</string>
+    <string-array name="alarm_choices">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>2 hours</item>
+        <item>6 hours</item>
+        <item>24 hours</item>
+    </string-array>
+    <integer-array name="alarm_choices_minutes_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+        <item>360</item>
+        <item>1440</item>
+    </integer-array>
+
 
 
 </resources>

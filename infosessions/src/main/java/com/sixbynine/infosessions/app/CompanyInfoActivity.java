@@ -3,7 +3,9 @@ package com.sixbynine.infosessions.app;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
+import com.sixbynine.infosessions.alarm.AlarmManager;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 
 import roboguice.activity.RoboActionBarActivity;

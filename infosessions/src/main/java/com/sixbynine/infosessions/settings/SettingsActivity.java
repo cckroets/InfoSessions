@@ -5,38 +5,27 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
-import com.sixbynine.infosessions.app.MyApplication;
 import com.sixbynine.infosessions.data.PreferenceManager;
-import com.sixbynine.infosessions.model.NotificationPreference;
-import com.sixbynine.infosessions.model.programs.Faculty;
+import com.sixbynine.infosessions.alarm.NotificationPreference;
+import com.sixbynine.infosessions.event.data.InfoSessionPreferencesModifiedEvent;
 import com.sixbynine.infosessions.model.programs.Program;
 import com.sixbynine.infosessions.ui.CheckableTextView;
 import com.sixbynine.infosessions.ui.HeaderSubheaderView;
+import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import roboguice.activity.RoboActionBarActivity;
-import roboguice.activity.RoboPreferenceActivity;
-import roboguice.fragment.provided.RoboPreferenceFragment;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 

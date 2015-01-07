@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,18 +15,25 @@ import android.widget.Toast;
 
 import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
+import com.sixbynine.infosessions.alarm.AlarmManager;
 import com.sixbynine.infosessions.app.BaseActivity;
 import com.sixbynine.infosessions.app.CompanyInfoActivity;
 import com.sixbynine.infosessions.data.InfoSessionManager;
 import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
 import com.sixbynine.infosessions.data.ResponseHandler;
+import com.sixbynine.infosessions.event.MainBus;
+import com.sixbynine.infosessions.event.data.CompanyLoadedEvent;
+import com.sixbynine.infosessions.event.data.InfoSessionPreferencesModifiedEvent;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionCollection;
+import com.sixbynine.infosessions.model.company.Company;
 import com.sixbynine.infosessions.search.SearchActivity;
 import com.sixbynine.infosessions.settings.SettingsActivity;
 import com.sixbynine.infosessions.ui.InfoSessionUtil;
 import com.sixbynine.infosessions.ui.PagerSlidingTabStrip;
+import com.sixbynine.infosessions.util.Logger;
 import com.sixbynine.infosessions.util.StoreUtils;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
@@ -46,6 +54,9 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
 
     @Inject
     InfoSessionManager mInfoSessionManager;
+
+    @Inject
+    InfoSessionUtil mUtil;
 
     private static final int SEARCH_REQUEST_CODE = 0;
     private static final int SETTINGS_REQUEST_CODE = 1;
@@ -88,6 +99,11 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
         return true;
     }
 
+    @Subscribe
+    public void onInfoSessionModified(InfoSessionPreferencesModifiedEvent event) {
+        updateListFragments();
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -113,47 +129,41 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
     }
 
     @Override
-    public void onFavoriteClicked(WaterlooInfoSession infoSession) {
-        mInfoSessionPreferenceManager.editPreferences(infoSession)
-                .toggleFavorited()
-                .commit();
-        updateListFragments();
-    }
-
-    @Override
-    public void onShareClicked(WaterlooInfoSession infoSession) {
-        Toast.makeText(this, infoSession.getCompanyName() + " shared", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onAlarmClicked(WaterlooInfoSession infoSession) {
-        Toast.makeText(this, infoSession.getCompanyName() + " alarm", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onCalendarClicked(WaterlooInfoSession infoSession) {
-        InfoSessionUtil.launchCalendarIntent(this, infoSession);
-    }
-
-    @Override
-    public void onDismiss(WaterlooInfoSession infoSession) {
-        mInfoSessionPreferenceManager.editPreferences(infoSession)
-                .toggleDismissed()
-                .commit();
-        updateListFragments();
+    public void onInfoSessionEvent(InfoSessionListAdapter.Event event, WaterlooInfoSession infoSession) {
+        switch(event){
+            case FAVORITE:
+                mInfoSessionPreferenceManager.editPreferences(infoSession)
+                        .toggleFavorited()
+                        .commit();
+                updateListFragments();
+                break;
+            case CALENDAR:
+                mUtil.launchCalendarIntent(this, infoSession);
+                break;
+            case SHARE:
+                Toast.makeText(this, infoSession.getCompanyName() + " shared", Toast.LENGTH_SHORT).show();
+                break;
+            case ALARM:
+                mUtil.doAlarmLogic(this, infoSession);
+                break;
+            case DISMISS:
+                mInfoSessionPreferenceManager.editPreferences(infoSession)
+                        .toggleDismissed()
+                        .commit();
+                updateListFragments();
+                break;
+            case CLICK:
+                Intent intent = new Intent(this, CompanyInfoActivity.class);
+                intent.putExtra(CompanyInfoActivity.INFO_SESSION_KEY, infoSession);
+                startActivity(intent);
+                break;
+        }
     }
 
     private void updateListFragments(){
         for(InfoSessionListFragment frag : mPagerAdapter.getListFragments()){
             if(frag != null) frag.refreshData();
         }
-    }
-
-    @Override
-    public void onInfoSessionClicked(WaterlooInfoSession infoSession) {
-        Intent intent = new Intent(this, CompanyInfoActivity.class);
-        intent.putExtra(CompanyInfoActivity.INFO_SESSION_KEY, infoSession);
-        startActivity(intent);
     }
 
     @Override

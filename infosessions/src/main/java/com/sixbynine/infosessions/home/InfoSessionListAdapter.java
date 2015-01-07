@@ -1,6 +1,8 @@
 package com.sixbynine.infosessions.home;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
+import com.sixbynine.infosessions.BuildConfig;
 import com.sixbynine.infosessions.R;
+import com.sixbynine.infosessions.alarm.AlarmManager;
 import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
@@ -45,6 +49,9 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
 
     @Inject
     InfoSessionManager mInfoSessionManager;
+
+    @Inject
+    AlarmManager mAlarmManager;
 
     private InfoSessionActionListener mListener;
 
@@ -92,8 +99,7 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
             if(Build.VERSION.SDK_INT < 14){
                 viewHolder.calendarButton.setVisibility(View.GONE); //calendar intent only works in 14 and higher
             }
-            CheatSheet.setup(viewHolder.favoriteButton, R.string.favorite_tooltip);
-            CheatSheet.setup(viewHolder.alarmButton, R.string.alarm_tooltip);
+
             CheatSheet.setup(viewHolder.calendarButton, R.string.calendar_tooltip);
             CheatSheet.setup(viewHolder.shareButton, R.string.share_tooltip);
         } else {
@@ -131,40 +137,72 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         viewHolder.location.setText(infoSession.getLocation());
         if (preferences.isFavorited()) {
             viewHolder.favoriteButton.setImageResource(R.drawable.ic_action_favorite);
+            CheatSheet.setup(viewHolder.favoriteButton, R.string.remove_favorite);
         } else {
             viewHolder.favoriteButton.setImageResource(R.drawable.ic_action_favorite_outline);
+            CheatSheet.setup(viewHolder.favoriteButton, R.string.add_favorite);
+        }
+        if(preferences.hasAlarm()){
+            viewHolder.alarmButton.setImageResource(R.drawable.ic_action_alarm_on);
+            CheatSheet.setup(viewHolder.alarmButton, R.string.remove_reminder);
+        }else{
+            viewHolder.alarmButton.setImageResource(R.drawable.ic_action_alarm_add);
+            CheatSheet.setup(viewHolder.alarmButton, R.string.add_reminder);
         }
 
         viewHolder.favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null) mListener.onFavoriteClicked(infoSession);
+                fireEvent(Event.FAVORITE, infoSession);
             }
         });
         viewHolder.shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null) mListener.onShareClicked(infoSession);
+                fireEvent(Event.SHARE, infoSession);
             }
         });
         viewHolder.alarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null) mListener.onAlarmClicked(infoSession);
+                fireEvent(Event.ALARM, infoSession);
             }
         });
         viewHolder.calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null) mListener.onCalendarClicked(infoSession);
+                fireEvent(Event.CALENDAR, infoSession);
             }
         });
         viewHolder.clickableRegion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null) mListener.onInfoSessionClicked(infoSession);
+                fireEvent(Event.CLICK, infoSession);
             }
         });
+        if(BuildConfig.DEBUG){
+            viewHolder.clickableRegion.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    new AlertDialog.Builder(v.getContext())
+                            .setTitle("Generate test notification?")
+                            .setMessage("The notification will be shown in 5 seconds")
+                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    mAlarmManager.setTestAlarm(infoSession);
+                                }
+                            }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).create()
+                            .show();
+                    return true;
+                }
+            });
+        }
 
         return view;
     }
@@ -179,18 +217,18 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         Log.d("InfoSessions", "notifyDataSetChanged called");
     }
 
+    private void fireEvent(Event event, WaterlooInfoSession infoSession){
+        if(mListener != null){
+            mListener.onInfoSessionEvent(event, infoSession);
+        }
+    }
+
+    public  enum Event{
+        FAVORITE, SHARE, ALARM, CALENDAR, DISMISS, CLICK
+    }
+
     public interface InfoSessionActionListener {
-        public void onFavoriteClicked(WaterlooInfoSession infoSession);
-
-        public void onShareClicked(WaterlooInfoSession infoSession);
-
-        public void onAlarmClicked(WaterlooInfoSession infoSession);
-
-        public void onCalendarClicked(WaterlooInfoSession infoSession);
-
-        public void onDismiss(WaterlooInfoSession infoSession);
-
-        public void onInfoSessionClicked(WaterlooInfoSession infoSession);
+        public void onInfoSessionEvent(Event event, WaterlooInfoSession infoSession);
     }
 
     static class ViewHolder {

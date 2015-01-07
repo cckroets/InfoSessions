@@ -14,7 +14,7 @@ public class WaterlooInfoSessionPreferences implements Parcelable{
     private String mId;
     private boolean mDismissed;
     private boolean mFavorited;
-    private List<Integer> mAlarmIds;
+    private int mAlarm; //minutes preceding the event the alarm is set to, or 0 if no alarm set
 
     /**
      *
@@ -34,18 +34,14 @@ public class WaterlooInfoSessionPreferences implements Parcelable{
         mId = id;
         mDismissed = false;
         mFavorited = false;
-        mAlarmIds = new ArrayList<>();
+        mAlarm = 0;
     }
 
     private WaterlooInfoSessionPreferences(Parcel in){
         mId = in.readString();
         mDismissed = in.readInt() == 1;
         mFavorited = in.readInt() == 1;
-        int alarmIdSize = in.readInt();
-        mAlarmIds = new ArrayList<>(alarmIdSize);
-        for(int i = 0; i < alarmIdSize; i ++){
-            mAlarmIds.add(in.readInt());
-        }
+        mAlarm = in.readInt();
     }
 
     public String getId() {
@@ -60,8 +56,12 @@ public class WaterlooInfoSessionPreferences implements Parcelable{
         return mFavorited;
     }
 
-    public List<Integer> getAlarmIds() {
-        return mAlarmIds;
+    public int getAlarm(){
+        return mAlarm;
+    }
+
+    public boolean hasAlarm(){
+        return mAlarm != 0;
     }
 
     public void setDismissed(boolean mDismissed) {
@@ -72,16 +72,12 @@ public class WaterlooInfoSessionPreferences implements Parcelable{
         this.mFavorited = mFavorited;
     }
 
-    public void setAlarmIds(List<Integer> mAlarmIds) {
-        this.mAlarmIds = mAlarmIds;
+    public void setAlarm(int minutes){
+        mAlarm = minutes;
     }
 
-    public boolean addAlarm(Integer id){
-        return mAlarmIds.add(id);
-    }
-
-    public boolean removeAlarm(Integer id){
-        return mAlarmIds.remove(id);
+    public void removeAlarm(){
+        mAlarm = 0;
     }
 
     @Override
@@ -94,11 +90,7 @@ public class WaterlooInfoSessionPreferences implements Parcelable{
         dest.writeString(mId);
         dest.writeInt(mDismissed? 1: 0);
         dest.writeInt(mFavorited? 1 : 0);
-        int size = mAlarmIds.size();
-        dest.writeInt(size);
-        for(int i = 0; i < size; i ++){
-            dest.writeInt(mAlarmIds.get(i));
-        }
+        dest.writeInt(mAlarm);
     }
 
     public static final Creator<WaterlooInfoSessionPreferences> CREATOR = new Creator<WaterlooInfoSessionPreferences>() {

@@ -14,6 +14,7 @@ import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.app.BaseActivity;
 import com.sixbynine.infosessions.app.CompanyInfoActivity;
 import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
+import com.sixbynine.infosessions.home.InfoSessionListAdapter;
 import com.sixbynine.infosessions.home.InfoSessionListFragment;
 import com.sixbynine.infosessions.model.group.InfoSessionGroup;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
@@ -39,6 +40,9 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
 
     @Inject
     InfoSessionPreferenceManager mInfoSessionPreferenceManager;
+
+    @Inject
+    InfoSessionUtil mUtil;
 
     public static void launchActivityForResult(Activity activity, int code, ArrayList<WaterlooInfoSession> sessions){
         Intent intent = new Intent(activity, SearchActivity.class);
@@ -121,37 +125,24 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
     };
 
     @Override
-    public void onFavoriteClicked(WaterlooInfoSession infoSession) {
-        mInfoSessionPreferenceManager.editPreferences(infoSession)
-                .toggleFavorited()
-                .commit();
-        mListFragment.refreshData();
+    public void onInfoSessionEvent(InfoSessionListAdapter.Event event, WaterlooInfoSession infoSession) {
+        switch(event){
+            case FAVORITE:
+                mInfoSessionPreferenceManager.editPreferences(infoSession)
+                        .toggleFavorited()
+                        .commit();
+                mListFragment.refreshData();
+                break;
+            case CALENDAR:
+                mUtil.launchCalendarIntent(this, infoSession);
+                break;
+            case CLICK:
+                Intent intent = new Intent(this, CompanyInfoActivity.class);
+                intent.putExtra(CompanyInfoActivity.INFO_SESSION_KEY, infoSession);
+                startActivity(intent);
+                break;
+
+        }
     }
 
-    @Override
-    public void onShareClicked(WaterlooInfoSession infoSession) {
-
-    }
-
-    @Override
-    public void onAlarmClicked(WaterlooInfoSession infoSession) {
-
-    }
-
-    @Override
-    public void onDismiss(WaterlooInfoSession infoSession) {
-
-    }
-
-    @Override
-    public void onCalendarClicked(WaterlooInfoSession infoSession) {
-        InfoSessionUtil.launchCalendarIntent(this, infoSession);
-    }
-
-    @Override
-    public void onInfoSessionClicked(WaterlooInfoSession infoSession) {
-        Intent intent = new Intent(this, CompanyInfoActivity.class);
-        intent.putExtra(CompanyInfoActivity.INFO_SESSION_KEY, infoSession);
-        startActivity(intent);
-    }
 }

@@ -58,12 +58,7 @@ public class InfoSessionListFragment extends RoboFragment implements
     List<WaterlooInfoSession> mAllSessions;
 
     public interface Callback{
-        public void onFavoriteClicked(WaterlooInfoSession infoSession);
-        public void onShareClicked(WaterlooInfoSession infoSession);
-        public void onAlarmClicked(WaterlooInfoSession infoSession);
-        public void onDismiss(WaterlooInfoSession infoSession);
-        public void onCalendarClicked(WaterlooInfoSession infoSession);
-        public void onInfoSessionClicked(WaterlooInfoSession infoSession);
+        public void onInfoSessionEvent(InfoSessionListAdapter.Event event, WaterlooInfoSession infoSession);
     }
 
     public static InfoSessionListFragment newInstance(InfoSessionGroup group, ArrayList<WaterlooInfoSession> infoSessions){
@@ -128,33 +123,8 @@ public class InfoSessionListFragment extends RoboFragment implements
     }
 
     @Override
-    public void onFavoriteClicked(WaterlooInfoSession infoSession) {
-        mCallback.onFavoriteClicked(infoSession);
-    }
-
-    @Override
-    public void onShareClicked(WaterlooInfoSession infoSession) {
-        mCallback.onShareClicked(infoSession);
-    }
-
-    @Override
-    public void onAlarmClicked(WaterlooInfoSession infoSession) {
-        mCallback.onAlarmClicked(infoSession);
-    }
-
-    @Override
-    public void onCalendarClicked(WaterlooInfoSession infoSession) {
-        mCallback.onCalendarClicked(infoSession);
-    }
-
-    @Override
-    public void onDismiss(WaterlooInfoSession infoSession) {
-        mCallback.onDismiss(infoSession);
-    }
-
-    @Override
-    public void onInfoSessionClicked(WaterlooInfoSession infoSession) {
-        mCallback.onInfoSessionClicked(infoSession);
+    public void onInfoSessionEvent(InfoSessionListAdapter.Event event, WaterlooInfoSession infoSession) {
+        mCallback.onInfoSessionEvent(event, infoSession);
     }
 
     public void setDataset(ArrayList<WaterlooInfoSession> sessions){

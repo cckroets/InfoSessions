@@ -1,4 +1,4 @@
-package com.sixbynine.infosessions.model;
+package com.sixbynine.infosessions.alarm;
 
 import android.support.annotation.IntDef;
 

@@ -1,12 +1,9 @@
 package com.sixbynine.infosessions.data;
 
-import android.preference.Preference;
-
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.sixbynine.infosessions.event.MainBus;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferencesMap;
@@ -141,17 +138,17 @@ public final class InfoSessionPreferenceManager {
         }
 
         public Editor addAlarm(int alarmId){
-            preferences.addAlarm(alarmId);
+            preferences.setAlarm(alarmId);
             return this;
         }
 
-        public Editor setAlarms(List<Integer> alarms){
-            preferences.setAlarmIds(alarms);
+        public Editor setAlarm(int minutes){
+            preferences.setAlarm(minutes);
             return this;
         }
 
-        public Editor removeAlarm(int alarmId){
-            preferences.removeAlarm(alarmId);
+        public Editor removeAlarm(){
+            preferences.removeAlarm();
             return this;
         }
 
@@ -165,9 +162,10 @@ public final class InfoSessionPreferenceManager {
             return this;
         }
 
-        public void commit(){
+        public WaterlooInfoSessionPreferences commit(){
             mPreferencesMap.put(preferences.getId(), preferences);
             saveData();
+            return preferences;
         }
     }
 
