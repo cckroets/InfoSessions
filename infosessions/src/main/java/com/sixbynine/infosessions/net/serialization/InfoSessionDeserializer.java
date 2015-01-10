@@ -65,7 +65,14 @@ public class InfoSessionDeserializer implements JsonDeserializer<WaterlooInfoSes
     private Calendar parseFullDate(String rawTime, Date date) {
 
         final Date time = parseDate(mTimeFormat, rawTime);
-        return new GregorianCalendar(date.getYear(), date.getMonth(), date.getDate(),
-                time.getHours(), time.getMinutes(), time.getSeconds());
+        final Calendar timeCal = new GregorianCalendar();
+        timeCal.setTime(time);
+
+        final Calendar dateCal = new GregorianCalendar();
+        dateCal.setTime(date);
+        dateCal.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
+        dateCal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
+
+        return dateCal;
     }
 }
