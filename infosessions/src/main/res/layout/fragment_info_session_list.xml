@@ -10,9 +10,22 @@
         android:layout_height="match_parent"
         android:divider="@null"
         android:dividerHeight="0dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:background="@color/info_sessions_fragment_bg"
         />
+
+    <TextView
+        android:id="@+id/nothing_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/nothing_here_text"
+        android:textColor="@android:color/black"
+        android:textStyle="italic"
+        android:textSize="16sp"
+        android:visibility="gone"/>
 
 </FrameLayout>

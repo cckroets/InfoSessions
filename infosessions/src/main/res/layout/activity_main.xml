@@ -1,6 +1,31 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sixbynine.infosessions.ui.MainActivity" />
+    android:orientation="vertical"
+    tools:context="com.sixbynine.infosessions.home.MainActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <com.sixbynine.infosessions.ui.PagerSlidingTabStrip
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="48dip"
+        android:background="?attr/colorPrimary"
+        android:textColor="@color/white_tab_color"
+        app:pstsDividerColor="#00000000"
+        app:pstsIndicatorColor="@android:color/white"
+        app:pstsIndicatorHeight="4dp"
+        app:pstsTabPaddingLeftRight="12dp" />
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <in.srain.cube.views.GridViewWithHeaderAndFooter
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:columnWidth="380dp"
+        android:numColumns="auto_fit"
+        android:background="@color/info_sessions_fragment_bg"
+        android:horizontalSpacing="20dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/nothing_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/nothing_here_text"
+        android:textColor="@android:color/black"
+        android:textStyle="italic"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
+</FrameLayout>

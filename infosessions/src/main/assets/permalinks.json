@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_updated": "1404793544000"
+    "last_updated": "1420859439714"
   },
   "data": [
     {
@@ -21,7 +21,7 @@
     {
       "id": "2356",
       "employer": "Kik Interactive, Inc",
-      "permalink": "kik"
+      "permalink": "kik-interactive"
     },
     {
       "id": "2358",
@@ -192,7 +192,7 @@
         "A9.com",
         "A9"
       ],
-      "permalink": "a9-com"
+      "permalink": "a9"
     },
     {
       "id": "2444",
@@ -274,6 +274,468 @@
         "PayPal"
       ],
       "permalink": "paypal"
+    },
+    {
+      "id": "2693",
+      "employer": "Yelp",
+      "permalink": "yelp"
+    },
+    {
+      "id": "2699",
+      "employer": "Amazon",
+      "permalink": "amazon"
+    },
+    {
+      "id": "2701",
+      "employer": "Maluuba Inc.",
+      "permalink": "maluuba"
+    },
+    {
+      "id": "2702",
+      "employer": "Sandvine",
+      "permalink": "sandvine"
+    },
+    {
+      "id": "2707",
+      "employer": "D2L",
+      "permalink": "desire2learn"
+    },
+    {
+      "id": "2719",
+      "employer": "Desjardins General Insurance Group",
+      "permalink": null
+    },
+    {
+      "id": "2739",
+      "employer": "Noom",
+      "permalink": "noom"
+    },
+    {
+      "id": "2743",
+      "employer": "Apple",
+      "permalink": "apple"
+    },
+    {
+      "id": "2744",
+      "employer": "A9.com",
+      "alt_names": [
+        "A9"
+      ],
+      "permalink": "a9"
+    },
+    {
+      "id": "2745",
+      "employer": "Google",
+      "permalink": "google"
+    },
+    {
+      "id": "2746",
+      "employer": "Google",
+      "permalink": "google"
+    },
+    {
+      "id": "2747",
+      "employer": "Facebook",
+      "permalink": "facebook"
+    },
+    {
+      "id": "2754",
+      "employer": "Palantir Technologies",
+      "permalink": "palantir-technologies"
+    },
+    {
+      "id": "2768",
+      "employer": "Polar",
+      "permalink": "polar-me"
+    },
+    {
+      "id": "2771",
+      "employer": "Kik Interactive, Inc",
+      "permalink": "kik-interactive"
+    },
+    {
+      "id": "2773",
+      "employer": "Bazaarvoice",
+      "permalink": "bazaarvoice"
+    },
+    {
+      "id": "2777",
+      "employer": "Enflick",
+      "permalink": "enflick"
+    },
+    {
+      "id": "2781",
+      "employer": "Riot Games",
+      "permalink": "riot-games"
+    },
+    {
+      "id": "2784",
+      "employer": "eSentire Inc.",
+      "permalink": "esentire"
+    },
+    {
+      "id": "2786",
+      "employer": "Wattpad",
+      "permalink": "wattpad"
+    },
+    {
+      "id": "2789",
+      "employer": "Motorola Mobility",
+      "alt_names": [
+        "Motorola"
+      ],
+      "permalink": "motorola-mobility"
+    },
+    {
+      "id": "2792",
+      "employer": "Pinterest",
+      "permalink": "pinterest"
+    },
+    {
+      "id": "2794",
+      "employer": "Microsoft",
+      "permalink": "microsoft"
+    },
+    {
+      "id": "2797",
+      "employer": "Electronic Arts",
+      "permalink": "electronicarts"
+    },
+    {
+      "id": "2801",
+      "employer": "Nest Labs, Inc.",
+      "permalink": "nest-labs"
+    },
+    {
+      "id": "2802",
+      "employer": "Indeed",
+      "permalink": "indeed"
+    },
+    {
+      "id": "2804",
+      "employer": "CGI",
+      "permalink": "cgi"
+    },
+    {
+      "id": "2806",
+      "employer": "CI Investment",
+      "permalink": "ci-fund-management-inc"
+    },
+    {
+      "id": "2807",
+      "employer": "Bloomberg LP",
+      "permalink": "bloomberg"
+    },
+    {
+      "id": "2809",
+      "employer": "CIBC",
+      "permalink": "canadian-imperial-bank-of-commerce"
+    },
+    {
+      "id": "2810",
+      "employer": "Stephenson Engineering Ltd.",
+      "permalink": null
+    },
+    {
+      "id": "2814",
+      "employer": "Genesys Telecommunication Labs",
+      "permalink": "genesys"
+    },
+    {
+      "id": "2816",
+      "employer": "Infusion",
+      "permalink": "infusion"
+    },
+    {
+      "id": "2817",
+      "employer": "Zynga",
+      "permalink": "zynga"
+    },
+    {
+      "id": "2818",
+      "employer": "EY",
+      "permalink": "ernst-young"
+    },
+    {
+      "id": "2821",
+      "employer": "OPSEU Pension Trust",
+      "permalink": null
+    },
+    {
+      "id": "2825",
+      "employer": "BioDiaspora Inc.",
+      "permalink": null
+    },
+    {
+      "id": "2826",
+      "employer": "MediaMath",
+      "permalink": "mediamath"
+    },
+    {
+      "id": "2827",
+      "employer": "Loblaw",
+      "permalink": "loblaw-companies-limited"
+    },
+    {
+      "id": "2840",
+      "employer": "RBC Capital Markets Technology",
+      "permalink": "rbc-capital-markets"
+    },
+    {
+      "id": "2841",
+      "employer": "Vena Solutions",
+      "permalink": "vena-solutions"
+    },
+    {
+      "id": "2844",
+      "employer": "Fairfax Financial Holdings Ltd",
+      "permalink": "fairfax-financial-holdings"
+    },
+    {
+      "id": "2845",
+      "employer": "Influitive Corporation",
+      "permalink": "influitive"
+    },
+    {
+      "id": "2848",
+      "employer": "Canada Pension Plan Investment Board",
+      "permalink": null
+    },
+    {
+      "id": "2849",
+      "employer": "Wish",
+      "permalink": "wish"
+    },
+    {
+      "id": "2851",
+      "employer": "Guidewire Software",
+      "permalink": "guidewire-software"
+    },
+    {
+      "id": "2857",
+      "employer": "Cloudera",
+      "permalink": "cloudera"
+    },
+    {
+      "id": "2859",
+      "employer": "Capco",
+      "permalink": "capco"
+    },
+    {
+      "id": "2860",
+      "employer": "Drop
+      box",
+      "permalink": "dropbox"
+    },
+    {
+      "id": "2861",
+      "employer": "Stripe*",
+      "permalink": "stripe"
+    },
+    {
+      "id": "2862",
+      "employer": "SMART Technologies",
+      "permalink": "smart-technologies"
+    },
+    {
+      "id": "2864",
+      "employer": "PagerDuty Inc.",
+      "permalink": "pagerduty"
+    },
+    {
+      "id": "2866",
+      "employer": "Arista Networks",
+      "permalink": "arista-networks"
+    },
+    {
+      "id": "2868",
+      "employer": "Aviva Canada",
+      "permalink": "aviva"
+    },
+    {
+      "id": "2872",
+      "employer": "Ubisoft Toronto",
+      "permalink": "ubisoft"
+    },
+    {
+      "id": "2876",
+      "employer": "Two Sigma",
+      "permalink": "two-sigma-ventures"
+    },
+    {
+      "id": "2878",
+      "employer": "Digiflare Inc.",
+      "permalink": "digiflare"
+    },
+    {
+      "id": "2880",
+      "employer": "Mozilla",
+      "permalink": "mozilla"
+    },
+    {
+      "id": "2881",
+      "employer": "LinkedIn",
+      "permalink": "linkedin"
+    },
+    {
+      "id": "2882",
+      "employer": "Ginger.io",
+      "permalink": "ginger-io"
+    },
+    {
+      "id": "2883",
+      "employer": "LogiSense Corporation",
+      "permalink": "logisense-corporation"
+    },
+    {
+      "id": "2884",
+      "employer": "RedIron Technologies",
+      "permalink": null
+    },
+    {
+      "id": "2887",
+      "employer": "TATA Consultancy Services",
+      "permalink": "tata-consultancy-services"
+    },
+    {
+      "id": "2889",
+      "employer": "Microsoft Canada Inc.",
+      "permalink": "microsoft"
+    },
+    {
+      "id": "2890",
+      "employer": "REGIONAL MUNICIPALITY OF YORK",
+      "permalink": null
+    },
+    {
+      "id": "2893",
+      "employer": "Lightspeed Venture Partners*",
+      "permalink": "lightspeed-venture-partners"
+    },
+    {
+      "id": "2896",
+      "employer": "Siemens Canada",
+      "permalink": "siemens"
+    },
+    {
+      "id": "2897",
+      "employer": "Protiviti",
+      "permalink": "protiviti"
+    },
+    {
+      "id": "2899",
+      "employer": "Bionym",
+      "permalink": "bionym"
+    },
+    {
+      "id": "2900",
+      "employer": "Careerify",
+      "permalink": "careerify"
+    },
+    {
+      "id": "2902",
+      "employer": "Deloitte",
+      "permalink": "deloitte"
+    },
+    {
+      "id": "2905",
+      "employer": "McRae Integration Ltd.",
+      "permalink": null
+    },
+    {
+      "id": "2906",
+      "employer": "Microsoft",
+      "permalink": "microsoft"
+    },
+    {
+      "id": "2907",
+      "employer": "Top Hat",
+      "permalink": "top-hat-monocle"
+    },
+    {
+      "id": "2908",
+      "employer": "Infusion",
+      "permalink": "infusion"
+    },
+    {
+      "id": "2909",
+      "employer": "Suncor Energy",
+      "permalink": "suncor-energy"
+    },
+    {
+      "id": "2911",
+      "employer": "Cisco Systems Canada",
+      "permalink": "cisco"
+    },
+    {
+      "id": "2916",
+      "employer": "National Instruments",
+      "permalink": "national-instruments"
+    },
+    {
+      "id": "2917",
+      "employer": "The Working Group",
+      "permalink": "the-working-group"
+    },
+    {
+      "id": "2924",
+      "employer": "TD Lab - TD's innovation labs",
+      "permalink": "communitech"
+    },
+    {
+      "id": "2926",
+      "employer": "Meraki",
+      "permalink": "meraki"
+    },
+    {
+      "id": "2928",
+      "employer": "Wealthfront",
+      "permalink": "wealthfront"
+    },
+    {
+      "id": "2930",
+      "employer": "Flatiron Health",
+      "permalink": "flatiron-health"
+    },
+    {
+      "id": "2931",
+      "employer": "Citadel",
+      "permalink": "citadel"
+    },
+    {
+      "id": "2933",
+      "employer": "Blend Labs*",
+      "permalink": "blend-labs"
+    },
+    {
+      "id": "2934",
+      "employer": "Airbnb*",
+      "permalink": "airbnb"
+    },
+    {
+      "id": "2935",
+      "employer": "Apotex",
+      "permalink": "apotex-inc"
+    },
+    {
+      "id": "2937",
+      "employer": "Sofina Foods Inc.",
+      "permalink": null
+    },
+    {
+      "id": "2938",
+      "employer": "Airbnb*",
+      "permalink": "airbnb"
+    },
+    {
+      "id": "2939",
+      "employer": "PDT Partners",
+      "permalink": null
+    },
+    {
+      "id": "2943",
+      "employer": "BDO Canada LLP",
+      "permalink": null
     }
   ]
 }

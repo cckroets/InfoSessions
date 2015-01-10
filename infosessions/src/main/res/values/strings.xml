@@ -4,6 +4,87 @@
     <string name="app_name">Info Sessions</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="action_rate">Rate App</string>
     <string name="title_activity_company_info">CompanyInfoActivity</string>
+    <string name="action_view_dismissed">View Dismissed</string>
+    <string name="action_view_undismissed">View Undismissed</string>
+    <string name="action_search">Search</string>
+    <string name="dismissed_sessions">Dismissed Sessions</string>
+    <string name="search_info_sessions">Search Info Sessions</string>
+    <string name="nothing_here_text">There doesn\'t seem to be anything here</string>
+
+    <!-- TAB TITLES -->
+    <string name="tab_all">All</string>
+    <string name="tab_favorites">Favourites</string>
+    <string name="tab_coop">Co-op</string>
+    <string name="tab_graduate">Graduate</string>
+
+    <!-- Faculty Names -->
+    <string name="mathematics">Mathematics</string>
+    <string name="engineering">Engineering</string>
+    <string name="science">Science</string>
+    <string name="environment">Environment</string>
+    <string name="arts">Arts</string>
+    <string name="applied_health_sciences">Applied Health Sciences</string>
+    <string name="chartered_accounting">Chartered Accounting</string>
+
+    <!-- Settings -->
+    <string name="tabs">TABS</string>
+    <string name="alerts">NOTIFICATIONS</string>
+    <string name="info_sessions">INFO SESSIONS</string>
+    <string name="interested_programs">Programs</string>
+    <string name="none_selected">None Selected</string>
+    <string name="show_coop_tab">Show Co-op Sessions</string>
+    <string name="show_graduate_tab">Show Graduate Sessions</string>
+    <string name="alerts_vibrate">Vibrate</string>
+    <string name="alerts_light">Light</string>
+    <string name="alerts_sound">Sound</string>
+
+    <string name="faculty_all">ALL - %1$s</string>
+    <string name="select_programs">Select Programs</string>
+
+    <!-- Simple Words -->
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="add">Add</string>
+
+    <!-- Tooltips for the buttons on the card -->
+    <string name="add_favorite">Add To Favourites</string>
+    <string name="remove_favorite">Remove From Favourites</string>
+    <string name="add_reminder">Add Reminder</string>
+    <string name="remove_reminder">Remove Reminder</string>
+    <string name="calendar_tooltip">Add To Calendar</string>
+    <string name="share_tooltip">Share</string>
+
+    <!-- Calendar Strings -->
+    <string name="event_header">%1$s Info Session</string>
+    <string name="time_in_place">%1$s in %2$s</string>
+
+    <!-- Alarm Strings -->
+    <string name="remove_alarm">Remove reminder?</string>
+    <string name="remove_alarm_message_minutes">The current reminder is set to go off %1$d minutes before the info session</string>
+    <string name="remove_alarm_message_hours">The current reminder is set to go off %1$d hours before the info session</string>
+    <string name="alarm_choices_title">Add Reminder</string>
+    <string name="alarm_choices_prompt">How long before the event should the reminder go off?</string>
+    <string-array name="alarm_choices">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>2 hours</item>
+        <item>6 hours</item>
+        <item>24 hours</item>
+    </string-array>
+    <integer-array name="alarm_choices_minutes_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+        <item>360</item>
+        <item>1440</item>
+    </integer-array>
+
+
 
 </resources>
