@@ -1,7 +1,11 @@
 package com.sixbynine.infosessions.home;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Toast;
 
 import com.crittercism.app.Crittercism;
@@ -50,6 +55,8 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
     PagerSlidingTabStrip mTabs;
     @InjectView(R.id.pager)
     ViewPager mPager;
+    @InjectView(R.id.loading_container)
+    ViewGroup mLoadingContainer;
 
     @Inject
     InfoSessionPreferenceManager mInfoSessionPreferenceManager;
@@ -67,15 +74,32 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
     ArrayList<WaterlooInfoSession> mInfoSessions;
     InfoSessionsTabsPagerAdapter mPagerAdapter;
 
+    Handler mHandler;
+    enum ActivityState{
+        INITIALIZED, LOADING, LOADED
+    }
+    ActivityState mState;
+    private Runnable mLoadingRunnable = new Runnable() {
+        @Override
+        public void run() {
+            animateStateChange(ActivityState.LOADING);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Crittercism.initialize(this, Keys.APP_ID_CRITTERCISM);
         setSupportActionBar(mToolbar); //I used a toolbar here since I was having issues disabling the drop shadow from action bar
+        mHandler = new Handler();
+        mHandler.postDelayed(mLoadingRunnable, 10);
+        animateStateChange(ActivityState.INITIALIZED);
 
         mInfoSessionManager.getWaterlooInfoSessions(new ResponseHandler<WaterlooInfoSessionCollection>() {
             @Override
             public void onSuccess(WaterlooInfoSessionCollection object) {
+                mHandler.removeCallbacks(mLoadingRunnable);
+                animateStateChange(ActivityState.LOADED);
                 mInfoSessions = new ArrayList<>(object.getInfoSessions());
                 mPagerAdapter = new InfoSessionsTabsPagerAdapter(getSupportFragmentManager(), mInfoSessions);
                 mPager.setAdapter(mPagerAdapter);
@@ -169,6 +193,42 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
         }
     }
 
+    private void animateStateChange(ActivityState toState){
+        switch(toState){
+            case LOADING:
+                mTabs.setVisibility(View.GONE);
+                mLoadingContainer.setVisibility(View.VISIBLE);
+                break;
+            case LOADED:
+                mTabs.setVisibility(View.VISIBLE);
+                ValueAnimator anim = ValueAnimator.ofFloat(0f, 1f).setDuration(200);
+                anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        float curVal = (float) animation.getAnimatedValue();
+                        mLoadingContainer.setAlpha(1f - curVal);
+                        ViewGroup.LayoutParams params = mTabs.getLayoutParams();
+                        params.height = (int) (curVal * mToolbar.getHeight());
+                        mTabs.setLayoutParams(params);
+                    }
+                });
+                anim.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        ViewGroup.LayoutParams params = mTabs.getLayoutParams();
+                        params.height = mToolbar.getHeight();
+                        mTabs.setLayoutParams(params);
+                        mLoadingContainer.setVisibility(View.GONE);
+                    }
+                });
+                anim.setInterpolator(new AccelerateDecelerateInterpolator());
+                anim.start();
+                break;
+        }
+        mState = toState;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode){
@@ -176,7 +236,8 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
                 updateListFragments(); //if the user favorites a session while searching, that should be reflected when they return
                 break;
             case SETTINGS_REQUEST_CODE:
-                mPagerAdapter.refreshData();
+                mPagerAdapter = new InfoSessionsTabsPagerAdapter(getSupportFragmentManager(), mInfoSessions);
+                mPager.setAdapter(mPagerAdapter);
                 mTabs.notifyDataSetChanged();
                 updateListFragments();
                 break;

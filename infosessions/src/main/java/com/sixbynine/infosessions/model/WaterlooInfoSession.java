@@ -10,6 +10,7 @@ import com.sixbynine.infosessions.data.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import roboguice.RoboGuice;
@@ -186,10 +187,17 @@ public class WaterlooInfoSession implements Parcelable, Comparable<WaterlooInfoS
 
             for(WaterlooInfoSession i : infoSessions){
                 //higher level filters
-                if(!((showCoop && i.isForCoops()) || showGrad && i.isForGraduates())){
+                if(!((showCoop && i.mForCoops) || showGrad && i.mForGraduates)){
                     continue;
-                }else if(!showPast && i.mEndTime.getTimeInMillis() < System.currentTimeMillis()){
-                    continue;
+                }else if(!showPast){
+                    Calendar c = Calendar.getInstance();
+                    c.set(Calendar.HOUR, 0);
+                    c.set(Calendar.MINUTE, 0);
+                    c.set(Calendar.SECOND, 0);
+                    Date today = c.getTime();
+                    if(i.mEndTime.getTime().before(today)){
+                        continue;
+                    }
                 }
                 WaterlooInfoSessionPreferences p = manager.getPreferences(i);
                 if(matches(i, p)){

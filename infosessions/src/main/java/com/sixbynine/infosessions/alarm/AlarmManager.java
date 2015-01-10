@@ -6,12 +6,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
+import com.flurry.sdk.de;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sixbynine.infosessions.R;
@@ -65,8 +68,11 @@ public class AlarmManager{
                     timeFormat.format(infoSession.getStartTime().getTime()),
                     infoSession.getLocation());
 
+            Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher);
+
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.ic_launcher) //TODO use small white icon
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setLargeIcon(largeIcon)
                     .setContentTitle(title)
                     .setContentText(message);
 

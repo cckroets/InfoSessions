@@ -39,12 +39,10 @@ public class InfoSessionUtil {
     public void launchCalendarIntent(Context context, WaterlooInfoSession infoSession){
         Resources res = context.getResources();
 
-        Calendar startDate = infoSession.getStartTime();
-        Calendar endDate = infoSession.getEndTime();
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setType("vnd.android.cursor.item/event")
-                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startDate)
-                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endDate)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, infoSession.getStartTime().getTimeInMillis())
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, infoSession.getEndTime().getTimeInMillis())
                 .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY , false)
                 .putExtra(CalendarContract.Events.TITLE, res.getString(R.string.event_header, infoSession.getCompanyName()))
                 .putExtra(CalendarContract.Events.DESCRIPTION, infoSession.getDescription())

@@ -65,6 +65,8 @@
     <string name="event_header">%1$s Info Session</string>
     <string name="time_in_place">%1$s in %2$s</string>
 
+    <string name="loading_info_sessions">Loading Info Sessions…</string>
+
     <!-- Alarm Strings -->
     <string name="remove_alarm">Remove reminder?</string>
     <string name="remove_alarm_message_minutes">The current reminder is set to go off %1$d minutes before the info session</string>
