@@ -75,12 +75,12 @@
     <string name="alarm_choices_title">Add Reminder</string>
     <string name="alarm_choices_prompt">How long before the event should the reminder go off?</string>
     <string-array name="alarm_choices">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>2 hours</item>
-        <item>6 hours</item>
-        <item>24 hours</item>
+        <item>15 minutes in advance</item>
+        <item>30 minutes in advance</item>
+        <item>1 hour in advance</item>
+        <item>2 hours in advance</item>
+        <item>6 hours in advance</item>
+        <item>24 hours in advance</item>
     </string-array>
     <integer-array name="alarm_choices_minutes_values">
         <item>15</item>
