@@ -14,7 +14,7 @@ import retrofit.converter.GsonConverter;
  */
 public class GithubApiProvider implements Provider<PermalinkAPI> {
 
-    private static final String API_URL_GITHUB = "https://raw.githubusercontent.com/cckroets/InfoSessions/b7c19f822854d3865355a92f198f2a1b847b93dd/infosessions";
+    private static final String API_URL_GITHUB = "https://raw.githubusercontent.com/cckroets/InfoSessions/master/infosessions";
 
     @Inject
     @Named("network")
