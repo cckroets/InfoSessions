@@ -155,26 +155,35 @@ public class CompanyInfoFragment extends RoboFragment {
     }
 
     private void updateCompanyInfo() {
+        final String companyName;
+        final String companyDesc;
+        final String homepageUrl;
         if (mCompany == null) {
-            return;
+            companyName = mWaterlooInfoSession.getCompanyName();
+            companyDesc = null;
+            homepageUrl = null;
+        } else {
+            companyName = mCompany.getName();
+            companyDesc = mCompany.getShortDescription();
+            homepageUrl = mCompany.getHomePageUrl();
         }
-        mCompanyName.setText(mCompany.getName());
+        mCompanyName.setText(companyName);
         mCompanyName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mCompany.getHomePageUrl() != null) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mCompany.getHomePageUrl())));
+                if (homepageUrl != null) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(homepageUrl)));
                 }
             }
         });
-        ViewUtil.setTextOrGone(mCompanyDescription, mCompany.getShortDescription());
-        getActivity().setTitle(mCompany.getName());
+        ViewUtil.setTextOrGone(mCompanyDescription, companyDesc);
+        getActivity().setTitle(companyName);
         updateSocialMedia();
         updateHeadquarters();
     }
 
     private void updateHeadquarters() {
-        final Address hq = mCompany.getHeadquarters();
+        final Address hq = mCompany == null ? null : mCompany.getHeadquarters();
         if (hq == null) {
             mTableRowHq.setVisibility(View.GONE);
         } else if (hq.getCity() != null && hq.getRegion() != null) {
@@ -196,6 +205,9 @@ public class CompanyInfoFragment extends RoboFragment {
 
     private void updateSocialMedia() {
         mSocialMedia.removeAllViews();
+        if (mCompany == null) {
+            return;
+        }
         for (final Website website : mCompany.getWebsites()) {
             if (website.getType() == null) {
                 continue;
