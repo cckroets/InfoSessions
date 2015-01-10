@@ -91,6 +91,7 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Crittercism.initialize(this, Keys.APP_ID_CRITTERCISM);
+
         setSupportActionBar(mToolbar); //I used a toolbar here since I was having issues disabling the drop shadow from action bar
         mHandler = new Handler();
         mHandler.postDelayed(mLoadingRunnable, 10);
@@ -109,6 +110,19 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
                         8, getResources().getDisplayMetrics()));
                 ViewCompat.setElevation(mTabs, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                         8, getResources().getDisplayMetrics()));
+
+                String data = getIntent().getDataString();
+                if(data != null && data.length() > 4){
+                    String sessionId = data.substring(data.length() - 4);
+                    for(WaterlooInfoSession infoSession : mInfoSessions){
+                        if(infoSession.getId().equals(sessionId)){
+                            Intent intent = new Intent(MainActivity.this, CompanyInfoActivity.class);
+                            intent.putExtra(CompanyInfoActivity.INFO_SESSION_KEY, infoSession);
+                            startActivityForResult(intent, VIEW_REQUEST_CODE);
+                            break;
+                        }
+                    }
+                }
             }
 
             @Override

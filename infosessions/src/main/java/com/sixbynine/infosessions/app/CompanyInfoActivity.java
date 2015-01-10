@@ -25,9 +25,6 @@ public class CompanyInfoActivity extends BaseActivity {
     public static final String INFO_SESSION_KEY = "key-info-session";
 
     @Inject
-    InfoSessionManager mInfoSessionManager;
-
-    @Inject
     InfoSessionUtil mInfoSessionUtil;
 
     @Inject
@@ -42,11 +39,6 @@ public class CompanyInfoActivity extends BaseActivity {
 
         if(savedInstanceState == null){
             mInfoSession = getIntent().getParcelableExtra(INFO_SESSION_KEY);
-            if(mInfoSession == null){
-                String link = getIntent().getDataString();
-                String sessionId = link.substring(link.length() - 4);
-                mInfoSession = mInfoSessionManager.getInfoSessionFromId(sessionId);
-            }
         }else{
             mInfoSession = savedInstanceState.getParcelable(INFO_SESSION_KEY);
         }

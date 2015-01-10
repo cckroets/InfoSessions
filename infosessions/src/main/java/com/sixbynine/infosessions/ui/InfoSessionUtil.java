@@ -78,7 +78,7 @@ public class InfoSessionUtil {
 
     public void cancelRsvp(Context context, WaterlooInfoSession infoSession){
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("http://www.ceca.uwaterloo.ca/students/rsvp/index.php?id=" +
+        intent.setData(Uri.parse("https://info.uwaterloo.ca/infocecs/students/rsvp/index.php?id=" +
                 infoSession.getId() + "&mode=off"));
         context.startActivity(intent);
     }
