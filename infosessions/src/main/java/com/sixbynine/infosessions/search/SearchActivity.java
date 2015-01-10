@@ -134,6 +134,12 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
                         .commit();
                 mListFragment.refreshData();
                 break;
+            case SHARE:
+                mUtil.shareInfoSession(this, infoSession);
+                break;
+            case ALARM:
+                mUtil.doAlarmLogic(this, infoSession);
+                break;
             case CALENDAR:
                 mUtil.launchCalendarIntent(this, infoSession);
                 break;

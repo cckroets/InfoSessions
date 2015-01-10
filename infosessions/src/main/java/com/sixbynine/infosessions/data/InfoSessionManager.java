@@ -13,6 +13,7 @@ import com.sixbynine.infosessions.event.data.CompanyLoadedEvent;
 import com.sixbynine.infosessions.event.data.WaterlooDataLoadedEvent;
 import com.sixbynine.infosessions.model.EmployerInfo;
 import com.sixbynine.infosessions.model.PermalinkMap;
+import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionCollection;
 import com.sixbynine.infosessions.model.company.Company;
 import com.sixbynine.infosessions.net.CrunchbaseAPI;
@@ -85,6 +86,18 @@ public final class InfoSessionManager {
         }
 
         mWaterlooSessionsCallback.addCallback(callback);
+    }
+
+    public WaterlooInfoSession getInfoSessionFromId(final String id){
+        WaterlooInfoSessionCollection collection = mInfoSessionDBManager.getWaterlooSessions();
+        if (collection != null) {
+            for(WaterlooInfoSession infoSession : collection.getInfoSessions()){
+                if(infoSession.getId().equals(id)){
+                    return infoSession;
+                }
+            }
+        }
+        return null;
     }
 
     public void getCompanyFromSession(final String sessionId, final ResponseHandler<Company> callback) {

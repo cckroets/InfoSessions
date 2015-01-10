@@ -6,13 +6,27 @@
     <item
         android:id="@+id/action_favourite"
         android:title="Favourite"
-        android:icon="@android:drawable/btn_star_big_off"
+        android:icon="@drawable/ic_favorite_white"
         android:checkable="true"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
+        android:id="@+id/action_rsvp"
+        android:title="RSVP"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_share"
+        android:title="Share"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/action_alarm"
+        android:title="Set Reminder"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/action_calendar"
+        android:title="Add To Calendar"
+        app:showAsAction="collapseActionView"/>
 </menu>

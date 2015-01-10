@@ -69,6 +69,7 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
 
     private static final int SEARCH_REQUEST_CODE = 0;
     private static final int SETTINGS_REQUEST_CODE = 1;
+    private static final int VIEW_REQUEST_CODE = 2;
 
 
     ArrayList<WaterlooInfoSession> mInfoSessions;
@@ -168,7 +169,7 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
                 mUtil.launchCalendarIntent(this, infoSession);
                 break;
             case SHARE:
-                Toast.makeText(this, infoSession.getCompanyName() + " shared", Toast.LENGTH_SHORT).show();
+                mUtil.shareInfoSession(this, infoSession);
                 break;
             case ALARM:
                 mUtil.doAlarmLogic(this, infoSession);
@@ -182,7 +183,7 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
             case CLICK:
                 Intent intent = new Intent(this, CompanyInfoActivity.class);
                 intent.putExtra(CompanyInfoActivity.INFO_SESSION_KEY, infoSession);
-                startActivity(intent);
+                startActivityForResult(intent, VIEW_REQUEST_CODE);
                 break;
         }
     }
@@ -232,6 +233,7 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode){
+            case VIEW_REQUEST_CODE:
             case SEARCH_REQUEST_CODE:
                 updateListFragments(); //if the user favorites a session while searching, that should be reflected when they return
                 break;
@@ -241,6 +243,7 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
                 mTabs.notifyDataSetChanged();
                 updateListFragments();
                 break;
+
         }
     }
 }

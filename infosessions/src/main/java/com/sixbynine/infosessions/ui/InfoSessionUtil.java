@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
 
@@ -21,6 +22,8 @@ import com.sixbynine.infosessions.event.data.InfoSessionPreferencesModifiedEvent
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -34,6 +37,20 @@ public class InfoSessionUtil {
 
     @Inject
     AlarmManager mAlarmManager;
+
+    public void shareInfoSession(Context context, WaterlooInfoSession infoSession){
+        DateFormat timeDateFormat = new SimpleDateFormat("EEE MMM d, h:mma");
+
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, context.getResources().getString(R.string.share_message,
+                infoSession.getCompanyName(),
+                infoSession.getLocation(),
+                timeDateFormat.format(infoSession.getStartTime().getTime()),
+                infoSession.getId()));
+        intent.setType("text/plain");
+        context.startActivity(intent);
+    }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public void launchCalendarIntent(Context context, WaterlooInfoSession infoSession){
@@ -49,6 +66,20 @@ public class InfoSessionUtil {
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, infoSession.getLocation())
                 .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY)
                 .putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE);
+        context.startActivity(intent);
+    }
+
+    public void rsvp(Context context, WaterlooInfoSession infoSession){
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("https://info.uwaterloo.ca/infocecs/students/rsvp/index.php?id="
+                + infoSession.getId() + "&mode=on"));
+        context.startActivity(intent);
+    }
+
+    public void cancelRsvp(Context context, WaterlooInfoSession infoSession){
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("http://www.ceca.uwaterloo.ca/students/rsvp/index.php?id=" +
+                infoSession.getId() + "&mode=off"));
         context.startActivity(intent);
     }
 

@@ -66,6 +66,7 @@
     <string name="time_in_place">%1$s in %2$s</string>
 
     <string name="loading_info_sessions">Loading Info Sessions…</string>
+    <string name="share_message">%1$s Info Session\n%2$s\n%3$s\nLink: http://www.ceca.uwaterloo.ca/students/sessions_details.php?id=%4$s</string>
 
     <!-- Alarm Strings -->
     <string name="remove_alarm">Remove reminder?</string>
