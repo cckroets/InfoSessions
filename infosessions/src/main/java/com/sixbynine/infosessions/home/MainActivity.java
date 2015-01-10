@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.crittercism.app.Crittercism;
 import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.alarm.AlarmManager;
@@ -27,6 +28,7 @@ import com.sixbynine.infosessions.event.data.InfoSessionPreferencesModifiedEvent
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionCollection;
 import com.sixbynine.infosessions.model.company.Company;
+import com.sixbynine.infosessions.net.Keys;
 import com.sixbynine.infosessions.search.SearchActivity;
 import com.sixbynine.infosessions.settings.SettingsActivity;
 import com.sixbynine.infosessions.ui.InfoSessionUtil;
@@ -68,6 +70,7 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Crittercism.initialize(this, Keys.APP_ID_CRITTERCISM);
         setSupportActionBar(mToolbar); //I used a toolbar here since I was having issues disabling the drop shadow from action bar
 
         mInfoSessionManager.getWaterlooInfoSessions(new ResponseHandler<WaterlooInfoSessionCollection>() {

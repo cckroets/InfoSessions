@@ -2,6 +2,7 @@ package com.sixbynine.infosessions.util;
 
 import android.util.Log;
 
+import com.crittercism.app.Crittercism;
 import com.sixbynine.infosessions.BuildConfig;
 
 /**
@@ -39,5 +40,15 @@ public class Logger {
         if(BuildConfig.DEBUG){
             Log.e(TAG, String.format(message, formatArgs));
         }
+    }
+
+    public static void leaveBreadcrumb(String message){
+        Logger.d(message);
+        Crittercism.leaveBreadcrumb(message);
+    }
+
+    public static void logHandledException(Throwable e){
+        Logger.e(e.getMessage());
+        Crittercism.logHandledException(e);
     }
 }
