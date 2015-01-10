@@ -1,12 +1,17 @@
 package com.sixbynine.infosessions.data;
 
+import android.net.MailTo;
 import android.util.Log;
 
+import com.flurry.android.FlurryAgent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.sixbynine.infosessions.BuildConfig;
+import com.sixbynine.infosessions.error.NoEmployerInfoException;
 import com.sixbynine.infosessions.event.MainBus;
 import com.sixbynine.infosessions.event.data.CompanyLoadedEvent;
 import com.sixbynine.infosessions.event.data.WaterlooDataLoadedEvent;
+import com.sixbynine.infosessions.model.EmployerInfo;
 import com.sixbynine.infosessions.model.PermalinkMap;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionCollection;
 import com.sixbynine.infosessions.model.company.Company;
@@ -15,7 +20,9 @@ import com.sixbynine.infosessions.net.PermalinkAPI;
 import com.sixbynine.infosessions.net.WaterlooAPI;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -81,8 +88,19 @@ public final class InfoSessionManager {
 
     public void getCompanyFromSession(final String sessionId, final ResponseHandler<Company> callback) {
         if (mPermalinks != null) {
-            final String permalink = mPermalinks.getEmployerInfo(sessionId).getPermalink();
-            getCompanyData(permalink, callback);
+            final EmployerInfo employerInfo = mPermalinks.getEmployerInfo(sessionId);
+            if(employerInfo == null){
+                if(BuildConfig.DEBUG){
+                    throw new NoEmployerInfoException(sessionId);
+                }else{ //don't crash if this is in production, but let us know via flurry
+                    Map<String, String> params = new HashMap<>();
+                    params.put("sessionId", sessionId);
+                    FlurryAgent.logEvent("No Employer Info Found", params);
+                }
+            }else{
+                final String permalink = mPermalinks.getEmployerInfo(sessionId).getPermalink();
+                getCompanyData(permalink, callback);
+            }
             return;
         }
         mWaterlooSessionsCallback.addCallback(new ResponseHandler<WaterlooInfoSessionCollection>() {
