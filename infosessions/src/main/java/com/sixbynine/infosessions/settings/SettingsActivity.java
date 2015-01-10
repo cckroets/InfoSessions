@@ -38,6 +38,10 @@ public class SettingsActivity extends RoboActionBarActivity implements View.OnCl
     CheckableTextView mCoopCheckableTextView;
     @InjectView(R.id.settings_graduate)
     CheckableTextView mGraduateCheckableTextView;
+    @InjectView(R.id.settings_past)
+    CheckableTextView mPastCheckableTextView;
+    @InjectView(R.id.settings_today_tab)
+    CheckableTextView mTodayCheckableTextView;
     @InjectView(R.id.settings_vibrate)
     CheckableTextView mVibrateCheckableTextView;
     @InjectView(R.id.settings_sound)
@@ -75,6 +79,20 @@ public class SettingsActivity extends RoboActionBarActivity implements View.OnCl
                     mCoopCheckableTextView.setChecked(true);
                 }
                 mPreferenceManager.putBoolean(PreferenceManager.Keys.SHOW_GRADUATE, isChecked);
+                syncViews();
+            }
+        });
+        mTodayCheckableTextView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mPreferenceManager.putBoolean(PreferenceManager.Keys.SHOW_TODAY, isChecked);
+                syncViews();
+            }
+        });
+        mPastCheckableTextView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mPreferenceManager.putBoolean(PreferenceManager.Keys.SHOW_PAST, isChecked);
                 syncViews();
             }
         });
@@ -158,6 +176,8 @@ public class SettingsActivity extends RoboActionBarActivity implements View.OnCl
 
         mCoopCheckableTextView.setChecked(mPreferenceManager.getBoolean(PreferenceManager.Keys.SHOW_COOP, true));
         mGraduateCheckableTextView.setChecked(mPreferenceManager.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE, true));
+        mPastCheckableTextView.setChecked(mPreferenceManager.getBoolean(PreferenceManager.Keys.SHOW_PAST, false));
+        mTodayCheckableTextView.setChecked(mPreferenceManager.getBoolean(PreferenceManager.Keys.SHOW_TODAY, true));
 
         NotificationPreference pref = NotificationPreference.getNotificationPreference(mPreferenceManager);
         mVibrateCheckableTextView.setChecked(pref.hasVibrate());

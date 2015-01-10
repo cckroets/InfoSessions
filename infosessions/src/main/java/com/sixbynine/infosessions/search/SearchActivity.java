@@ -114,7 +114,7 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
             final String query = s;
             WaterlooInfoSession.Filter filter = new WaterlooInfoSession.Filter(){
                 @Override
-                public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p, PreferenceManager m) {
+                public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
                     return i.getCompanyName().toUpperCase().contains(query.toUpperCase());
                 }
             };

@@ -2,6 +2,7 @@ package com.sixbynine.infosessions.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,6 +15,10 @@ public final class WaterlooInfoSessionCollection {
 
     private WaterlooInfoSessionCollection() {
 
+    }
+
+    public void sort(){
+        Collections.sort(mInfoSessions);
     }
 
     public List<WaterlooInfoSession> getInfoSessions() {

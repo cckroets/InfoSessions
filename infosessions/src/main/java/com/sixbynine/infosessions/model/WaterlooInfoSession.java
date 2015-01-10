@@ -17,7 +17,7 @@ import roboguice.RoboGuice;
 /**
  * @author curtiskroetsch
  */
-public class WaterlooInfoSession implements Parcelable{
+public class WaterlooInfoSession implements Parcelable, Comparable<WaterlooInfoSession>{
 
     private String mId;
     private String mCompanyName;
@@ -148,6 +148,13 @@ public class WaterlooInfoSession implements Parcelable{
         }
     };
 
+    @Override
+    public int compareTo(WaterlooInfoSession another) {
+        return mStartTime.compareTo(another.mStartTime);
+    }
+
+
+
     /**
      * Abstract class that provides the ability to filter a list of {@link com.sixbynine.infosessions.model.WaterlooInfoSession}
      */
@@ -168,17 +175,30 @@ public class WaterlooInfoSession implements Parcelable{
          * @param p the associated user preference for the info session
          * @return true if the info session matches the criteria of the filter, false otherwise
          */
-        public abstract boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p, PreferenceManager m);
+        public abstract boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p);
 
         public ArrayList<WaterlooInfoSession> filter(List<WaterlooInfoSession> infoSessions){
             ArrayList<WaterlooInfoSession> result = new ArrayList<>();
+
+            boolean showCoop = preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_COOP, true);
+            boolean showGrad = preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE, true);
+            boolean showPast = preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_PAST, false);
+
             for(WaterlooInfoSession i : infoSessions){
+                //higher level filters
+                if(!((showCoop && i.isForCoops()) || showGrad && i.isForGraduates())){
+                    continue;
+                }else if(!showPast && i.mEndTime.getTimeInMillis() < System.currentTimeMillis()){
+                    continue;
+                }
                 WaterlooInfoSessionPreferences p = manager.getPreferences(i);
-                if(matches(i, p, preferenceManager)){
+                if(matches(i, p)){
                     result.add(i);
                 }
             }
             return result;
         }
     }
+
+
 }

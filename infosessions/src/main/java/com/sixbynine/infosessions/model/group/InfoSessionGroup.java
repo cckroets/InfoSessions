@@ -14,6 +14,7 @@ import com.sixbynine.infosessions.model.programs.Faculty;
 import com.sixbynine.infosessions.model.programs.Program;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -22,30 +23,40 @@ import java.util.List;
 public final class InfoSessionGroup implements Parcelable{
     public static final InfoSessionGroup ALL = new InfoSessionGroup(0, R.string.tab_all, new WaterlooInfoSession.Filter() {
         @Override
-        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p, PreferenceManager m) {
+        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
             return true;
         }
     });
     public static final InfoSessionGroup FAVORITES = new InfoSessionGroup(1, R.string.tab_favorites, new WaterlooInfoSession.Filter() {
         @Override
-        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p, PreferenceManager m) {
+        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
             return p.isFavorited();
         }
     });
     public static final InfoSessionGroup COOP = new InfoSessionGroup(2, R.string.tab_coop, new WaterlooInfoSession.Filter() {
         @Override
-        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p, PreferenceManager m) {
+        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
             return i.isForCoops();
         }
     });
     public static final InfoSessionGroup GRADUATE = new InfoSessionGroup(3, R.string.tab_graduate, new WaterlooInfoSession.Filter() {
         @Override
-        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p, PreferenceManager m) {
+        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
             return i.isForGraduates();
         }
     });
+    public static final InfoSessionGroup TODAY = new InfoSessionGroup(4, R.string.tab_today, new WaterlooInfoSession.Filter(){
+        @Override
+        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
+            Calendar today = Calendar.getInstance();
+            Calendar event = i.getStartTime();
+            return today.get(Calendar.YEAR) == event.get(Calendar.YEAR) &&
+                    today.get(Calendar.MONTH) == event.get(Calendar.MONTH) &&
+                    today.get(Calendar.DAY_OF_MONTH) == event.get(Calendar.DAY_OF_MONTH);
+        }
+    });
 
-    private static final InfoSessionGroup[] CONSTANTS = new InfoSessionGroup[]{ALL, FAVORITES, COOP, GRADUATE};
+    private static final InfoSessionGroup[] CONSTANTS = new InfoSessionGroup[]{ALL, FAVORITES, COOP, GRADUATE, TODAY};
 
     @IntDef({CONSTANT, PROGRAM, FACULTY})
     public @interface Type{}
@@ -153,8 +164,8 @@ public final class InfoSessionGroup implements Parcelable{
     public static InfoSessionGroup createGroupForFaculty(final Faculty faculty){
         InfoSessionGroup group = new InfoSessionGroup(faculty.name(), new WaterlooInfoSession.Filter() {
             @Override
-            public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p, PreferenceManager m) {
-                return matchesCoopGradPreference(m, i) && matchesFaculty(i, faculty);
+            public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
+                return matchesFaculty(i, faculty);
             }
         }, FACULTY);
         group.faculty = faculty;
@@ -164,17 +175,12 @@ public final class InfoSessionGroup implements Parcelable{
     public static InfoSessionGroup createGroupForProgram(final Program program){
         InfoSessionGroup group = new InfoSessionGroup(program.name().replaceAll("_", " "), new WaterlooInfoSession.Filter() {
             @Override
-            public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p, PreferenceManager m) {
-                return matchesCoopGradPreference(m, i) && (matchesFaculty(i, program.getFaculty()) || matchesProgram(i, program));
+            public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
+                return (matchesFaculty(i, program.getFaculty()) || matchesProgram(i, program));
             }
         }, PROGRAM);
         group.program = program;
         return group;
-    }
-
-    private static boolean matchesCoopGradPreference(PreferenceManager m, WaterlooInfoSession i){
-        return (m.getBoolean(PreferenceManager.Keys.SHOW_COOP, true) && i.isForCoops()
-                || m.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE, true) && i.isForGraduates());
     }
 
     private static boolean matchesFaculty(WaterlooInfoSession i, Faculty faculty){
@@ -188,17 +194,24 @@ public final class InfoSessionGroup implements Parcelable{
     public static List<InfoSessionGroup> getGroups(PreferenceManager preferenceManager){
         List<InfoSessionGroup> tabs = new ArrayList<>();
 
-        if(preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_COOP, true) &&
-                preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE, true)){
+        boolean showToday = preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_TODAY, true);
+        boolean showCoop = preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_COOP, true);
+        boolean showGrad = preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE, true);
+
+
+        if(showCoop && showGrad){
             tabs.add(ALL);
+            if(showToday) tabs.add(TODAY);
             tabs.add(FAVORITES);
             tabs.add(COOP);
             tabs.add(GRADUATE);
-        }else if(preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_COOP, true)){
+        }else if(showCoop){
             tabs.add(COOP);
+            if(showToday) tabs.add(TODAY);
             tabs.add(FAVORITES);
-        }else if(preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE, true)){
+        }else if(showGrad){
             tabs.add(GRADUATE);
+            if(showToday) tabs.add(TODAY);
             tabs.add(FAVORITES);
         }else{
             tabs.add(FAVORITES);

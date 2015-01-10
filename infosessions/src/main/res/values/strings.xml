@@ -18,6 +18,7 @@
     <string name="tab_favorites">Favourites</string>
     <string name="tab_coop">Co-op</string>
     <string name="tab_graduate">Graduate</string>
+    <string name="tab_today">Today</string>
 
     <!-- Faculty Names -->
     <string name="mathematics">Mathematics</string>
@@ -36,6 +37,8 @@
     <string name="none_selected">None Selected</string>
     <string name="show_coop_tab">Show Co-op Sessions</string>
     <string name="show_graduate_tab">Show Graduate Sessions</string>
+    <string name="show_today_tab">Show Today Tab</string>
+    <string name="show_past_sessions">Show Past Sessions</string>
     <string name="alerts_vibrate">Vibrate</string>
     <string name="alerts_light">Light</string>
     <string name="alerts_sound">Sound</string>

@@ -77,6 +77,7 @@ public final class InfoSessionManager {
 
         collection = mInfoSessionDBManager.getWaterlooSessions();
         if (collection != null) {
+            collection.sort();
             mPermalinks = mInfoSessionDBManager.getPermalinks();
             mWaterlooInfoSessionCollection = collection;
             callbackSuccess(callback, collection);

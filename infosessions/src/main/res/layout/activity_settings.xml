@@ -39,6 +39,16 @@
 
         <View style="@style/SettingsDivider" />
 
+        <com.sixbynine.infosessions.ui.CheckableTextView
+            android:id="@+id/settings_past"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:checked="false"
+            android:text="@string/show_past_sessions" />
+
+        <View style="@style/SettingsDivider" />
+
 
 
         <TextView
@@ -56,6 +66,16 @@
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             app:hsvHeaderText="@string/interested_programs" />
+
+        <View style="@style/SettingsDivider" />
+
+        <com.sixbynine.infosessions.ui.CheckableTextView
+            android:id="@+id/settings_today_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:checked="true"
+            android:text="@string/show_today_tab" />
 
         <View style="@style/SettingsDivider" />
 
