@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -102,6 +103,8 @@ public class InfoSessionUtil {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mAlarmManager.cancelAlarm(infoSession);
+                            Toast.makeText(MyApplication.getInstance().getApplicationContext(),
+                                    "Reminder removed", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -129,6 +132,8 @@ public class InfoSessionUtil {
                             int minutes = MyApplication.getInstance().getResources()
                                     .getIntArray(R.array.alarm_choices_minutes_values)[mAlarmChoice];
                             mAlarmManager.setAlarm(infoSession, minutes);
+                            Toast.makeText(MyApplication.getInstance().getApplicationContext(),
+                                    "Reminder added", Toast.LENGTH_SHORT).show();
                         }
                     }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override

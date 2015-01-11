@@ -14,6 +14,7 @@ import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
+import com.flurry.android.FlurryAgent;
 import com.flurry.sdk.de;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -30,6 +31,8 @@ import com.sixbynine.infosessions.util.Logger;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import roboguice.RoboGuice;
 
@@ -60,6 +63,10 @@ public class AlarmManager{
             RoboGuice.getInjector(context).injectMembersWithoutViews(this);
 
             WaterlooInfoSession infoSession = intent.getParcelableExtra(KEY_INFO_SESSION);
+            Map<String, String> params = new HashMap<>();
+            params.put("session id", infoSession.getId());
+            params.put("company", infoSession.getCompanyName());
+            FlurryAgent.logEvent("Reminder shown", params);
 
             int requestId = (int) System.currentTimeMillis();
 
@@ -116,7 +123,7 @@ public class AlarmManager{
 
         manager.set(android.app.AlarmManager.RTC_WAKEUP, millisOfAlarm, getInfoSessionPendingIntent(infoSession));
         WaterlooInfoSessionPreferences prefs = mInfoSessionPreferenceManager.editPreferences(infoSession)
-                .addAlarm(minutesPreceding)
+                .setAlarm(minutesPreceding)
                 .commit();
         MainBus.get().post(new InfoSessionPreferencesModifiedEvent(infoSession, prefs));
     }

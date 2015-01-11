@@ -28,7 +28,6 @@ import roboguice.inject.ContentView;
 
 /**
  * Created by stevenkideckel on 14-12-30.
- * TODO make sure this handles clicks correctly
  */
 @ContentView(R.layout.activity_search)
 public class SearchActivity extends BaseActivity implements InfoSessionListFragment.Callback{
