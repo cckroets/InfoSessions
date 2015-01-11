@@ -61,6 +61,8 @@ public class AlarmManager{
 
             WaterlooInfoSession infoSession = intent.getParcelableExtra(KEY_INFO_SESSION);
 
+            int requestId = (int) System.currentTimeMillis();
+
             DateFormat timeFormat = new SimpleDateFormat("h:mm");
             Resources res = context.getResources();
             String title = res.getString(R.string.event_header, infoSession.getCompanyName());
@@ -76,14 +78,15 @@ public class AlarmManager{
                     .setContentTitle(title)
                     .setContentText(message);
 
-            Intent resultIntent = new Intent(context, CompanyInfoActivity.class);
+            Intent resultIntent = new Intent(context.getApplicationContext(), CompanyInfoActivity.class);
             resultIntent.putExtra(CompanyInfoActivity.INFO_SESSION_KEY, infoSession);
+            resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+            /*TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
             stackBuilder.addParentStack(CompanyInfoActivity.class);
-            stackBuilder.addNextIntent(resultIntent);
+            stackBuilder.addNextIntent(resultIntent);*/
 
-            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent resultPendingIntent = PendingIntent.getActivity(context, requestId, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);//stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
             builder.setContentIntent(resultPendingIntent);
 
