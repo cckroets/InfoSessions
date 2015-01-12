@@ -14,6 +14,7 @@ import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
+import com.flurry.android.FlurryAgent;
 import com.flurry.sdk.de;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -30,6 +31,8 @@ import com.sixbynine.infosessions.util.Logger;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import roboguice.RoboGuice;
 
@@ -63,6 +66,12 @@ public class AlarmManager{
             RoboGuice.getInjector(context).injectMembersWithoutViews(this);
 
             WaterlooInfoSession infoSession = intent.getParcelableExtra(KEY_INFO_SESSION);
+            Map<String, String> params = new HashMap<>();
+            params.put("session id", infoSession.getId());
+            params.put("company", infoSession.getCompanyName());
+            FlurryAgent.logEvent("Reminder shown", params);
+
+            int requestId = (int) System.currentTimeMillis();
 
             DateFormat timeFormat = new SimpleDateFormat("h:mm");
             Resources res = context.getResources();
@@ -79,14 +88,15 @@ public class AlarmManager{
                     .setContentTitle(title)
                     .setContentText(message);
 
-            Intent resultIntent = new Intent(context, CompanyInfoActivity.class);
+            Intent resultIntent = new Intent(context.getApplicationContext(), CompanyInfoActivity.class);
             resultIntent.putExtra(CompanyInfoActivity.INFO_SESSION_KEY, infoSession);
+            resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+            /*TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
             stackBuilder.addParentStack(CompanyInfoActivity.class);
-            stackBuilder.addNextIntent(resultIntent);
+            stackBuilder.addNextIntent(resultIntent);*/
 
-            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent resultPendingIntent = PendingIntent.getActivity(context, requestId, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);//stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
             builder.setContentIntent(resultPendingIntent);
 
@@ -120,7 +130,7 @@ public class AlarmManager{
 
         manager.set(android.app.AlarmManager.RTC_WAKEUP, millisOfAlarm, getInfoSessionPendingIntent(infoSession));
         WaterlooInfoSessionPreferences prefs = mInfoSessionPreferenceManager.editPreferences(infoSession)
-                .addAlarm(minutesPreceding)
+                .setAlarm(minutesPreceding)
                 .commit();
         MainBus.get().post(new InfoSessionPreferencesModifiedEvent(infoSession, prefs));
     }

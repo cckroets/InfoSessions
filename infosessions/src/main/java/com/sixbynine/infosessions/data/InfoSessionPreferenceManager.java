@@ -1,5 +1,6 @@
 package com.sixbynine.infosessions.data;
 
+import com.flurry.android.FlurryAgent;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -9,7 +10,9 @@ import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferencesMap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by stevenkideckel on 14-12-29.
@@ -133,33 +136,35 @@ public final class InfoSessionPreferenceManager {
         }
 
         public Editor setFavorited(boolean favorited){
+            Map<String, String> params = new HashMap<>(1);
+            params.put("session_id", preferences.getId());
+            FlurryAgent.logEvent("Event " + (favorited? "added to " : "removed from ") + "favourites", params);
             preferences.setFavorited(favorited);
             return this;
         }
 
-        public Editor addAlarm(int alarmId){
-            preferences.setAlarm(alarmId);
-            return this;
-        }
-
         public Editor setAlarm(int minutes){
+            Map<String, String> params = new HashMap<>(1);
+            params.put("session_id", preferences.getId());
+            FlurryAgent.logEvent("Reminder created for info session", params);
             preferences.setAlarm(minutes);
             return this;
         }
 
         public Editor removeAlarm(){
+            Map<String, String> params = new HashMap<>(1);
+            params.put("session_id", preferences.getId());
+            FlurryAgent.logEvent("Reminder removed for info session", params);
             preferences.removeAlarm();
             return this;
         }
 
         public Editor toggleFavorited(){
-            preferences.setFavorited(!preferences.isFavorited());
-            return this;
+            return setFavorited(!preferences.isFavorited());
         }
 
         public Editor toggleDismissed(){
-            preferences.setDismissed(!preferences.isDismissed());
-            return this;
+            return setDismissed(!preferences.isDismissed());
         }
 
         public WaterlooInfoSessionPreferences commit(){

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.flurry.android.FlurryAgent;
 import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.alarm.AlarmManager;
@@ -15,6 +16,9 @@ import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
 import com.sixbynine.infosessions.ui.InfoSessionUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
@@ -42,6 +46,11 @@ public class CompanyInfoActivity extends BaseActivity {
         }else{
             mInfoSession = savedInstanceState.getParcelable(INFO_SESSION_KEY);
         }
+
+        Map<String, String> params = new HashMap<>(2);
+        params.put("session id", mInfoSession.getId());
+        params.put("company", mInfoSession.getCompanyName());
+        FlurryAgent.logEvent("Info Session viewed", params);
 
         mInfoFragment = CompanyInfoFragment.createInstance(mInfoSession);
         getSupportFragmentManager()
