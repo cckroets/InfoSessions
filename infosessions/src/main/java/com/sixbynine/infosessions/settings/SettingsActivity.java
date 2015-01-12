@@ -42,6 +42,8 @@ public class SettingsActivity extends RoboActionBarActivity implements View.OnCl
     CheckableTextView mPastCheckableTextView;
     @InjectView(R.id.settings_today_tab)
     CheckableTextView mTodayCheckableTextView;
+    @InjectView(R.id.settings_reminders_tab)
+    CheckableTextView mRemindersCheckableTextView;
     @InjectView(R.id.settings_vibrate)
     CheckableTextView mVibrateCheckableTextView;
     @InjectView(R.id.settings_sound)
@@ -86,6 +88,13 @@ public class SettingsActivity extends RoboActionBarActivity implements View.OnCl
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mPreferenceManager.putBoolean(PreferenceManager.Keys.SHOW_TODAY, isChecked);
+                syncViews();
+            }
+        });
+        mRemindersCheckableTextView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mPreferenceManager.putBoolean(PreferenceManager.Keys.SHOW_REMINDERS, isChecked);
                 syncViews();
             }
         });
@@ -178,6 +187,7 @@ public class SettingsActivity extends RoboActionBarActivity implements View.OnCl
         mGraduateCheckableTextView.setChecked(mPreferenceManager.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE, true));
         mPastCheckableTextView.setChecked(mPreferenceManager.getBoolean(PreferenceManager.Keys.SHOW_PAST, false));
         mTodayCheckableTextView.setChecked(mPreferenceManager.getBoolean(PreferenceManager.Keys.SHOW_TODAY, true));
+        mRemindersCheckableTextView.setChecked(mPreferenceManager.getBoolean(PreferenceManager.Keys.SHOW_REMINDERS, false));
 
         NotificationPreference pref = NotificationPreference.getNotificationPreference(mPreferenceManager);
         mVibrateCheckableTextView.setChecked(pref.hasVibrate());

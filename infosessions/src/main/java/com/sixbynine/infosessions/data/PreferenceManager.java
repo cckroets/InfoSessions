@@ -79,6 +79,7 @@ public final class PreferenceManager {
         public static final String SHOW_GRADUATE = "show-grad-tab-key";
         public static final String SHOW_PAST = "show-past-tab-key";
         public static final String SHOW_TODAY = "show-today-tab-key";
+        public static final String SHOW_REMINDERS = "show-reminders-tab-key";
         public static final String ALERT_PREFERENCE = "alert-preference";
     }
 }

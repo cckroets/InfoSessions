@@ -10,6 +10,7 @@
 
         <com.sixbynine.infosessions.ui.HeaderSubheaderView
             android:id="@+id/two_line_view"
+            android:clickable="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

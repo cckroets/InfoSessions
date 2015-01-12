@@ -55,6 +55,12 @@ public final class InfoSessionGroup implements Parcelable{
                     today.get(Calendar.DAY_OF_MONTH) == event.get(Calendar.DAY_OF_MONTH);
         }
     });
+    public static final InfoSessionGroup REMINDERS = new InfoSessionGroup(5, R.string.tab_reminders, new WaterlooInfoSession.Filter() {
+        @Override
+        public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
+            return p.hasAlarm();
+        }
+    });
 
     private static final InfoSessionGroup[] CONSTANTS = new InfoSessionGroup[]{ALL, FAVORITES, COOP, GRADUATE, TODAY};
 
@@ -192,9 +198,17 @@ public final class InfoSessionGroup implements Parcelable{
     }
 
     public static List<InfoSessionGroup> getGroups(PreferenceManager preferenceManager){
+        //TODO allow reordering of tabs
+
         List<InfoSessionGroup> tabs = new ArrayList<>();
 
-        boolean showToday = preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_TODAY, true);
+        Calendar c = Calendar.getInstance();
+        boolean weekday = c.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY &&
+                c.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY;
+
+
+        boolean showToday = weekday && preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_TODAY, true);
+        boolean showReminders = preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_REMINDERS, false);
         boolean showCoop = preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_COOP, true);
         boolean showGrad = preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE, true);
 
@@ -203,18 +217,22 @@ public final class InfoSessionGroup implements Parcelable{
             tabs.add(ALL);
             if(showToday) tabs.add(TODAY);
             tabs.add(FAVORITES);
+            if(showReminders) tabs.add(REMINDERS);
             tabs.add(COOP);
             tabs.add(GRADUATE);
         }else if(showCoop){
             tabs.add(COOP);
             if(showToday) tabs.add(TODAY);
             tabs.add(FAVORITES);
+            if(showReminders) tabs.add(REMINDERS);
         }else if(showGrad){
             tabs.add(GRADUATE);
             if(showToday) tabs.add(TODAY);
             tabs.add(FAVORITES);
+            if(showReminders) tabs.add(REMINDERS);
         }else{
             tabs.add(FAVORITES);
+            if(showReminders) tabs.add(REMINDERS);
         }
 
         for(String s : preferenceManager.getStrings(PreferenceManager.Keys.INTERESTED_PROGRAMS)){

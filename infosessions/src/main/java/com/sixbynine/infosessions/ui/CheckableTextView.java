@@ -31,7 +31,9 @@ public class CheckableTextView extends RelativeLayout implements Checkable, View
 
     private static final int[] ATTRS = new int[]{
             android.R.attr.text,
-            android.R.attr.checked
+            android.R.attr.checked,
+            R.attr.hsvHeaderText,
+            R.attr.hsvSubHeaderText
     };
 
     public CheckableTextView(Context context, AttributeSet attrs) {
@@ -56,15 +58,14 @@ public class CheckableTextView extends RelativeLayout implements Checkable, View
         mText = a.getString(0);
         mChecked = a.getBoolean(1, false);
 
-        a.recycle();
-
-        a = context.obtainStyledAttributes(attrs, R.styleable.HeaderSubheaderView, 0, 0);
-
-        String text = a.getString(R.styleable.HeaderSubheaderView_hsvHeaderText);
+        String text = a.getString(2);
         if(text != null){
             mText = text;
         }
-        mSubtext = a.getString(R.styleable.HeaderSubheaderView_hsvSubHeaderText);
+        mSubtext = a.getString(3);
+
+        a.recycle();
+
 
     }
 

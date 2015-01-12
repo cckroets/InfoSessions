@@ -75,7 +75,21 @@
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:checked="true"
-            android:text="@string/show_today_tab" />
+            android:text="@string/show_today_tab"
+            app:ctvLines="one"
+            app:hsvSubHeaderText="@string/show_today_tab_info"/>
+
+        <View style="@style/SettingsDivider" />
+
+        <com.sixbynine.infosessions.ui.CheckableTextView
+            android:id="@+id/settings_reminders_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:checked="false"
+            android:text="@string/show_reminders_tab"
+            app:ctvLines="one"
+            app:hsvSubHeaderText="@string/show_reminders_tab_info"/>
 
         <View style="@style/SettingsDivider" />
 
