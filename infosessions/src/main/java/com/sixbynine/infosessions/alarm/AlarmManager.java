@@ -54,6 +54,9 @@ public class AlarmManager{
         @Inject
         PreferenceManager mPreferenceManager;
 
+        @Inject
+        InfoSessionPreferenceManager mInfoSessionPreferenceManager;
+
         @Override
         public void onReceive(Context context, Intent intent) {
             Logger.d("OnReceiveIntentCalled");
@@ -100,6 +103,10 @@ public class AlarmManager{
 
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             manager.notify(NOTIFICATION_ID, builder.build());
+
+            mInfoSessionPreferenceManager.editPreferences(infoSession)
+                    .removeAlarm()
+                    .commit(); //remove alarm when it shows
         }
     }
 

@@ -7,7 +7,7 @@
         android:layout_height="wrap_content"
         android:text="Header"
         android:paddingTop="12dp"
-        android:textColor="@android:color/black"
+        android:textColor="@color/primaryText"
         android:textSize="16sp"
         android:ellipsize="end"
         android:singleLine="true"/>
@@ -24,6 +24,7 @@
         android:textSize="14sp"
         android:paddingBottom="12dp"
         android:ellipsize="end"
-        android:singleLine="true"/>
+        android:singleLine="true"
+        android:textColor="@color/secondaryText"/>
 
 </merge>

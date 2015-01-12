@@ -9,36 +9,29 @@ import android.os.Handler;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.Toast;
 
 import com.crittercism.app.Crittercism;
 import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
-import com.sixbynine.infosessions.alarm.AlarmManager;
 import com.sixbynine.infosessions.app.BaseActivity;
 import com.sixbynine.infosessions.app.CompanyInfoActivity;
 import com.sixbynine.infosessions.data.InfoSessionManager;
 import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
 import com.sixbynine.infosessions.data.ResponseHandler;
-import com.sixbynine.infosessions.event.MainBus;
-import com.sixbynine.infosessions.event.data.CompanyLoadedEvent;
 import com.sixbynine.infosessions.event.data.InfoSessionPreferencesModifiedEvent;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionCollection;
-import com.sixbynine.infosessions.model.company.Company;
 import com.sixbynine.infosessions.net.Keys;
 import com.sixbynine.infosessions.search.SearchActivity;
 import com.sixbynine.infosessions.settings.SettingsActivity;
 import com.sixbynine.infosessions.ui.InfoSessionUtil;
 import com.sixbynine.infosessions.ui.PagerSlidingTabStrip;
-import com.sixbynine.infosessions.util.Logger;
 import com.sixbynine.infosessions.util.StoreUtils;
 import com.squareup.otto.Subscribe;
 
@@ -71,7 +64,6 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
     private static final int SETTINGS_REQUEST_CODE = 1;
     private static final int VIEW_REQUEST_CODE = 2;
 
-
     ArrayList<WaterlooInfoSession> mInfoSessions;
     InfoSessionsTabsPagerAdapter mPagerAdapter;
 
@@ -80,12 +72,6 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
         INITIALIZED, LOADING, LOADED
     }
     ActivityState mState;
-    private Runnable mLoadingRunnable = new Runnable() {
-        @Override
-        public void run() {
-            animateStateChange(ActivityState.LOADING);
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,14 +80,12 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
 
         setSupportActionBar(mToolbar); //I used a toolbar here since I was having issues disabling the drop shadow from action bar
         mHandler = new Handler();
-        mHandler.postDelayed(mLoadingRunnable, 10);
-        animateStateChange(ActivityState.INITIALIZED);
+        changeState(ActivityState.INITIALIZED, false);
 
-        mInfoSessionManager.getWaterlooInfoSessions(new ResponseHandler<WaterlooInfoSessionCollection>() {
+        boolean loaded = mInfoSessionManager.getWaterlooInfoSessions(new ResponseHandler<WaterlooInfoSessionCollection>() {
             @Override
             public void onSuccess(WaterlooInfoSessionCollection object) {
-                mHandler.removeCallbacks(mLoadingRunnable);
-                animateStateChange(ActivityState.LOADED);
+                changeState(ActivityState.LOADED, mState == ActivityState.LOADING);
                 mInfoSessions = new ArrayList<>(object.getInfoSessions());
                 mPagerAdapter = new InfoSessionsTabsPagerAdapter(getSupportFragmentManager(), mInfoSessions);
                 mPager.setAdapter(mPagerAdapter);
@@ -130,6 +114,10 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
 
             }
         });
+
+        if(!loaded){
+            changeState(ActivityState.LOADING, false);
+        }
     }
 
     @Override
@@ -159,13 +147,6 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
             case R.id.action_rate:
                 startActivity(StoreUtils.getStoreIntent());
                 return true;
-        }
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        final int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -208,37 +189,33 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
         }
     }
 
-    private void animateStateChange(ActivityState toState){
+    private void changeState(ActivityState toState, boolean animate){
         switch(toState){
             case LOADING:
-                mTabs.setVisibility(View.GONE);
                 mLoadingContainer.setVisibility(View.VISIBLE);
                 break;
             case LOADED:
-                mTabs.setVisibility(View.VISIBLE);
-                ValueAnimator anim = ValueAnimator.ofFloat(0f, 1f).setDuration(200);
-                anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        float curVal = (float) animation.getAnimatedValue();
-                        mLoadingContainer.setAlpha(1f - curVal);
-                        ViewGroup.LayoutParams params = mTabs.getLayoutParams();
-                        params.height = (int) (curVal * mToolbar.getHeight());
-                        mTabs.setLayoutParams(params);
-                    }
-                });
-                anim.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        ViewGroup.LayoutParams params = mTabs.getLayoutParams();
-                        params.height = mToolbar.getHeight();
-                        mTabs.setLayoutParams(params);
-                        mLoadingContainer.setVisibility(View.GONE);
-                    }
-                });
-                anim.setInterpolator(new AccelerateDecelerateInterpolator());
-                anim.start();
+                if(animate) {
+                    ValueAnimator anim = ValueAnimator.ofFloat(1f, 0f).setDuration(200);
+                    anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            float curVal = (float) animation.getAnimatedValue();
+                            mLoadingContainer.setAlpha(curVal);
+                        }
+                    });
+                    anim.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            mLoadingContainer.setVisibility(View.GONE);
+                        }
+                    });
+                    anim.setInterpolator(new AccelerateDecelerateInterpolator());
+                    anim.start();
+                }else{
+                    mLoadingContainer.setVisibility(View.GONE);
+                }
                 break;
         }
         mState = toState;

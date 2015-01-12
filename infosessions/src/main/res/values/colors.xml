@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- theme colors -->
-    <color name="primary">#00BCD4</color>
+    <!-- theme colors cyan-green-->
+    <!--<color name="primary">#00BCD4</color>
     <color name="primaryDark">#0097A7</color>
+    <color name="accent">#4CAF50</color>-->
+
+    <!-- theme colors amber-red -->
+    <color name="primary">#FFC107</color>
+    <color name="primaryDark">#FFA000</color>
     <color name="accent">#4CAF50</color>
+    <color name="primaryLight">#FFECB3</color>
+    <color name="primaryText">#212121</color>
+    <color name="secondaryText">#727272</color>
+    <color name="divider">#B6B6B6</color>
+    <color name="textIcons">#212121</color>
 
     <color name="info_sessions_fragment_bg">#caececec</color>
     <color name="shadow_color">#caa2a2a2</color>

@@ -85,14 +85,15 @@ public class InfoSessionUtil {
 
     private int mAlarmChoice;
     public void doAlarmLogic(Activity context, final WaterlooInfoSession infoSession){
+        Resources res = context.getResources();
         WaterlooInfoSessionPreferences prefs = mPreferenceManager.getPreferences(infoSession);
         if(prefs.hasAlarm()){
             int minutes = prefs.getAlarm();
             String message;
             if(minutes >= 60){
-                message = context.getString(R.string.remove_alarm_message_hours, minutes / 60);
+                message = res.getQuantityString(R.plurals.remove_alarm_message_hours, minutes / 60, minutes / 60);
             }else{
-                message = context.getString(R.string.remove_alarm_message_minutes, minutes);
+                message = res.getQuantityString(R.plurals.remove_alarm_message_minutes, minutes / 60, minutes / 60);
             }
 
             new AlertDialog.Builder(context)

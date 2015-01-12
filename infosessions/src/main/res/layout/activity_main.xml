@@ -20,7 +20,8 @@
         app:pstsDividerColor="#00000000"
         app:pstsIndicatorColor="@android:color/white"
         app:pstsIndicatorHeight="4dp"
-        app:pstsTabPaddingLeftRight="12dp" />
+        app:pstsTabPaddingLeftRight="12dp"
+        app:pstsTabBackground="?attr/selectableItemBackground"/>
 
     <FrameLayout
         android:layout_width="match_parent"

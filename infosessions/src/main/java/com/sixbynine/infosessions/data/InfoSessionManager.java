@@ -69,11 +69,16 @@ public final class InfoSessionManager {
         mWaterlooAPI.getInfoSessions(mWaterlooSessionsCallback);
     }
 
-    public void getWaterlooInfoSessions(final ResponseHandler<WaterlooInfoSessionCollection> callback) {
+    /**
+     * Gets the List of current InfoSessions, using the cached value if available
+     * @param callback the callback which will be invoked asynchronously
+     * @return true if there was a cached copy, false if a network request will be made
+     */
+    public boolean getWaterlooInfoSessions(final ResponseHandler<WaterlooInfoSessionCollection> callback) {
         WaterlooInfoSessionCollection collection = mWaterlooInfoSessionCollection;
         if (collection != null) {
             callbackSuccess(callback, collection);
-            return;
+            return true;
         }
 
         collection = mInfoSessionDBManager.getWaterlooSessions();
@@ -82,10 +87,11 @@ public final class InfoSessionManager {
             mPermalinks = mInfoSessionDBManager.getPermalinks();
             mWaterlooInfoSessionCollection = collection;
             callbackSuccess(callback, collection);
-            return;
+            return true;
         }
 
         mWaterlooSessionsCallback.addCallback(callback);
+        return false;
     }
 
     public WaterlooInfoSession getInfoSessionFromId(final String id){

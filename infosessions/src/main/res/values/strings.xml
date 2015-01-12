@@ -70,8 +70,14 @@
 
     <!-- Alarm Strings -->
     <string name="remove_alarm">Remove reminder?</string>
-    <string name="remove_alarm_message_minutes">The current reminder is set to go off %1$d minutes before the info session</string>
-    <string name="remove_alarm_message_hours">The current reminder is set to go off %1$d hours before the info session</string>
+    <plurals name="remove_alarm_message_minutes">
+        <item quantity="one">The current reminder is set to go off %1$d minute before the info session</item>
+        <item quantity="other">The current reminder is set to go off %1$d minutes before the info session</item>
+    </plurals>
+    <plurals name="remove_alarm_message_hours">
+        <item quantity="one">The current reminder is set to go off %1$d hour before the info session</item>
+        <item quantity="other">The current reminder is set to go off %1$d hours before the info session</item>
+    </plurals>
     <string name="alarm_choices_title">Add Reminder</string>
     <string name="alarm_choices_prompt">How long before the event should the reminder go off?</string>
     <string-array name="alarm_choices">
