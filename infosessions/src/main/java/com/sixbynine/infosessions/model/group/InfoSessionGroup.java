@@ -62,7 +62,7 @@ public final class InfoSessionGroup implements Parcelable{
         }
     });
 
-    private static final InfoSessionGroup[] CONSTANTS = new InfoSessionGroup[]{ALL, FAVORITES, COOP, GRADUATE, TODAY};
+    private static final InfoSessionGroup[] CONSTANTS = new InfoSessionGroup[]{ALL, FAVORITES, COOP, GRADUATE, TODAY, REMINDERS};
 
     @IntDef({CONSTANT, PROGRAM, FACULTY})
     public @interface Type{}
