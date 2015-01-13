@@ -3,12 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.CompanyInfoActivity">
 
-    <item
-        android:id="@+id/action_favourite"
-        android:title="Favourite"
-        android:icon="@drawable/ic_favorite_white"
-        android:checkable="true"
-        app:showAsAction="always" />
+
 
     <item
         android:id="@+id/action_rsvp"
@@ -16,9 +11,9 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/action_share"
-        android:title="Share"
-        app:showAsAction="collapseActionView"/>
+        android:id="@+id/action_favourite"
+        android:title="Add To Favourites"
+        app:showAsAction="collapseActionView" />
 
     <item
         android:id="@+id/action_alarm"
@@ -28,5 +23,10 @@
     <item
         android:id="@+id/action_calendar"
         android:title="Add To Calendar"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/action_share"
+        android:title="Share"
         app:showAsAction="collapseActionView"/>
 </menu>

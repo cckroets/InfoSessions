@@ -3,7 +3,10 @@ package com.sixbynine.infosessions.home;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewCompat;
@@ -15,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.Button;
 
 import com.crittercism.app.Crittercism;
 import com.google.inject.Inject;
@@ -51,6 +55,10 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
     ViewPager mPager;
     @InjectView(R.id.loading_container)
     ViewGroup mLoadingContainer;
+    @InjectView(R.id.failure_container)
+    ViewGroup mFailureContainer;
+    @InjectView(R.id.retry_button)
+    Button mRetryButton;
 
     @Inject
     InfoSessionPreferenceManager mInfoSessionPreferenceManager;
@@ -70,7 +78,7 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
 
     Handler mHandler;
     enum ActivityState{
-        INITIALIZED, LOADING, LOADED
+        INITIALIZED, LOADING, LOADED, ERROR
     }
     ActivityState mState;
 
@@ -80,44 +88,62 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
         Crittercism.initialize(this, Keys.APP_ID_CRITTERCISM);
 
         setSupportActionBar(mToolbar); //I used a toolbar here since I was having issues disabling the drop shadow from action bar
+        ViewCompat.setElevation(mToolbar, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                8, getResources().getDisplayMetrics()));
+        ViewCompat.setElevation(mTabs, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                8, getResources().getDisplayMetrics()));
         mHandler = new Handler();
-        changeState(ActivityState.INITIALIZED, false);
+        changeState(ActivityState.INITIALIZED);
 
-        boolean loaded = mInfoSessionManager.getWaterlooInfoSessions(new ResponseHandler<WaterlooInfoSessionCollection>() {
+        loadListings();
+
+        mRetryButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(WaterlooInfoSessionCollection object) {
-                changeState(ActivityState.LOADED, mState == ActivityState.LOADING);
-                mInfoSessions = new ArrayList<>(object.getInfoSessions());
-                mPagerAdapter = new InfoSessionsTabsPagerAdapter(getSupportFragmentManager(), mInfoSessions);
-                mPager.setAdapter(mPagerAdapter);
-                mTabs.setViewPager(mPager);
-                ViewCompat.setElevation(mToolbar, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                        8, getResources().getDisplayMetrics()));
-                ViewCompat.setElevation(mTabs, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                        8, getResources().getDisplayMetrics()));
+            public void onClick(View v) {
+                loadListings();
+            }
+        });
+    }
 
-                String data = getIntent().getDataString();
-                if(data != null && data.length() > 4){
-                    String sessionId = data.substring(data.length() - 4);
-                    for(WaterlooInfoSession infoSession : mInfoSessions){
-                        if(infoSession.getId().equals(sessionId)){
-                            Intent intent = new Intent(MainActivity.this, CompanyInfoActivity.class);
-                            intent.putExtra(CompanyInfoActivity.INFO_SESSION_KEY, infoSession);
-                            startActivityForResult(intent, VIEW_REQUEST_CODE);
-                            break;
+    private void loadListings(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if( activeNetworkInfo == null || !activeNetworkInfo.isConnected()){
+            changeState(ActivityState.ERROR);
+        }else{
+            boolean loaded = mInfoSessionManager.getWaterlooInfoSessions(new ResponseHandler<WaterlooInfoSessionCollection>() {
+                @Override
+                public void onSuccess(WaterlooInfoSessionCollection object) {
+                    changeState(ActivityState.LOADED);
+                    mInfoSessions = new ArrayList<>(object.getInfoSessions());
+                    mPagerAdapter = new InfoSessionsTabsPagerAdapter(getSupportFragmentManager(), mInfoSessions);
+                    mPager.setAdapter(mPagerAdapter);
+                    mTabs.setViewPager(mPager);
+
+                    String data = getIntent().getDataString();
+                    if(data != null && data.length() > 4){
+                        String sessionId = data.substring(data.length() - 4);
+                        for(WaterlooInfoSession infoSession : mInfoSessions){
+                            if(infoSession.getId().equals(sessionId)){
+                                Intent intent = new Intent(MainActivity.this, CompanyInfoActivity.class);
+                                intent.putExtra(CompanyInfoActivity.INFO_SESSION_KEY, infoSession);
+                                startActivityForResult(intent, VIEW_REQUEST_CODE);
+                                break;
+                            }
                         }
                     }
                 }
+
+                @Override
+                public void onFailure(Exception error) {
+                    changeState(ActivityState.ERROR);
+                }
+            });
+
+            if(!loaded){
+                changeState(ActivityState.LOADING);
             }
-
-            @Override
-            public void onFailure(Exception error) {
-
-            }
-        });
-
-        if(!loaded){
-            changeState(ActivityState.LOADING, false);
         }
     }
 
@@ -190,52 +216,43 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
         }
     }
 
-    private void changeState(ActivityState toState, boolean animate){
+    private void changeState(ActivityState toState){
         switch(toState){
             case LOADING:
                 mLoadingContainer.setVisibility(View.VISIBLE);
+                mFailureContainer.setVisibility(View.GONE);
                 break;
             case LOADED:
-                if(animate) {
-                    ValueAnimator anim = ValueAnimator.ofFloat(1f, 0f).setDuration(200);
-                    anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(ValueAnimator animation) {
-                            float curVal = (float) animation.getAnimatedValue();
-                            mLoadingContainer.setAlpha(curVal);
-                        }
-                    });
-                    anim.addListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            mLoadingContainer.setVisibility(View.GONE);
-                        }
-                    });
-                    anim.setInterpolator(new AccelerateDecelerateInterpolator());
-                    anim.start();
-                }else{
-                    mLoadingContainer.setVisibility(View.GONE);
-                }
+                mFailureContainer.setVisibility(View.GONE);
+                mLoadingContainer.setVisibility(View.GONE);
                 break;
+            case ERROR:
+                mFailureContainer.setVisibility(View.VISIBLE);
+                mLoadingContainer.setVisibility(View.GONE);
+                break;
+
         }
         mState = toState;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch(requestCode){
-            case VIEW_REQUEST_CODE:
-            case SEARCH_REQUEST_CODE:
-                updateListFragments(); //if the user favorites a session while searching, that should be reflected when they return
-                break;
-            case SETTINGS_REQUEST_CODE:
-                mPagerAdapter = new InfoSessionsTabsPagerAdapter(getSupportFragmentManager(), mInfoSessions);
-                mPager.setAdapter(mPagerAdapter);
-                mTabs.notifyDataSetChanged();
-                updateListFragments();
-                break;
-
+        if(mInfoSessions == null){
+            loadListings();
+        }else{
+            switch(requestCode){
+                case VIEW_REQUEST_CODE:
+                case SEARCH_REQUEST_CODE:
+                    updateListFragments(); //if the user favorites a session while searching, that should be reflected when they return
+                    break;
+                case SETTINGS_REQUEST_CODE:
+                    mPagerAdapter = new InfoSessionsTabsPagerAdapter(getSupportFragmentManager(), mInfoSessions);
+                    mPager.setAdapter(mPagerAdapter);
+                    mTabs.notifyDataSetChanged();
+                    updateListFragments();
+                    break;
+            }
         }
+
     }
 }

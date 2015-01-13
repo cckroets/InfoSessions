@@ -56,6 +56,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="add">Add</string>
+    <string name="retry">Retry</string>
 
     <!-- Tooltips for the buttons on the card -->
     <string name="add_favorite">Add To Favourites</string>
@@ -70,6 +71,7 @@
     <string name="time_in_place">%1$s in %2$s</string>
 
     <string name="loading_info_sessions">Loading Info Sessions…</string>
+    <string name="failure_message">There was an error retrieving the listings.\nPlease check your network connection and try again.</string>
     <string name="share_message">%1$s Info Session\n%2$s\n%3$s\nLink: http://www.ceca.uwaterloo.ca/students/sessions_details.php?id=%4$s</string>
 
     <!-- Alarm Strings -->

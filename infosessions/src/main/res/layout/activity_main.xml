@@ -20,8 +20,8 @@
         app:pstsDividerColor="#00000000"
         app:pstsIndicatorColor="@android:color/white"
         app:pstsIndicatorHeight="4dp"
-        app:pstsTabPaddingLeftRight="12dp"
-        app:pstsTabBackground="?attr/selectableItemBackground"/>
+        app:pstsTabBackground="?attr/selectableItemBackground"
+        app:pstsTabPaddingLeftRight="12dp" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -53,7 +53,36 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/loading_info_sessions"/>
+                    android:text="@string/loading_info_sessions" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/failure_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/primaryText"
+                    android:text="@string/failure_message" />
+
+                <Button
+                    android:id="@+id/retry_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/retry"/>
 
 
             </LinearLayout>

@@ -71,10 +71,8 @@ public class CompanyInfoActivity extends BaseActivity {
         WaterlooInfoSessionPreferences prefs = mPreferencesManager.getPreferences(mInfoSession);
         menu.findItem(R.id.action_alarm).setTitle(prefs.hasAlarm()? R.string.remove_reminder : R.string.add_reminder);
         if(prefs.isFavorited()){
-            menu.findItem(R.id.action_favourite).setIcon(R.drawable.ic_favorite_white);
             menu.findItem(R.id.action_favourite).setTitle(R.string.remove_favorite);
         }else{
-            menu.findItem(R.id.action_favourite).setIcon(R.drawable.ic_favorite_white_outline);
             menu.findItem(R.id.action_favourite).setTitle(R.string.add_favorite);
         }
         return true;

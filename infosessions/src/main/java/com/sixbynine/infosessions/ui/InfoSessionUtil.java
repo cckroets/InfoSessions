@@ -92,9 +92,9 @@ public class InfoSessionUtil {
             int minutes = prefs.getAlarm();
             String message;
             if(minutes >= 60){
-                message = res.getQuantityString(R.plurals.remove_alarm_message_hours, minutes / 60, minutes / 60);
+                message = res.getQuantityString(R.plurals.remove_alarm_message_hours,    minutes / 60, minutes / 60);
             }else{
-                message = res.getQuantityString(R.plurals.remove_alarm_message_minutes, minutes / 60, minutes / 60);
+                message = res.getQuantityString(R.plurals.remove_alarm_message_minutes, minutes, minutes);
             }
 
             new AlertDialog.Builder(context)
