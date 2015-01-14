@@ -5,6 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_rate">Rate App</string>
+    <string name="action_share">Share App</string>
     <string name="title_activity_company_info">CompanyInfoActivity</string>
     <string name="action_view_dismissed">View Dismissed</string>
     <string name="action_view_undismissed">View Undismissed</string>
@@ -12,6 +13,7 @@
     <string name="dismissed_sessions">Dismissed Sessions</string>
     <string name="search_info_sessions">Search Info Sessions</string>
     <string name="nothing_here_text">There doesn\'t seem to be anything here</string>
+    <string name="share_app_message">View employer info sessions the better way: %1$s</string>
 
     <!-- TAB TITLES -->
     <string name="tab_all">All</string>

@@ -172,7 +172,10 @@ public class MainActivity extends BaseActivity implements InfoSessionListFragmen
                 SearchActivity.launchActivityForResult(this, SEARCH_REQUEST_CODE, mInfoSessions);
                 return true;
             case R.id.action_rate:
-                startActivity(StoreUtils.getStoreIntent());
+                StoreUtils.launchStoreIntent(this);
+                return true;
+            case R.id.action_share:
+                StoreUtils.shareApp(this);
                 return true;
         }
         return super.onOptionsItemSelected(item);
