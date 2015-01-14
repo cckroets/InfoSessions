@@ -16,7 +16,7 @@ import retrofit.converter.GsonConverter;
  */
 public class CrunchbaseApiProvider implements Provider<CrunchbaseAPI> {
 
-    private static final String API_URL_CRUNCHBASE = "http://api.crunchbase.com/v/2";
+    private static final String API_URL_CRUNCHBASE = "https://api.crunchbase.com/v/2";
 
     @Inject
     @Named("network")
