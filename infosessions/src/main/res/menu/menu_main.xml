@@ -10,14 +10,19 @@
         app:showAsAction="always"/>
 
     <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_rate"
         android:title="@string/action_rate"
-        android:orderInCategory="101"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="102"
-        app:showAsAction="never" />
+        android:id="@+id/action_share"
+        android:title="@string/action_share"
+        app:showAsAction="never"/>
+
+
 </menu>
