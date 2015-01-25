@@ -24,6 +24,7 @@ public class InfoSessionDeserializer implements JsonDeserializer<WaterlooInfoSes
     private static final String TAG = InfoSessionDeserializer.class.getName();
 
     final DateFormat mDateFormat = new SimpleDateFormat("MMM d, yyyy");
+    final DateFormat mNewDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     final DateFormat mTimeFormat = new SimpleDateFormat("h:m a");
 
     @Override
@@ -42,7 +43,10 @@ public class InfoSessionDeserializer implements JsonDeserializer<WaterlooInfoSes
         final String programs = jsonObject.get("programs").getAsString();
         final String description = jsonObject.get("description").getAsString();
 
-        final Date date = parseDate(mDateFormat, rawDate);
+        Date date = parseDate(mDateFormat, rawDate);
+        if(date == null){
+            date = parseDate(mNewDateFormat, rawDate); //temp code until the api change comes
+        }
         final Calendar startTime = parseFullDate(rawStartTime, date);
         final Calendar endTime = parseFullDate(rawEndTime, date);
 

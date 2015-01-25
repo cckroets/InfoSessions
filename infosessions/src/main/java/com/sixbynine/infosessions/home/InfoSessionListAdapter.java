@@ -1,5 +1,6 @@
 package com.sixbynine.infosessions.home;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,6 +26,7 @@ import com.sixbynine.infosessions.data.ResponseHandler;
 
 import com.sixbynine.infosessions.model.company.Company;
 import com.sixbynine.infosessions.ui.CheatSheet;
+import com.sixbynine.infosessions.util.CompatUtil;
 import com.sixbynine.infosessions.util.Logger;
 import com.squareup.picasso.Picasso;
 
@@ -53,11 +55,14 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
     @Inject
     AlarmManager mAlarmManager;
 
+    Activity mContext;
+
     private InfoSessionActionListener mListener;
 
-    public InfoSessionListAdapter(Context context, List<WaterlooInfoSession> sessions) {
+    public InfoSessionListAdapter(Activity context, List<WaterlooInfoSession> sessions) {
         super(context, R.layout.info_session, R.id.companyName, sessions);
-        RoboGuice.getInjector(getContext()).injectMembersWithoutViews(this);
+        mContext = context;
+        RoboGuice.getInjector(context).injectMembersWithoutViews(this);
     }
 
     private int getDayOfYear(int row) {
@@ -96,7 +101,7 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
             viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
 
-            if(Build.VERSION.SDK_INT < 14){
+            if(!CompatUtil.canHandleCalendarIntent(mContext)){
                 viewHolder.calendarButton.setVisibility(View.GONE); //calendar intent only works in 14 and higher
             }
 

@@ -9,6 +9,7 @@
     <facet type="android" name="Android">
       <configuration>
         <option name="SELECTED_BUILD_VARIANT" value="amazonDebug" />
+        <option name="SELECTED_TEST_ARTIFACT" value="_android_test_" />
         <option name="ASSEMBLE_TASK_NAME" value="assembleAmazonDebug" />
         <option name="COMPILE_JAVA_TASK_NAME" value="compileAmazonDebugSources" />
         <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleAmazonDebugTest" />
@@ -120,8 +121,8 @@
     <orderEntry type="library" exported="" name="roboblender-3.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="FlurryAnalytics-4.0.0" level="project" />
+    <orderEntry type="library" exported="" name="crittercism-android-agent-5.0.4" level="project" />
     <orderEntry type="library" exported="" name="commons-lang-2.4" level="project" />
-    <orderEntry type="library" exported="" name="crittercism-android-agent-5.0.3" level="project" />
     <orderEntry type="library" exported="" name="gson-2.3" level="project" />
     <orderEntry type="library" exported="" name="picasso-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="velocity-1.7" level="project" />

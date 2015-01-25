@@ -16,6 +16,7 @@ import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
 import com.sixbynine.infosessions.ui.InfoSessionUtil;
+import com.sixbynine.infosessions.util.CompatUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,6 +75,9 @@ public class CompanyInfoActivity extends BaseActivity {
             menu.findItem(R.id.action_favourite).setTitle(R.string.remove_favorite);
         }else{
             menu.findItem(R.id.action_favourite).setTitle(R.string.add_favorite);
+        }
+        if(!CompatUtil.canHandleCalendarIntent(this)){
+            menu.findItem(R.id.action_calendar).setVisible(false);
         }
         return true;
     }

@@ -6,8 +6,8 @@ android {
     defaultConfig {
         minSdkVersion 12
         targetSdkVersion 21
-        versionCode 2
-        versionName '1.1'
+        versionCode 3
+        versionName '1.2'
     }
     buildTypes {
         release {
@@ -20,7 +20,7 @@ android {
             buildConfigField 'boolean', 'AMAZON', 'true'
         }
         googlePlay{
-            buildConfigField 'boolean', 'AMAZON', 'true'
+            buildConfigField 'boolean', 'AMAZON', 'false'
         }
     }
 }
