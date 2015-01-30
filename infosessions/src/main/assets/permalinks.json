@@ -463,8 +463,8 @@
     },
     {
       "id": "2825",
-      "employer": "BioDiaspora Inc.",
-      "permalink": null
+      "employer": "BlueDot",
+      "permalink": "bluedot"
     },
     {
       "id": "2826",
@@ -738,9 +738,24 @@
       "permalink": null
     },
     {
+      "id": "2954",
+      "employer": "AeroFS",
+      "permalink": "aerofs"
+    },
+    {
       "id": "3000",
       "employer": "Medallia*",
       "permalink": "medallia"
+    },
+    {
+      "id": "3010",
+      "employer": "Atomic Labs",
+      "permalink": "atomic-labs"
+    },
+    {
+      "id": "3015",
+      "employer": "Yahoo*",
+      "permalink": "yahoo"
     }
   ]
 }
