@@ -11,7 +11,7 @@ import roboguice.activity.RoboActionBarActivity;
 /**
  * Created by stevenkideckel on 14-12-30.
  */
-public abstract class BaseActivity extends RoboActionBarActivity{
+public abstract class BaseActivity extends RoboActionBarActivity {
 
     @Inject
     AlarmManager mAlarmManager;

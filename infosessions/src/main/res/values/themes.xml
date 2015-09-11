@@ -10,9 +10,10 @@
 
     <style name="AppTheme" parent="AppBaseTheme"/>
 
-    <style name="ToolbarActivity" parent="AppTheme">
-        <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
+    <style name="ToolbarActivity" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
 </resources>

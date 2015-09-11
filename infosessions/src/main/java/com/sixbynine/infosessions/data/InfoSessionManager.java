@@ -1,6 +1,5 @@
 package com.sixbynine.infosessions.data;
 
-import android.net.MailTo;
 import android.util.Log;
 
 import com.flurry.android.FlurryAgent;
@@ -19,6 +18,7 @@ import com.sixbynine.infosessions.model.company.Company;
 import com.sixbynine.infosessions.net.CrunchbaseAPI;
 import com.sixbynine.infosessions.net.PermalinkAPI;
 import com.sixbynine.infosessions.net.WaterlooAPI;
+import com.sixbynine.infosessions.util.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,198 +35,216 @@ import retrofit.client.Response;
 @Singleton
 public final class InfoSessionManager {
 
-    private static final String TAG = InfoSessionManager.class.getName();
+  private static final String TAG = InfoSessionManager.class.getName();
 
-    @Inject
-    PermalinkAPI mPermalinkAPI;
+  @Inject
+  PermalinkAPI mPermalinkAPI;
 
-    @Inject
-    WaterlooAPI mWaterlooAPI;
+  @Inject
+  WaterlooAPI mWaterlooAPI;
 
-    @Inject
-    CrunchbaseAPI mCrunchbaseAPI;
+  @Inject
+  CrunchbaseAPI mCrunchbaseAPI;
 
-    @Inject
-    CompanyCache mCompanyCache;
+  @Inject
+  CompanyCache mCompanyCache;
 
-    @Inject
-    InfoSessionSaver mInfoSessionDBManager;
+  @Inject
+  InfoSessionSaver mInfoSessionSaver;
 
-    PermalinkMap mPermalinks;
+  PermalinkMap mPermalinks;
 
-    WaterlooInfoSessionCollection mWaterlooInfoSessionCollection;
+  WaterlooInfoSessionCollection mWaterlooInfoSessionCollection;
 
-    WaterlooSessionsCallback mWaterlooSessionsCallback = new WaterlooSessionsCallback();
+  WaterlooSessionsCallback mWaterlooSessionsCallback = new WaterlooSessionsCallback();
 
-    @Inject
-    private InfoSessionManager(WaterlooAPI waterlooAPI) {
-        MainBus.get().register(this);
-        mWaterlooAPI = waterlooAPI;
-        loadData();
+  @Inject
+  private InfoSessionManager(WaterlooAPI waterlooAPI) {
+    MainBus.get().register(this);
+    mWaterlooAPI = waterlooAPI;
+    loadData();
+  }
+
+  private void loadData() {
+    mWaterlooAPI.getInfoSessions(mWaterlooSessionsCallback);
+  }
+
+  /**
+   * Gets the List of current InfoSessions, using the cached value if available
+   *
+   * @param callback the callback which will be invoked asynchronously
+   * @return true if there was a cached copy, false if a network request will be made
+   */
+  public boolean getWaterlooInfoSessions(final ResponseHandler<WaterlooInfoSessionCollection> callback) {
+    return getWaterlooInfoSessions(callback, true);
+  }
+
+  /**
+   * Gets the List of current InfoSessions, using the cached value if available
+   *
+   * @param callback the callback which will be invoked asynchronously
+   * @param useCache true if the cache should be used
+   * @return true if there was a cached copy, false if a network request will be made
+   */
+  public boolean getWaterlooInfoSessions(final ResponseHandler<WaterlooInfoSessionCollection> callback,
+                                         boolean useCache) {
+    Logger.d("getting info sessions");
+    if (useCache) {
+      WaterlooInfoSessionCollection collection = mWaterlooInfoSessionCollection;
+      if (collection != null) {
+        callbackSuccess(callback, collection);
+        return true;
+      }
+
+      collection = mInfoSessionSaver.getWaterlooSessions();
+      if (collection != null) {
+        collection.sort();
+        mPermalinks = mInfoSessionSaver.getPermalinks();
+        mWaterlooInfoSessionCollection = collection;
+        callbackSuccess(callback, collection);
+        return true;
+      }
+      mWaterlooSessionsCallback.addCallback(callback);
+    } else {
+      mWaterlooSessionsCallback = new WaterlooSessionsCallback();
+      mWaterlooSessionsCallback.addCallback(callback);
+      loadData();
     }
 
-    private void loadData() {
-        mWaterlooAPI.getInfoSessions(mWaterlooSessionsCallback);
+    return false;
+  }
+
+  public WaterlooInfoSession getInfoSessionFromId(final String id) {
+    WaterlooInfoSessionCollection collection = mInfoSessionSaver.getWaterlooSessions();
+    if (collection != null) {
+      for (WaterlooInfoSession infoSession : collection.getInfoSessions()) {
+        if (infoSession.getId().equals(id)) {
+          return infoSession;
+        }
+      }
+    }
+    return null;
+  }
+
+  public void getCompanyFromInfoSession(final WaterlooInfoSession infoSession, final ResponseHandler<Company> callback) {
+    if (mPermalinks != null) {
+      final EmployerInfo employerInfo = mPermalinks.getEmployerInfo(infoSession);
+      if (employerInfo == null) {
+        if (false && BuildConfig.DEBUG) {
+          throw new NoEmployerInfoException(infoSession.getId());
+        } else { //don't crash if this is in production, but let us know via flurry
+          Map<String, String> params = new HashMap<>();
+          params.put("sessionId", infoSession.getId());
+          FlurryAgent.logEvent("No Employer Info Found", params);
+        }
+      } else {
+        final String permalink = employerInfo.getPermalink();
+        getCompanyData(permalink, callback);
+      }
+      return;
+    }
+    mWaterlooSessionsCallback.addCallback(new ResponseHandler<WaterlooInfoSessionCollection>() {
+      @Override
+      public void onSuccess(WaterlooInfoSessionCollection object) {
+        getCompanyFromInfoSession(infoSession, callback);
+      }
+
+      @Override
+      public void onFailure(Exception error) {
+        callbackFailure(callback, error);
+      }
+    });
+  }
+
+  public void getCompanyData(String permalink, final ResponseHandler<Company> callback) {
+    if (permalink == null) {
+      Log.e(TAG, "getCompanyData called with null permalink");
+      callback.onFailure(new IllegalArgumentException("permalink == null"));
+      return;
+    }
+    Company company = mCompanyCache.get(permalink);
+    if (company != null) {
+      callbackSuccess(callback, company);
+      return;
     }
 
-    /**
-     * Gets the List of current InfoSessions, using the cached value if available
-     * @param callback the callback which will be invoked asynchronously
-     * @return true if there was a cached copy, false if a network request will be made
-     */
-    public boolean getWaterlooInfoSessions(final ResponseHandler<WaterlooInfoSessionCollection> callback) {
-        WaterlooInfoSessionCollection collection = mWaterlooInfoSessionCollection;
-        if (collection != null) {
-            callbackSuccess(callback, collection);
-            return true;
-        }
-
-        collection = mInfoSessionDBManager.getWaterlooSessions();
-        if (collection != null) {
-            collection.sort();
-            mPermalinks = mInfoSessionDBManager.getPermalinks();
-            mWaterlooInfoSessionCollection = collection;
-            callbackSuccess(callback, collection);
-            return true;
-        }
-
-        mWaterlooSessionsCallback.addCallback(callback);
-        return false;
+    company = mInfoSessionSaver.getCompany(permalink);
+    if (company != null) {
+      callbackSuccess(callback, company);
+      mCompanyCache.put(permalink, company);
+      return;
     }
 
-    public WaterlooInfoSession getInfoSessionFromId(final String id){
-        WaterlooInfoSessionCollection collection = mInfoSessionDBManager.getWaterlooSessions();
-        if (collection != null) {
-            for(WaterlooInfoSession infoSession : collection.getInfoSessions()){
-                if(infoSession.getId().equals(id)){
-                    return infoSession;
-                }
-            }
-        }
-        return null;
+    loadCompanyData(permalink, callback);
+  }
+
+  private void loadCompanyData(final String permalink, final ResponseHandler<Company> callback) {
+    mCrunchbaseAPI.getOrganization(permalink, new Callback<Company>() {
+      @Override
+      public void success(Company company, Response response) {
+        callbackSuccess(callback, company);
+        MainBus.get().post(new CompanyLoadedEvent(company));
+      }
+
+      @Override
+      public void failure(RetrofitError error) {
+        callbackFailure(callback, error);
+        Log.e(TAG, error.getMessage() != null ? error.getMessage() : "loading " +
+            permalink + " unknown failure");
+      }
+    });
+  }
+
+
+  private <T> void callbackSuccess(ResponseHandler<T> callback, T object) {
+    if (callback != null) {
+      callback.onSuccess(object);
+    }
+  }
+
+  private <T> void callbackFailure(ResponseHandler<T> callback, Exception exception) {
+    if (callback != null) {
+      callback.onFailure(exception);
+    }
+  }
+
+  private class WaterlooSessionsCallback implements Callback<WaterlooInfoSessionCollection> {
+
+    List<ResponseHandler<WaterlooInfoSessionCollection>> mCallbacks = new ArrayList<>();
+
+    public void addCallback(ResponseHandler<WaterlooInfoSessionCollection> callback) {
+      mCallbacks.add(callback);
     }
 
-    public void getCompanyFromSession(final String sessionId, final ResponseHandler<Company> callback) {
-        if (mPermalinks != null) {
-            final EmployerInfo employerInfo = mPermalinks.getEmployerInfo(sessionId);
-            if(employerInfo == null){
-                if(BuildConfig.DEBUG){
-                    throw new NoEmployerInfoException(sessionId);
-                }else{ //don't crash if this is in production, but let us know via flurry
-                    Map<String, String> params = new HashMap<>();
-                    params.put("sessionId", sessionId);
-                    FlurryAgent.logEvent("No Employer Info Found", params);
-                }
-            }else{
-                final String permalink = mPermalinks.getEmployerInfo(sessionId).getPermalink();
-                getCompanyData(permalink, callback);
-            }
-            return;
-        }
-        mWaterlooSessionsCallback.addCallback(new ResponseHandler<WaterlooInfoSessionCollection>() {
-            @Override
-            public void onSuccess(WaterlooInfoSessionCollection object) {
-                getCompanyFromSession(sessionId, callback);
-            }
-
-            @Override
-            public void onFailure(Exception error) {
-                callbackFailure(callback, error);
-            }
-        });
-    }
-
-    public void getCompanyData(String permalink, final ResponseHandler<Company> callback) {
-        if (permalink == null) {
-            Log.e(TAG, "getCompanyData called with null permalink");
-            callback.onFailure(new IllegalArgumentException("permalink == null"));
-            return;
-        }
-        Company company = mCompanyCache.get(permalink);
-        if (company != null) {
-            callbackSuccess(callback, company);
-            return;
-        }
-
-        company = mInfoSessionDBManager.getCompany(permalink);
-        if (company != null) {
-            callbackSuccess(callback, company);
-            mCompanyCache.put(permalink, company);
-            return;
-        }
-
-        loadCompanyData(permalink, callback);
-    }
-
-    private void loadCompanyData(final String permalink, final ResponseHandler<Company> callback) {
-        mCrunchbaseAPI.getOrganization(permalink, new Callback<Company>() {
-            @Override
-            public void success(Company company, Response response) {
-                callbackSuccess(callback, company);
-                MainBus.get().post(new CompanyLoadedEvent(company));
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                callbackFailure(callback, error);
-                Log.e(TAG, error.getMessage() != null ? error.getMessage() : "loading " +
-                        permalink + " unknown failure");
-            }
-        });
-    }
-
-
-    private <T> void callbackSuccess(ResponseHandler<T> callback, T object) {
-        if (callback != null) {
-            callback.onSuccess(object);
-        }
-    }
-
-    private <T> void callbackFailure(ResponseHandler<T> callback, Exception exception) {
-        if (callback != null) {
-            callback.onFailure(exception);
-        }
-    }
-
-    private class WaterlooSessionsCallback implements Callback<WaterlooInfoSessionCollection> {
-
-        List<ResponseHandler<WaterlooInfoSessionCollection>> mCallbacks = new ArrayList<>();
-
-        public void addCallback(ResponseHandler<WaterlooInfoSessionCollection> callback) {
-            mCallbacks.add(callback);
-        }
-
+    @Override
+    public void success(final WaterlooInfoSessionCollection collection, Response response) {
+      mPermalinkAPI.getPermalinks(new Callback<PermalinkMap>() {
         @Override
-        public void success(final WaterlooInfoSessionCollection collection, Response response) {
-            Log.d(TAG, "Waterloo SUCCESS " + collection.getInfoSessions().get(0).getCompanyName());
-
-            mPermalinkAPI.getPermalinks(new Callback<PermalinkMap>() {
-                @Override
-                public void success(PermalinkMap permalinkMap, Response response) {
-                    Log.d(TAG, "Permalink SUCCESS ");
-                    MainBus.get().post(new WaterlooDataLoadedEvent(collection, permalinkMap));
-                    mWaterlooInfoSessionCollection = collection;
-                    mPermalinks = permalinkMap;
-                    for (ResponseHandler<WaterlooInfoSessionCollection> callback : mCallbacks) {
-                        callbackSuccess(callback, collection);
-                    }
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.d(TAG, "Permalink FAILURE " + error.getMessage());
-                    WaterlooSessionsCallback.this.failure(error);
-                }
-            });
+        public void success(PermalinkMap permalinkMap, Response response) {
+          Log.d(TAG, "Permalink SUCCESS ");
+          MainBus.get().post(new WaterlooDataLoadedEvent(collection, permalinkMap));
+          mWaterlooInfoSessionCollection = collection;
+          mPermalinks = permalinkMap;
+          for (ResponseHandler<WaterlooInfoSessionCollection> callback : mCallbacks) {
+            callbackSuccess(callback, collection);
+          }
         }
 
         @Override
         public void failure(RetrofitError error) {
-            Log.d(TAG, "Waterloo FAILURE " + error.getMessage());
-            for (ResponseHandler<WaterlooInfoSessionCollection> callback : mCallbacks) {
-                callbackFailure(callback, error);
-            }
+          Log.d(TAG, "Permalink FAILURE " + error.getMessage());
+          WaterlooSessionsCallback.this.failure(error);
         }
+      });
     }
+
+    @Override
+    public void failure(RetrofitError error) {
+      Log.d(TAG, "Waterloo FAILURE " + error.getMessage());
+      for (ResponseHandler<WaterlooInfoSessionCollection> callback : mCallbacks) {
+        callbackFailure(callback, error);
+      }
+    }
+  }
 
 }

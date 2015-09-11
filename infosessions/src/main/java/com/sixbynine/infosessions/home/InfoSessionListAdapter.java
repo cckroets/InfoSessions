@@ -2,9 +2,7 @@ package com.sixbynine.infosessions.home;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,13 +112,13 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         final Date date = infoSession.getStartTime().getTime();
         viewHolder.companyLogo.setImageBitmap(null);
         Picasso.with(getContext()).cancelRequest(viewHolder.companyLogo);
-        mInfoSessionManager.getCompanyFromSession(infoSession.getId(), new ResponseHandler<Company>() {
+        mInfoSessionManager.getCompanyFromInfoSession(infoSession, new ResponseHandler<Company>() {
             @Override
             public void onSuccess(Company object) {
                 if (object != null) {
                     Picasso.with(getContext())
-                            .load("https://res.cloudinary.com/crunchbase-production/" + object.getPrimaryImageUrl())
-                            .into(viewHolder.companyLogo);
+                        .load("https://res.cloudinary.com/crunchbase-production/" + object.getPrimaryImageUrl())
+                        .into(viewHolder.companyLogo);
                 } else {
                     Logger.e("Null object returned for %s", infoSession.getCompanyName());
                 }
@@ -233,7 +231,7 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
     }
 
     public interface InfoSessionActionListener {
-        public void onInfoSessionEvent(Event event, WaterlooInfoSession infoSession);
+        void onInfoSessionEvent(Event event, WaterlooInfoSession infoSession);
     }
 
     static class ViewHolder {
@@ -262,5 +260,3 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         }
     }
 }
-
-

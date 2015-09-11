@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +18,8 @@ import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.data.InfoSessionManager;
 import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
-import com.sixbynine.infosessions.model.group.InfoSessionGroup;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
+import com.sixbynine.infosessions.model.group.InfoSessionGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,8 @@ public class InfoSessionListFragment extends RoboFragment implements
     AbsListView mListView; //this is listview for smaller screens, gridview for larger screens
     @InjectView(R.id.nothing_text_view)
     TextView mNothingHereTextView;
+    @InjectView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     InfoSessionListAdapter mAdapter;
 
@@ -58,7 +61,8 @@ public class InfoSessionListFragment extends RoboFragment implements
     List<WaterlooInfoSession> mAllSessions;
 
     public interface Callback{
-        public void onInfoSessionEvent(InfoSessionListAdapter.Event event, WaterlooInfoSession infoSession);
+        void onInfoSessionEvent(InfoSessionListAdapter.Event event, WaterlooInfoSession infoSession);
+        void loadListings(boolean useCache);
     }
 
     public static InfoSessionListFragment newInstance(InfoSessionGroup group, ArrayList<WaterlooInfoSession> infoSessions){
@@ -112,7 +116,15 @@ public class InfoSessionListFragment extends RoboFragment implements
         mAdapter = new InfoSessionListAdapter(getActivity(), mGroup.getFilter().filter(mAllSessions));
         mAdapter.setActionListener(this);
         mListView.setAdapter(mAdapter);
-        mNothingHereTextView.setVisibility(mAdapter.getCount() > 0? View.GONE : View.VISIBLE);
+        mNothingHereTextView.setVisibility(mAdapter.getCount() > 0 ? View.GONE : View.VISIBLE);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mCallback.loadListings(false);
+            }
+        });
+        mSwipeRefreshLayout.setColorSchemeColors(R.color.accent);
     }
 
     private static View getSpace(Context context){
@@ -141,38 +153,11 @@ public class InfoSessionListFragment extends RoboFragment implements
         mAdapter.addAll(mGroup.getFilter().filter(mAllSessions));
         mAdapter.notifyDataSetChanged();
         mNothingHereTextView.setVisibility(mAdapter.getCount() > 0? View.GONE : View.VISIBLE);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
-    /*public void updateDisplayState(MainActivity.DisplayState displayState, String query){
-        if (isAdded()) {
-            Toast.makeText(getActivity(), infoSession.getCompanyName(), Toast.LENGTH_SHORT).show();
-            final CompanyInfoFragment fragment = CompanyInfoFragment.createInstance(infoSession);
-            getActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .addToBackStack(null)
-                    .add(R.id.fragment_container, fragment)
-                    .commit();
-        }
+    public void setLoading(boolean loading) {
+        mSwipeRefreshLayout.setRefreshing(loading);
     }
-
-    public void updateDisplayState(MainActivity.DisplayState displayState, String query) {
-        mAdapter.clear();
-        switch (displayState) {
-            case UNDISMISSED:
-                mAdapter.addAll(mInfoSessionPreferenceManager.getUndismissedInfoSessions(mAllSessions));
-                break;
-            case DISMISSED:
-                mAdapter.addAll(mInfoSessionPreferenceManager.getDismissedInfoSessions(mAllSessions));
-                break;
-            case QUERY:
-                for (WaterlooInfoSession infoSession : mAllSessions) {
-                    if (infoSession.getCompanyName().toUpperCase().contains(query.toUpperCase())) {
-                        mAdapter.add(infoSession);
-                    }
-                }
-                break;
-        }
-        mAdapter.notifyDataSetChanged();
-    }*/
 
 }

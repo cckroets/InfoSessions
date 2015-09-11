@@ -8,24 +8,35 @@ import java.util.Map;
  */
 public final class PermalinkMap implements Iterable<EmployerInfo> {
 
-    private long mLastUpdated;
-    private Map<String, EmployerInfo> mMap;
+    private final long mLastUpdated;
+    private final Map<String, EmployerInfo> mIdToInfoMap;
+    private final Map<String, EmployerInfo> mCompanyNameToInfoMap;
 
-    public PermalinkMap(long lastUpdated, Map<String, EmployerInfo> map) {
+    public PermalinkMap(long lastUpdated, Map<String, EmployerInfo> idMap,
+                        Map<String, EmployerInfo> companyMap) {
         mLastUpdated = lastUpdated;
-        mMap = map;
+        mIdToInfoMap = idMap;
+        mCompanyNameToInfoMap = companyMap;
     }
 
     public long getLastUpdated() {
         return mLastUpdated;
     }
 
-    public EmployerInfo getEmployerInfo(String id) {
-        return mMap.get(id);
+    /**
+     * Returns the EmployerInfo for the info session based off of the session id, then the employer
+     * name, returns null if it can't find anything.
+     */
+    public EmployerInfo getEmployerInfo(WaterlooInfoSession infoSession) {
+        EmployerInfo employerInfo = mIdToInfoMap.get(infoSession.getId());
+        if (employerInfo == null) {
+            employerInfo = mCompanyNameToInfoMap.get(infoSession.getCompanyName());
+        }
+        return employerInfo;
     }
 
     @Override
     public Iterator<EmployerInfo> iterator() {
-        return mMap.values().iterator();
+        return mIdToInfoMap.values().iterator();
     }
 }

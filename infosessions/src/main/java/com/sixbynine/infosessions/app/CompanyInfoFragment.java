@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import com.sixbynine.infosessions.BuildConfig;
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.data.InfoSessionManager;
 import com.sixbynine.infosessions.data.ResponseHandler;
@@ -100,7 +101,7 @@ public class CompanyInfoFragment extends RoboFragment {
         final Gson gson = new Gson();
         final String sessionJson = getArguments().getString(KEY_SESSION);
         mWaterlooInfoSession = gson.fromJson(sessionJson, WaterlooInfoSession.class);
-        mInfoSessionManager.getCompanyFromSession(mWaterlooInfoSession.getId(), new ResponseHandler<Company>() {
+        mInfoSessionManager.getCompanyFromInfoSession(mWaterlooInfoSession, new ResponseHandler<Company>() {
             @Override
             public void onSuccess(Company object) {
                 mCompany = object;
@@ -143,6 +144,11 @@ public class CompanyInfoFragment extends RoboFragment {
         super.onViewCreated(view, savedInstanceState);
         updateSessionInfo();
         updateCompanyInfo();
+
+        if (BuildConfig.AUDIENCE_BROKEN) {
+            mSessionCoop.setVisibility(View.GONE);
+            mSessionGraduate.setVisibility(View.GONE);
+        }
     }
 
     private void updateSessionInfo() {

@@ -14,12 +14,11 @@ import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.app.BaseActivity;
 import com.sixbynine.infosessions.app.CompanyInfoActivity;
 import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
-import com.sixbynine.infosessions.data.PreferenceManager;
 import com.sixbynine.infosessions.home.InfoSessionListAdapter;
 import com.sixbynine.infosessions.home.InfoSessionListFragment;
-import com.sixbynine.infosessions.model.group.InfoSessionGroup;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
+import com.sixbynine.infosessions.model.group.InfoSessionGroup;
 import com.sixbynine.infosessions.ui.InfoSessionUtil;
 
 import java.util.ArrayList;
@@ -151,4 +150,8 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
         }
     }
 
+    @Override
+    public void loadListings(boolean useCache) {
+        // TODO (do something)
+    }
 }

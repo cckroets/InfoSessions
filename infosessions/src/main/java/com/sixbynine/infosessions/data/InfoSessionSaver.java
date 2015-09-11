@@ -9,14 +9,11 @@ import com.google.inject.name.Named;
 import com.sixbynine.infosessions.event.MainBus;
 import com.sixbynine.infosessions.event.data.CompanyLoadedEvent;
 import com.sixbynine.infosessions.event.data.WaterlooDataLoadedEvent;
-import com.sixbynine.infosessions.model.EmployerInfo;
 import com.sixbynine.infosessions.model.PermalinkMap;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionCollection;
 import com.sixbynine.infosessions.model.company.Company;
 import com.sixbynine.infosessions.util.Logger;
 import com.squareup.otto.Subscribe;
-
-import java.util.Map;
 
 /**
  * @author curtiskroetsch
@@ -54,6 +51,7 @@ public final class InfoSessionSaver {
 
     @Subscribe
     public void onWaterlooSessionsLoaded(WaterlooDataLoadedEvent event) {
+        clearSavedData();
         final WaterlooInfoSessionCollection sessions = event.getData();
         final String sessionsJson = mGson.toJson(sessions, WaterlooInfoSessionCollection.class);
         Log.d(TAG, "saving sessions : " + sessionsJson);
@@ -89,6 +87,11 @@ public final class InfoSessionSaver {
         }
         Log.d(TAG, "getting permalinks : " + permalinks);
         return mGson.fromJson(permalinks, PermalinkMap.class);
+    }
+
+    private void clearSavedData() {
+        mPreferenceManager.putString(KEY_PERMALINKS, null);
+        mPreferenceManager.putString(KEY_SESSIONS, null);
     }
 
 }
