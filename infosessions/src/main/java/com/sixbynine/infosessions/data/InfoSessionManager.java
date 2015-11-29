@@ -127,10 +127,15 @@ public final class InfoSessionManager {
   }
 
   public void getCompanyFromInfoSession(final WaterlooInfoSession infoSession, final ResponseHandler<Company> callback) {
+    if (BuildConfig.CRUNCHBASE_BROKEN) {
+      callback.onFailure(new UnsupportedOperationException());
+      return;
+    }
+
     if (mPermalinks != null) {
       final EmployerInfo employerInfo = mPermalinks.getEmployerInfo(infoSession);
       if (employerInfo == null) {
-        if (false && BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
           throw new NoEmployerInfoException(infoSession.getId());
         } else { //don't crash if this is in production, but let us know via flurry
           Map<String, String> params = new HashMap<>();

@@ -86,7 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
-            android:checked="false"
+            android:checked="true"
             android:text="@string/show_reminders_tab"
             app:ctvLines="one"
             app:hsvSubHeaderText="@string/show_reminders_tab_info"/>

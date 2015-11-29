@@ -211,7 +211,7 @@ public final class InfoSessionGroup implements Parcelable {
 
 
     boolean showToday = weekday && preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_TODAY, true);
-    boolean showReminders = preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_REMINDERS, false);
+    boolean showReminders = preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_REMINDERS, true);
     boolean showCoop = !BuildConfig.AUDIENCE_BROKEN && preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_COOP, true);
     boolean showGrad = !BuildConfig.AUDIENCE_BROKEN && preferenceManager.getBoolean(PreferenceManager.Keys.SHOW_GRADUATE, true);
 
