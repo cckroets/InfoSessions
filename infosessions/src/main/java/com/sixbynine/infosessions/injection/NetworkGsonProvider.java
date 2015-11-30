@@ -3,6 +3,7 @@ package com.sixbynine.infosessions.injection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.inject.Provider;
+
 import com.sixbynine.infosessions.net.serialization.CompanyDeserializer;
 import com.sixbynine.infosessions.net.serialization.InfoSessionDeserializer;
 import com.sixbynine.infosessions.net.serialization.PermalinkDeserializer;

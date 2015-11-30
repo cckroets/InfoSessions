@@ -13,7 +13,7 @@ public class InfoSessionCardLayout extends RelativeLayout {
 
     private boolean lastCategory = false;
 
-    private static int[] MORE_STATES = new int[] { R.attr.state_last_of_category };
+    private static int[] MORE_STATES = new int[]{R.attr.state_last_of_category};
 
     public InfoSessionCardLayout(Context context) {
         super(context);
@@ -25,7 +25,7 @@ public class InfoSessionCardLayout extends RelativeLayout {
 
     @Override
     protected int[] onCreateDrawableState(int extraSpace) {
-        int[] state =  super.onCreateDrawableState(extraSpace + MORE_STATES.length);
+        int[] state = super.onCreateDrawableState(extraSpace + MORE_STATES.length);
         if (lastCategory) {
             mergeDrawableStates(state, MORE_STATES);
         }

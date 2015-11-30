@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.inject.Inject;
+
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.app.BaseActivity;
 import com.sixbynine.infosessions.app.CompanyInfoActivity;
@@ -29,7 +30,7 @@ import roboguice.inject.ContentView;
  * Created by stevenkideckel on 14-12-30.
  */
 @ContentView(R.layout.activity_search)
-public class SearchActivity extends BaseActivity implements InfoSessionListFragment.Callback{
+public class SearchActivity extends BaseActivity implements InfoSessionListFragment.Callback {
 
     private static final String SESSIONS_KEY = "sessions";
 
@@ -43,7 +44,7 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
     @Inject
     InfoSessionUtil mUtil;
 
-    public static void launchActivityForResult(Activity activity, int code, ArrayList<WaterlooInfoSession> sessions){
+    public static void launchActivityForResult(Activity activity, int code, ArrayList<WaterlooInfoSession> sessions) {
         Intent intent = new Intent(activity, SearchActivity.class);
         intent.putParcelableArrayListExtra(SESSIONS_KEY, sessions);
         activity.startActivityForResult(intent, code);
@@ -53,11 +54,11 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             extras.setClassLoader(WaterlooInfoSession.class.getClassLoader());
             mAllSessions = extras.getParcelableArrayList(SESSIONS_KEY);
-        }else{
+        } else {
             mAllSessions = savedInstanceState.getParcelableArrayList(SESSIONS_KEY);
         }
 
@@ -86,7 +87,7 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 setResult(RESULT_OK);
                 finish();
@@ -110,7 +111,7 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
         @Override
         public boolean onQueryTextChange(String s) {
             final String query = s;
-            WaterlooInfoSession.Filter filter = new WaterlooInfoSession.Filter(){
+            WaterlooInfoSession.Filter filter = new WaterlooInfoSession.Filter() {
                 @Override
                 public boolean matches(WaterlooInfoSession i, WaterlooInfoSessionPreferences p) {
                     return i.getCompanyName().toUpperCase().contains(query.toUpperCase());
@@ -125,7 +126,7 @@ public class SearchActivity extends BaseActivity implements InfoSessionListFragm
 
     @Override
     public void onInfoSessionEvent(InfoSessionListAdapter.Event event, WaterlooInfoSession infoSession) {
-        switch(event){
+        switch (event) {
             case FAVORITE:
                 mInfoSessionPreferenceManager.editPreferences(infoSession)
                         .toggleFavorited()

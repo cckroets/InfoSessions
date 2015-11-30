@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 
 /**
-* @author curtiskroetsch
-*/
+ * @author curtiskroetsch
+ */
 public interface SocialMedium {
 
     int getResource();

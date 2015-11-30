@@ -9,6 +9,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+
 import com.sixbynine.infosessions.model.company.Address;
 import com.sixbynine.infosessions.model.company.Company;
 import com.sixbynine.infosessions.model.company.Website;
@@ -89,7 +90,6 @@ public class CompanyDeserializer implements JsonDeserializer<Company> {
      * @param jsonObject   A paging object
      * @param requiredType The object must have a string field "type" that equals "requiredType"
      * @param key          of the desired value.
-     * @return
      */
     public String getFirstStringItem(JsonObject jsonObject, String requiredType, String key) {
         final JsonObject firstItem = getFirstItem(jsonObject);

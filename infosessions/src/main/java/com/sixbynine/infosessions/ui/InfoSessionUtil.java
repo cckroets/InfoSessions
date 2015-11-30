@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.alarm.AlarmManager;
 import com.sixbynine.infosessions.app.MyApplication;
@@ -39,7 +40,7 @@ public class InfoSessionUtil {
     @Inject
     AlarmManager mAlarmManager;
 
-    public void shareInfoSession(Context context, WaterlooInfoSession infoSession){
+    public void shareInfoSession(Context context, WaterlooInfoSession infoSession) {
         DateFormat timeDateFormat = new SimpleDateFormat("EEE MMM d, h:mma");
 
         Intent intent = new Intent();
@@ -54,14 +55,14 @@ public class InfoSessionUtil {
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public void launchCalendarIntent(Context context, WaterlooInfoSession infoSession){
+    public void launchCalendarIntent(Context context, WaterlooInfoSession infoSession) {
         Resources res = context.getResources();
 
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setType("vnd.android.cursor.item/event")
                 .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, infoSession.getStartTime().getTimeInMillis())
                 .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, infoSession.getEndTime().getTimeInMillis())
-                .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY , false)
+                .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
                 .putExtra(CalendarContract.Events.TITLE, res.getString(R.string.event_header, infoSession.getCompanyName()))
                 .putExtra(CalendarContract.Events.DESCRIPTION, infoSession.getDescription())
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, infoSession.getLocation())
@@ -70,14 +71,14 @@ public class InfoSessionUtil {
         context.startActivity(intent);
     }
 
-    public void rsvp(Context context, WaterlooInfoSession infoSession){
+    public void rsvp(Context context, WaterlooInfoSession infoSession) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("https://info.uwaterloo.ca/infocecs/students/rsvp/index.php?id="
                 + infoSession.getId() + "&mode=on"));
         context.startActivity(intent);
     }
 
-    public void cancelRsvp(Context context, WaterlooInfoSession infoSession){
+    public void cancelRsvp(Context context, WaterlooInfoSession infoSession) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("https://info.uwaterloo.ca/infocecs/students/rsvp/index.php?id=" +
                 infoSession.getId() + "&mode=off"));
@@ -85,15 +86,16 @@ public class InfoSessionUtil {
     }
 
     private int mAlarmChoice;
-    public void doAlarmLogic(Activity context, final WaterlooInfoSession infoSession){
+
+    public void doAlarmLogic(Activity context, final WaterlooInfoSession infoSession) {
         Resources res = context.getResources();
         WaterlooInfoSessionPreferences prefs = mPreferenceManager.getPreferences(infoSession);
-        if(prefs.hasAlarm()){
+        if (prefs.hasAlarm()) {
             int minutes = prefs.getAlarm();
             String message;
-            if(minutes >= 60){
-                message = res.getQuantityString(R.plurals.remove_alarm_message_hours,    minutes / 60, minutes / 60);
-            }else{
+            if (minutes >= 60) {
+                message = res.getQuantityString(R.plurals.remove_alarm_message_hours, minutes / 60, minutes / 60);
+            } else {
                 message = res.getQuantityString(R.plurals.remove_alarm_message_minutes, minutes, minutes);
             }
 
@@ -116,11 +118,11 @@ public class InfoSessionUtil {
                     })
                     .create()
                     .show();
-        }else{
+        } else {
             mAlarmChoice = 0;
             new AlertDialog.Builder(context)
                     .setTitle(R.string.alarm_choices_title)
-                    //.setMessage(R.string.alarm_choices_prompt)
+                            //.setMessage(R.string.alarm_choices_prompt)
                     .setSingleChoiceItems(R.array.alarm_choices, 0, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -137,11 +139,11 @@ public class InfoSessionUtil {
                                     "Reminder added", Toast.LENGTH_SHORT).show();
                         }
                     }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-                        }
-                    })
+                }
+            })
                     .create()
                     .show();
         }

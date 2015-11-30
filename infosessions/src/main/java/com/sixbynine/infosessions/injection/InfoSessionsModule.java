@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
+
 import com.sixbynine.infosessions.net.CrunchbaseAPI;
 import com.sixbynine.infosessions.net.PermalinkAPI;
 import com.sixbynine.infosessions.net.WaterlooAPI;

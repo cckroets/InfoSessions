@@ -7,7 +7,7 @@ import com.sixbynine.infosessions.model.company.Company;
  */
 public final class CompanyLoadedEvent {
 
-    private Company mCompany;
+    private final Company mCompany;
 
     public CompanyLoadedEvent(Company company) {
         mCompany = company;

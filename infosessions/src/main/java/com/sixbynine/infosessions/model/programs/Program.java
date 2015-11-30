@@ -50,7 +50,7 @@ public enum Program {
     Faculty faculty;
     String name;
 
-    Program(Faculty faculty, String name){
+    Program(Faculty faculty, String name) {
         this.faculty = faculty;
         this.name = name;
     }
@@ -65,17 +65,18 @@ public enum Program {
 
     /**
      * Returns a map of each faculty to a sorted list of the programs available
+     *
      * @return a map of each faculty to the programs in the faculty
      */
-    public static Map<Faculty, ArrayList<Program>> getFacultyMap(){
+    public static Map<Faculty, ArrayList<Program>> getFacultyMap() {
         Map<Faculty, ArrayList<Program>> map = new HashMap<>();
-        for(Faculty f : Faculty.values()){
+        for (Faculty f : Faculty.values()) {
             map.put(f, new ArrayList<Program>());
         }
-        for(Program p : values()){
+        for (Program p : values()) {
             map.get(p.faculty).add(p);
         }
-        for(Faculty f : Faculty.values()){
+        for (Faculty f : Faculty.values()) {
             Collections.sort(map.get(f), new Comparator<Program>() {
                 @Override
                 public int compare(Program lhs, Program rhs) {
@@ -86,9 +87,9 @@ public enum Program {
         return map;
     }
 
-    public static Program fromName(String name){
-        for(Program p : values()){
-            if(p.name().equals(name)){
+    public static Program fromName(String name) {
+        for (Program p : values()) {
+            if (p.name().equals(name)) {
                 return p;
             }
         }

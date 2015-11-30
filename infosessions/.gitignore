@@ -2,3 +2,7 @@
 /local.properties
 /.idea/*
 .DS_Store
+
+*.iml
+*.eml
+.idea/

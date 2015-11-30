@@ -8,16 +8,17 @@ import java.util.Iterator;
  */
 public class WaterlooInfoSessionPreferencesMap extends HashMap<String, WaterlooInfoSessionPreferences> {
 
-    public WaterlooInfoSessionPreferences put(WaterlooInfoSessionPreferences preferences){
+    public WaterlooInfoSessionPreferences put(WaterlooInfoSessionPreferences preferences) {
         return put(preferences.getId(), preferences);
     }
 
     /**
      * Convenience method for get(infoSession.getId());
+     *
      * @param infoSession the info session to get the preference for
      * @return the preferences, or null if no mapping was found
      */
-    public WaterlooInfoSessionPreferences get(WaterlooInfoSession infoSession){
+    public WaterlooInfoSessionPreferences get(WaterlooInfoSession infoSession) {
         return get(infoSession.getId());
     }
 

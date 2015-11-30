@@ -1,9 +1,10 @@
 package com.sixbynine.infosessions.data;
 
-import android.util.LruCache;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import android.util.LruCache;
+
 import com.sixbynine.infosessions.model.company.Company;
 
 /**

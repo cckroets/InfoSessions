@@ -14,18 +14,18 @@ import com.sixbynine.infosessions.app.MyApplication;
  */
 public class StoreUtils {
 
-    public static String getShareMessage(){
+    public static String getShareMessage() {
         final String appPackageName = MyApplication.getInstance().getPackageName();
-        if(BuildConfig.AMAZON){
+        if (BuildConfig.AMAZON) {
             return MyApplication.getInstance().getString(R.string.share_app_message,
                     "http://www.amazon.com/gp/mas/dl/android?id=" + appPackageName);
-        }else{
+        } else {
             return MyApplication.getInstance().getString(R.string.share_app_message,
                     "https://play.google.com/store/apps/details?id=" + appPackageName);
         }
     }
 
-    public static void shareApp(Activity context){
+    public static void shareApp(Activity context) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_TEXT, getShareMessage());
@@ -33,15 +33,15 @@ public class StoreUtils {
         context.startActivity(intent);
     }
 
-    public static void launchStoreIntent(Activity context){
+    public static void launchStoreIntent(Activity context) {
         final String appPackageName = context.getPackageName();
-        if(BuildConfig.AMAZON){
+        if (BuildConfig.AMAZON) {
             try {
                 context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("amzn://apps/android?p=" + appPackageName)));
             } catch (android.content.ActivityNotFoundException anfe) {
                 context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.amazon.com/gp/mas/dl/android?id=" + appPackageName)));
             }
-        }else{
+        } else {
             try {
                 context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
             } catch (android.content.ActivityNotFoundException anfe) {

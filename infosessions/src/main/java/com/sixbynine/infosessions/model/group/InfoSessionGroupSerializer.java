@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+
 import com.sixbynine.infosessions.model.programs.Faculty;
 import com.sixbynine.infosessions.model.programs.Program;
 
@@ -16,13 +17,13 @@ import java.lang.reflect.Type;
  * Created by stevenkideckel on 14-12-31.
  */
 public class InfoSessionGroupSerializer implements JsonSerializer<InfoSessionGroup>,
-        JsonDeserializer<InfoSessionGroup>{
+        JsonDeserializer<InfoSessionGroup> {
 
     @Override
     public JsonElement serialize(InfoSessionGroup src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject object = new JsonObject();
         object.addProperty("type", src.type);
-        switch(src.type){
+        switch (src.type) {
             case InfoSessionGroup.CONSTANT:
                 object.addProperty("id", src.id);
                 break;
@@ -42,7 +43,7 @@ public class InfoSessionGroupSerializer implements JsonSerializer<InfoSessionGro
     public InfoSessionGroup deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject obj = json.getAsJsonObject();
         int type = obj.get("type").getAsInt();
-        switch(type){
+        switch (type) {
             case InfoSessionGroup.CONSTANT:
                 int id = obj.get("id").getAsInt();
                 return InfoSessionGroup.fromId(id);

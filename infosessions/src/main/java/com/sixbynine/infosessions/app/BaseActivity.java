@@ -1,16 +1,14 @@
 package com.sixbynine.infosessions.app;
 
-import com.flurry.android.FlurryAgent;
 import com.google.inject.Inject;
+
+import com.flurry.android.FlurryAgent;
 import com.sixbynine.infosessions.alarm.AlarmManager;
 import com.sixbynine.infosessions.event.MainBus;
 import com.sixbynine.infosessions.net.Keys;
 
 import roboguice.activity.RoboActionBarActivity;
 
-/**
- * Created by stevenkideckel on 14-12-30.
- */
 public abstract class BaseActivity extends RoboActionBarActivity {
 
     @Inject

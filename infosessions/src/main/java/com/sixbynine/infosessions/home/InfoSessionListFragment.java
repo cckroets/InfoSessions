@@ -1,7 +1,6 @@
 package com.sixbynine.infosessions.home;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,10 +13,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
-import com.sixbynine.infosessions.data.InfoSessionManager;
-import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.group.InfoSessionGroup;
 
@@ -32,16 +28,11 @@ import roboguice.inject.InjectView;
 /**
  * @author curtiskroetsch
  */
-public class InfoSessionListFragment extends RoboFragment implements
-        InfoSessionListAdapter.InfoSessionActionListener{
+public final class InfoSessionListFragment extends RoboFragment implements
+        InfoSessionListAdapter.InfoSessionActionListener {
+
     private static final String GROUP_KEY = "group";
     private static final String SESSIONS_KEY = "sessions";
-
-    @Inject
-    InfoSessionManager mInfoSessionManager;
-
-    @Inject
-    InfoSessionPreferenceManager mInfoSessionPreferenceManager;
 
     @InjectView(R.id.listView)
     AbsListView mListView; //this is listview for smaller screens, gridview for larger screens
@@ -60,12 +51,13 @@ public class InfoSessionListFragment extends RoboFragment implements
 
     List<WaterlooInfoSession> mAllSessions;
 
-    public interface Callback{
+    public interface Callback {
         void onInfoSessionEvent(InfoSessionListAdapter.Event event, WaterlooInfoSession infoSession);
+
         void loadListings(boolean useCache);
     }
 
-    public static InfoSessionListFragment newInstance(InfoSessionGroup group, ArrayList<WaterlooInfoSession> infoSessions){
+    public static InfoSessionListFragment newInstance(InfoSessionGroup group, ArrayList<WaterlooInfoSession> infoSessions) {
         InfoSessionListFragment frag = new InfoSessionListFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(GROUP_KEY, group);
@@ -75,12 +67,12 @@ public class InfoSessionListFragment extends RoboFragment implements
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if(activity instanceof Callback){
-            mCallback = (Callback) activity;
-        }else{
-            throw new IllegalStateException(activity.getClass().getName() + " must implement Callback interface");
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof Callback) {
+            mCallback = (Callback) context;
+        } else {
+            throw new IllegalStateException(context.getClass().getName() + " must implement Callback interface");
         }
     }
 
@@ -100,10 +92,10 @@ public class InfoSessionListFragment extends RoboFragment implements
          * Adding padding to first view doesn't work on GridView
          * sorry :(
          */
-        if(mListView instanceof ListView){
+        if (mListView instanceof ListView) {
             ((ListView) mListView).addHeaderView(getSpace(view.getContext()));
             ((ListView) mListView).addFooterView(getSpace(view.getContext()));
-        }else if(mListView instanceof GridViewWithHeaderAndFooter){
+        } else if (mListView instanceof GridViewWithHeaderAndFooter) {
             ((GridViewWithHeaderAndFooter) mListView).addHeaderView(getSpace(view.getContext()));
             ((GridViewWithHeaderAndFooter) mListView).addFooterView(getSpace(view.getContext()));
         }
@@ -127,7 +119,7 @@ public class InfoSessionListFragment extends RoboFragment implements
         mSwipeRefreshLayout.setColorSchemeColors(R.color.accent);
     }
 
-    private static View getSpace(Context context){
+    private static View getSpace(Context context) {
         View space = new View(context);
         space.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT,
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, context.getResources().getDisplayMetrics())));
@@ -139,20 +131,16 @@ public class InfoSessionListFragment extends RoboFragment implements
         mCallback.onInfoSessionEvent(event, infoSession);
     }
 
-    public void setDataset(ArrayList<WaterlooInfoSession> sessions){
+    public void setDataset(ArrayList<WaterlooInfoSession> sessions) {
         mAllSessions = sessions;
     }
 
-    public void setGroup(InfoSessionGroup group){
-        mGroup = group;
-    }
-
-    public void refreshData(){
+    public void refreshData() {
         //TODO: Animate Entering and Exiting Cards
         mAdapter.clear();
         mAdapter.addAll(mGroup.getFilter().filter(mAllSessions));
         mAdapter.notifyDataSetChanged();
-        mNothingHereTextView.setVisibility(mAdapter.getCount() > 0? View.GONE : View.VISIBLE);
+        mNothingHereTextView.setVisibility(mAdapter.getCount() > 0 ? View.GONE : View.VISIBLE);
         mSwipeRefreshLayout.setRefreshing(false);
     }
 

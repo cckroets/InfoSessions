@@ -1,5 +1,8 @@
 package com.sixbynine.infosessions.alarm;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -10,14 +13,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
-import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 
 import com.flurry.android.FlurryAgent;
-import com.flurry.sdk.de;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.app.CompanyInfoActivity;
 import com.sixbynine.infosessions.app.MyApplication;
@@ -36,14 +34,8 @@ import java.util.Map;
 
 import roboguice.RoboGuice;
 
-/**
- * Created by steviekideckel on 2015-01-06.
- */
 @Singleton
-public class AlarmManager{
-
-    @Inject
-    PreferenceManager mPreferenceManager;
+public final class AlarmManager {
 
     @Inject
     InfoSessionPreferenceManager mInfoSessionPreferenceManager;
@@ -52,7 +44,7 @@ public class AlarmManager{
     private static final int NOTIFICATION_ID = 1337;
 
 
-    public static class AlarmReceiver extends BroadcastReceiver{
+    public static class AlarmReceiver extends BroadcastReceiver {
 
         @Inject
         PreferenceManager mPreferenceManager;
@@ -101,13 +93,13 @@ public class AlarmManager{
             builder.setContentIntent(resultPendingIntent);
 
             NotificationPreference pref = NotificationPreference.getNotificationPreference(mPreferenceManager);
-            if(pref.hasVibrate()){
-                builder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+            if (pref.hasVibrate()) {
+                builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
             }
-            if(pref.hasLights()){
+            if (pref.hasLights()) {
                 builder.setLights(Color.GREEN, 3000, 3000);
             }
-            if(pref.hasSound()){
+            if (pref.hasSound()) {
                 builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
             }
 
@@ -120,7 +112,7 @@ public class AlarmManager{
         }
     }
 
-    public void setAlarm(WaterlooInfoSession infoSession, int minutesPreceding){
+    public void setAlarm(WaterlooInfoSession infoSession, int minutesPreceding) {
         Context context = MyApplication.getInstance().getApplicationContext();
         long millisOfEvent = infoSession.getStartTime().getTimeInMillis();
         long millisOfAlarm = millisOfEvent - minutesPreceding * 60 * 1000;
@@ -135,7 +127,7 @@ public class AlarmManager{
         MainBus.get().post(new InfoSessionPreferencesModifiedEvent(infoSession, prefs));
     }
 
-    public void setTestAlarm(WaterlooInfoSession infoSession){
+    public void setTestAlarm(WaterlooInfoSession infoSession) {
         Context context = MyApplication.getInstance().getApplicationContext();
 
         android.app.AlarmManager manager =
@@ -147,7 +139,7 @@ public class AlarmManager{
                 .commit();*/
     }
 
-    public void cancelAlarm(WaterlooInfoSession infoSession){
+    public void cancelAlarm(WaterlooInfoSession infoSession) {
         Context context = MyApplication.getInstance().getApplicationContext();
         android.app.AlarmManager manager =
                 (android.app.AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -158,20 +150,19 @@ public class AlarmManager{
         MainBus.get().post(new InfoSessionPreferencesModifiedEvent(infoSession, prefs));
     }
 
-    public void cancelActiveNotifications(){
+    public void cancelActiveNotifications() {
         Context context = MyApplication.getInstance().getApplicationContext();
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(NOTIFICATION_ID);
     }
 
-    private static PendingIntent getInfoSessionPendingIntent(WaterlooInfoSession infoSession){
+    private static PendingIntent getInfoSessionPendingIntent(WaterlooInfoSession infoSession) {
         Context context = MyApplication.getInstance().getApplicationContext();
         Intent i = new Intent(context, AlarmReceiver.class);
         i.putExtra(KEY_INFO_SESSION, infoSession);
         return PendingIntent.getBroadcast(context, Integer.parseInt(infoSession.getId()),
                 i, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_CANCEL_CURRENT);
     }
-
 
 
 }

@@ -1,26 +1,21 @@
 package com.sixbynine.infosessions.data;
 
-import com.flurry.android.FlurryAgent;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+
+import com.flurry.android.FlurryAgent;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferencesMap;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-/**
- * Created by stevenkideckel on 14-12-29.
- */
 @Singleton
 public final class InfoSessionPreferenceManager {
 
-    public static final String TAG = InfoSessionPreferenceManager.class.getName();
     private static final String KEY_PREFERENCES = "KEY_PREFERENCES";
 
     @Inject
@@ -33,14 +28,14 @@ public final class InfoSessionPreferenceManager {
     WaterlooInfoSessionPreferencesMap mPreferencesMap;
 
     @Inject
-    private InfoSessionPreferenceManager(Gson gson, PreferenceManager preferenceManager){
+    private InfoSessionPreferenceManager(Gson gson, PreferenceManager preferenceManager) {
         mGson = gson;
         mPreferenceManager = preferenceManager;
         loadData();
     }
 
-    public WaterlooInfoSessionPreferences getPreferences(WaterlooInfoSession infoSession){
-        if(mPreferencesMap.get(infoSession) == null){
+    public WaterlooInfoSessionPreferences getPreferences(WaterlooInfoSession infoSession) {
+        if (mPreferencesMap.get(infoSession) == null) {
             mPreferencesMap.put(new WaterlooInfoSessionPreferences(infoSession));
             saveData();
         }
@@ -48,102 +43,52 @@ public final class InfoSessionPreferenceManager {
     }
 
     /**
-     *
-     * @param infoSession
-     * @return a {@link com.sixbynine.infosessions.data.InfoSessionPreferenceManager.Editor} for the info session preference
+     * @return a {@link com.sixbynine.infosessions.data.InfoSessionPreferenceManager.Editor} for the info session
+     * preference
      */
-    public Editor editPreferences(WaterlooInfoSession infoSession){
+    public Editor editPreferences(WaterlooInfoSession infoSession) {
         return new Editor(getPreferences(infoSession));
     }
 
-    private void loadData(){
+    private void loadData() {
         final String preferencesMapJson = mPreferenceManager.getString(KEY_PREFERENCES, null);
-        if(preferencesMapJson == null){
+        if (preferencesMapJson == null) {
             mPreferencesMap = new WaterlooInfoSessionPreferencesMap();
-        }else{
+        } else {
             mPreferencesMap = mGson.fromJson(preferencesMapJson, WaterlooInfoSessionPreferencesMap.class);
         }
     }
 
-    private void saveData(){
+    private void saveData() {
         mPreferenceManager.putString(KEY_PREFERENCES, mGson.toJson(mPreferencesMap));
     }
 
     /**
-     *
-     * @param sessions the list of {@link com.sixbynine.infosessions.model.WaterlooInfoSession}s
-     * @return a new list containing only the items of the list that are not dismissed
+     * Class that provides editing functions for the preferences of a WaterlooInfoSession <p> Methods return the
+     * instance for chaining, and changes will not be processed until the {@link #commit()} method is called
      */
-    public List<WaterlooInfoSession> getUndismissedInfoSessions(List<WaterlooInfoSession> sessions){
-        List<WaterlooInfoSession> infoSessions = new ArrayList<>(sessions);
-        for(int i = infoSessions.size() - 1; i >= 0; i --){
-            WaterlooInfoSessionPreferences preferences = getPreferences(infoSessions.get(i));
-            if(preferences.isDismissed()){
-                infoSessions.remove(i);
-            }
-        }
-        return infoSessions;
-    }
-
-    /**
-     *
-     * @param sessions the list of {@link com.sixbynine.infosessions.model.WaterlooInfoSession}s
-     * @return a new list containing only the items of the list that are not dismissed
-     */
-    public List<WaterlooInfoSession> getFavoriteInfoSessions(List<WaterlooInfoSession> sessions){
-        List<WaterlooInfoSession> infoSessions = new ArrayList<>(sessions);
-        for(int i = infoSessions.size() - 1; i >= 0; i --){
-            WaterlooInfoSessionPreferences preferences = getPreferences(infoSessions.get(i));
-            if(preferences.isDismissed()){
-                infoSessions.remove(i);
-            }
-        }
-        return infoSessions;
-    }
-    /**
-     *
-     * @param sessions the list of {@link com.sixbynine.infosessions.model.WaterlooInfoSession}s
-     * @return a new list containing only the items of the list that are dismissed
-     */
-    public List<WaterlooInfoSession> getDismissedInfoSessions(List<WaterlooInfoSession> sessions){
-        List<WaterlooInfoSession> infoSessions = new ArrayList<>(sessions);
-        for(int i = infoSessions.size() - 1; i >= 0; i --){
-            WaterlooInfoSessionPreferences preferences = getPreferences(infoSessions.get(i));
-            if(!preferences.isDismissed()){
-                infoSessions.remove(i);
-            }
-        }
-        return infoSessions;
-    }
-
-    /**
-     * Class that provides editing functions for the preferences of a WaterlooInfoSession
-     * <p>
-     * Methods return the instance for chaining, and changes will not be processed until the
-     * {@link #commit()} method is called
-     */
-    public class Editor{
+    public class Editor {
         WaterlooInfoSessionPreferences preferences;
 
-        public Editor(WaterlooInfoSessionPreferences preferences){
+        public Editor(WaterlooInfoSessionPreferences preferences) {
             String json = mGson.toJson(preferences);
             this.preferences = mGson.fromJson(json, WaterlooInfoSessionPreferences.class); //clone the preferences
         }
 
-        public Editor setDismissed(boolean dismissed){
+        public Editor setDismissed(boolean dismissed) {
             preferences.setDismissed(dismissed);
             return this;
         }
 
-        public Editor setFavorited(boolean favorited){
+        public Editor setFavorited(boolean favorited) {
             Map<String, String> params = new HashMap<>(1);
             params.put("session_id", preferences.getId());
-            FlurryAgent.logEvent("Event " + (favorited? "added to " : "removed from ") + "favourites", params);
+            FlurryAgent.logEvent("Event " + (favorited ? "added to " : "removed from ") + "favourites", params);
             preferences.setFavorited(favorited);
             return this;
         }
 
-        public Editor setAlarm(int minutes){
+        public Editor setAlarm(int minutes) {
             Map<String, String> params = new HashMap<>(1);
             params.put("session_id", preferences.getId());
             FlurryAgent.logEvent("Reminder created for info session", params);
@@ -151,7 +96,7 @@ public final class InfoSessionPreferenceManager {
             return this;
         }
 
-        public Editor removeAlarm(){
+        public Editor removeAlarm() {
             Map<String, String> params = new HashMap<>(1);
             params.put("session_id", preferences.getId());
             FlurryAgent.logEvent("Reminder removed for info session", params);
@@ -159,15 +104,15 @@ public final class InfoSessionPreferenceManager {
             return this;
         }
 
-        public Editor toggleFavorited(){
+        public Editor toggleFavorited() {
             return setFavorited(!preferences.isFavorited());
         }
 
-        public Editor toggleDismissed(){
+        public Editor toggleDismissed() {
             return setDismissed(!preferences.isDismissed());
         }
 
-        public WaterlooInfoSessionPreferences commit(){
+        public WaterlooInfoSessionPreferences commit() {
             mPreferencesMap.put(preferences.getId(), preferences);
             saveData();
             return preferences;

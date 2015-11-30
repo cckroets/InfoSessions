@@ -19,7 +19,7 @@ import roboguice.inject.InjectView;
 /**
  * Created by stevenkideckel on 14-12-31.
  */
-public class CheckableTextView extends RelativeLayout implements Checkable, View.OnClickListener{
+public class CheckableTextView extends RelativeLayout implements Checkable, View.OnClickListener {
     HeaderSubheaderView mHeaderSubheaderView;
     TextView mOneLineTextView;
     CheckBox mCheckbox;
@@ -41,7 +41,7 @@ public class CheckableTextView extends RelativeLayout implements Checkable, View
         init(context, attrs);
     }
 
-    private void init(Context context, AttributeSet attrs){
+    private void init(Context context, AttributeSet attrs) {
         inflate(context, R.layout.view_checkable_textview, this);
 
         TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -59,7 +59,7 @@ public class CheckableTextView extends RelativeLayout implements Checkable, View
         mChecked = a.getBoolean(1, false);
 
         String text = a.getString(2);
-        if(text != null){
+        if (text != null) {
             mText = text;
         }
         mSubtext = a.getString(3);
@@ -80,21 +80,21 @@ public class CheckableTextView extends RelativeLayout implements Checkable, View
         mOneLineTextView = (TextView) findViewById(R.id.one_line_view);
         mCheckbox = (CheckBox) findViewById(R.id.checkbox);
 
-        if(mNumLines == 1){
+        if (mNumLines == 1) {
             mHeaderSubheaderView.setVisibility(View.GONE);
             mOneLineTextView.setVisibility(View.VISIBLE);
-            if(mText != null){
+            if (mText != null) {
                 mOneLineTextView.setText(mText);
-            }else if(isInEditMode()){
+            } else if (isInEditMode()) {
                 mOneLineTextView.setText("Your text here");
             }
-        }else{
+        } else {
             mHeaderSubheaderView.setVisibility(View.VISIBLE);
             mOneLineTextView.setVisibility(View.GONE);
-            if(mText != null){
+            if (mText != null) {
                 mHeaderSubheaderView.setHeaderText(mText);
             }
-            if(mSubtext != null){
+            if (mSubtext != null) {
                 mHeaderSubheaderView.setSubheaderText(mSubtext);
             }
         }
@@ -104,8 +104,7 @@ public class CheckableTextView extends RelativeLayout implements Checkable, View
     }
 
     /**
-     * Register a callback to be invoked when the checked state of this button
-     * changes.
+     * Register a callback to be invoked when the checked state of this button changes.
      *
      * @param listener the callback to call on checked state change
      */
