@@ -6,6 +6,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 
 import java.lang.reflect.Type;
@@ -44,7 +45,7 @@ public class InfoSessionDeserializer implements JsonDeserializer<WaterlooInfoSes
         final String description = jsonObject.get("description").getAsString();
 
         Date date = parseDate(mDateFormat, rawDate);
-        if(date == null){
+        if (date == null) {
             date = parseDate(mNewDateFormat, rawDate); //temp code until the api change comes
         }
         final Calendar startTime = parseFullDate(rawStartTime, date);

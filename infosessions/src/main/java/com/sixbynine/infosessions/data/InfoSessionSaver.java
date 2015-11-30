@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+
 import com.sixbynine.infosessions.event.MainBus;
 import com.sixbynine.infosessions.event.data.CompanyLoadedEvent;
 import com.sixbynine.infosessions.event.data.WaterlooDataLoadedEvent;
@@ -40,11 +41,11 @@ public final class InfoSessionSaver {
     @Subscribe
     public void onCompanyLoaded(CompanyLoadedEvent event) {
         final Company company = event.getData();
-        if(company != null) {
+        if (company != null) {
             final String companyJson = mGson.toJson(company, Company.class);
             Log.d(TAG, "saving " + company + ": " + companyJson);
             mPreferenceManager.putString(company.getPermalink(), companyJson);
-        }else{
+        } else {
             Logger.e("null company loaded");
         }
     }

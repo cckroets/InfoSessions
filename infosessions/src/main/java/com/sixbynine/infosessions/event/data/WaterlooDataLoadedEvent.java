@@ -8,8 +8,8 @@ import com.sixbynine.infosessions.model.WaterlooInfoSessionCollection;
  */
 public final class WaterlooDataLoadedEvent {
 
-    WaterlooInfoSessionCollection mData;
-    PermalinkMap mPermalinkMap;
+    private final WaterlooInfoSessionCollection mData;
+    private final PermalinkMap mPermalinkMap;
 
     public WaterlooDataLoadedEvent(WaterlooInfoSessionCollection collection, PermalinkMap map) {
         mData = collection;

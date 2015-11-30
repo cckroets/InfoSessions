@@ -24,25 +24,24 @@ import android.view.View;
 import android.widget.Toast;
 
 /**
- * Helper class for showing cheat sheets (tooltips) for icon-only UI elements on long-press. This is
- * already default platform behavior for icon-only {@link android.app.ActionBar} items and tabs.
- * This class provides this behavior for any other such UI element.
+ * Helper class for showing cheat sheets (tooltips) for icon-only UI elements on long-press. This is already default
+ * platform behavior for icon-only {@link android.app.ActionBar} items and tabs. This class provides this behavior for
+ * any other such UI element.
  *
  * <p>Based on the original action bar implementation in <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/com/android/internal/view/menu/ActionMenuItemView.java">
  * ActionMenuItemView.java</a>.
  */
 public class CheatSheet {
     /**
-     * The estimated height of a toast, in dips (density-independent pixels). This is used to
-     * determine whether or not the toast should appear above or below the UI element.
+     * The estimated height of a toast, in dips (density-independent pixels). This is used to determine whether or not
+     * the toast should appear above or below the UI element.
      */
     private static final int ESTIMATED_TOAST_HEIGHT_DIPS = 48;
 
     /**
-     * Sets up a cheat sheet (tooltip) for the given view by setting its {@link
-     * android.view.View.OnLongClickListener}. When the view is long-pressed, a {@link Toast} with
-     * the view's {@link android.view.View#getContentDescription() content description} will be
-     * shown either above (default) or below the view (if there isn't room above it).
+     * Sets up a cheat sheet (tooltip) for the given view by setting its {@link android.view.View.OnLongClickListener}.
+     * When the view is long-pressed, a {@link Toast} with the view's {@link android.view.View#getContentDescription()
+     * content description} will be shown either above (default) or below the view (if there isn't room above it).
      *
      * @param view The view to add a cheat sheet for.
      */
@@ -56,10 +55,9 @@ public class CheatSheet {
     }
 
     /**
-     * Sets up a cheat sheet (tooltip) for the given view by setting its {@link
-     * android.view.View.OnLongClickListener}. When the view is long-pressed, a {@link Toast} with
-     * the given text will be shown either above (default) or below the view (if there isn't room
-     * above it).
+     * Sets up a cheat sheet (tooltip) for the given view by setting its {@link android.view.View.OnLongClickListener}.
+     * When the view is long-pressed, a {@link Toast} with the given text will be shown either above (default) or below
+     * the view (if there isn't room above it).
      *
      * @param view      The view to add a cheat sheet for.
      * @param textResId The string resource containing the text to show on long-press.
@@ -74,10 +72,9 @@ public class CheatSheet {
     }
 
     /**
-     * Sets up a cheat sheet (tooltip) for the given view by setting its {@link
-     * android.view.View.OnLongClickListener}. When the view is long-pressed, a {@link Toast} with
-     * the given text will be shown either above (default) or below the view (if there isn't room
-     * above it).
+     * Sets up a cheat sheet (tooltip) for the given view by setting its {@link android.view.View.OnLongClickListener}.
+     * When the view is long-pressed, a {@link Toast} with the given text will be shown either above (default) or below
+     * the view (if there isn't room above it).
      *
      * @param view The view to add a cheat sheet for.
      * @param text The text to show on long-press.
@@ -92,8 +89,7 @@ public class CheatSheet {
     }
 
     /**
-     * Removes the cheat sheet for the given view by removing the view's {@link
-     * android.view.View.OnLongClickListener}.
+     * Removes the cheat sheet for the given view by removing the view's {@link android.view.View.OnLongClickListener}.
      *
      * @param view The view whose cheat sheet should be removed.
      */

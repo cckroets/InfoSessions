@@ -13,14 +13,14 @@ import java.util.List;
  */
 public class CompatUtil {
 
-    public static boolean canHandleCalendarIntent(Activity context){
-        if(Build.VERSION.SDK_INT >= 14){
+    public static boolean canHandleCalendarIntent(Activity context) {
+        if (Build.VERSION.SDK_INT >= 14) {
             Intent intent = new Intent(Intent.ACTION_INSERT)
                     .setType("vnd.android.cursor.item/event");
             PackageManager manager = context.getPackageManager();
             List<ResolveInfo> infos = manager.queryIntentActivities(intent, 0);
             return infos.size() > 0;
-        }else{
+        } else {
             return false;
         }
     }

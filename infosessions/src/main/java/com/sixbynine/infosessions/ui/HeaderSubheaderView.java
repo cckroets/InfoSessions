@@ -12,7 +12,7 @@ import com.sixbynine.infosessions.R;
 /**
  * Created by stevenkideckel on 14-12-31.
  */
-public class HeaderSubheaderView extends LinearLayout{
+public class HeaderSubheaderView extends LinearLayout {
 
     private TextView mTextView;
     private TextView mSubTextView;
@@ -25,7 +25,7 @@ public class HeaderSubheaderView extends LinearLayout{
         init(context, attrs);
     }
 
-    private void init(Context context, AttributeSet attrs){
+    private void init(Context context, AttributeSet attrs) {
         setOrientation(VERTICAL);
         setClickable(true);
         LayoutInflater.from(context).inflate(R.layout.view_header_subheader, this);
@@ -43,11 +43,11 @@ public class HeaderSubheaderView extends LinearLayout{
         }
     }
 
-    public void setHeaderText(CharSequence cs){
+    public void setHeaderText(CharSequence cs) {
         mTextView.setText(cs);
     }
 
-    public void setSubheaderText(CharSequence cs){
+    public void setSubheaderText(CharSequence cs) {
         mSubTextView.setText(cs);
     }
 
@@ -57,15 +57,15 @@ public class HeaderSubheaderView extends LinearLayout{
         mTextView = (TextView) findViewById(R.id.header);
         mSubTextView = (TextView) findViewById(R.id.subheader);
 
-        if(mHeaderText != null){
+        if (mHeaderText != null) {
             mTextView.setText(mHeaderText);
-        }else if(isInEditMode()){
+        } else if (isInEditMode()) {
             mTextView.setText("Header");
         }
 
-        if(mSubHeaderText != null){
+        if (mSubHeaderText != null) {
             mSubTextView.setText(mSubHeaderText);
-        }else if(isInEditMode()){
+        } else if (isInEditMode()) {
             mSubTextView.setText("Subheader");
         }
     }

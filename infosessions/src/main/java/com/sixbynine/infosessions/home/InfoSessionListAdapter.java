@@ -1,5 +1,7 @@
 package com.sixbynine.infosessions.home;
 
+import com.google.inject.Inject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -12,16 +14,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.inject.Inject;
 import com.sixbynine.infosessions.BuildConfig;
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.alarm.AlarmManager;
+import com.sixbynine.infosessions.data.InfoSessionManager;
 import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
+import com.sixbynine.infosessions.data.ResponseHandler;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
-import com.sixbynine.infosessions.data.InfoSessionManager;
-import com.sixbynine.infosessions.data.ResponseHandler;
-
 import com.sixbynine.infosessions.model.company.Company;
 import com.sixbynine.infosessions.ui.CheatSheet;
 import com.sixbynine.infosessions.util.CompatUtil;
@@ -30,7 +30,6 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -39,9 +38,8 @@ import roboguice.RoboGuice;
 /**
  * @author curtiskroetsch
  */
-public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
+public final class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
 
-    private static final DateFormat HEADER_DATE_FORMAT = new SimpleDateFormat("EEEE MMM d, yyyy");
     private static final DateFormat TIME_DATE_FORMAT = new SimpleDateFormat("EEE MMM d, h:mma");
 
     @Inject
@@ -63,30 +61,6 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         RoboGuice.getInjector(context).injectMembersWithoutViews(this);
     }
 
-    private int getDayOfYear(int row) {
-        return getItem(row).getStartTime().get(Calendar.DAY_OF_YEAR);
-    }
-
-    /**
-     * Test if info session i, is the last on its day
-     *
-     * @param i The index of the info session
-     * @return True if the session is the last on its day
-     */
-    private boolean isLastOfDay(int i) {
-        return (i == getCount() - 1) || isFirstOfDay(i + 1);
-    }
-
-    /**
-     * Test if info session i, is the first on its day
-     *
-     * @param i The index of the info session
-     * @return True if the sesssion is the first on its day
-     */
-    private boolean isFirstOfDay(int i) {
-        return (i == 0) || (getDayOfYear(i) > getDayOfYear(i - 1));
-    }
-
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         final ViewHolder viewHolder;
@@ -99,7 +73,7 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
             viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
 
-            if(!CompatUtil.canHandleCalendarIntent(mContext)){
+            if (!CompatUtil.canHandleCalendarIntent(mContext)) {
                 viewHolder.calendarButton.setVisibility(View.GONE); //calendar intent only works in 14 and higher
             }
 
@@ -117,8 +91,8 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
             public void onSuccess(Company object) {
                 if (object != null) {
                     Picasso.with(getContext())
-                        .load("https://res.cloudinary.com/crunchbase-production/" + object.getPrimaryImageUrl())
-                        .into(viewHolder.companyLogo);
+                            .load("https://res.cloudinary.com/crunchbase-production/" + object.getPrimaryImageUrl())
+                            .into(viewHolder.companyLogo);
                 } else {
                     Logger.e("Null object returned for %s", infoSession.getCompanyName());
                 }
@@ -145,10 +119,10 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
             viewHolder.favoriteButton.setImageResource(R.drawable.ic_action_favorite_outline);
             CheatSheet.setup(viewHolder.favoriteButton, R.string.add_favorite);
         }
-        if(preferences.hasAlarm()){
+        if (preferences.hasAlarm()) {
             viewHolder.alarmButton.setImageResource(R.drawable.ic_action_alarm_on);
             CheatSheet.setup(viewHolder.alarmButton, R.string.remove_reminder);
-        }else{
+        } else {
             viewHolder.alarmButton.setImageResource(R.drawable.ic_action_alarm_add);
             CheatSheet.setup(viewHolder.alarmButton, R.string.add_reminder);
         }
@@ -183,7 +157,7 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
                 fireEvent(Event.CLICK, infoSession);
             }
         });
-        if(BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             viewHolder.clickableRegion.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -220,13 +194,13 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         Log.d("InfoSessions", "notifyDataSetChanged called");
     }
 
-    private void fireEvent(Event event, WaterlooInfoSession infoSession){
-        if(mListener != null){
+    private void fireEvent(Event event, WaterlooInfoSession infoSession) {
+        if (mListener != null) {
             mListener.onInfoSessionEvent(event, infoSession);
         }
     }
 
-    public  enum Event{
+    public enum Event {
         FAVORITE, SHARE, ALARM, CALENDAR, DISMISS, CLICK
     }
 
@@ -235,7 +209,6 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
     }
 
     static class ViewHolder {
-        //TextView dateHeader;
         TextView companyName;
         TextView startTime;
         TextView location;
@@ -246,8 +219,7 @@ public class InfoSessionListAdapter extends ArrayAdapter<WaterlooInfoSession> {
         ImageButton favoriteButton;
         View clickableRegion;
 
-        ViewHolder(View view){
-            //viewHolder.dateHeader = (TextView) view.findViewById(R.id.dateHeader);
+        ViewHolder(View view) {
             companyName = (TextView) view.findViewById(R.id.company_name);
             startTime = (TextView) view.findViewById(R.id.start_time);
             location = (TextView) view.findViewById(R.id.location);

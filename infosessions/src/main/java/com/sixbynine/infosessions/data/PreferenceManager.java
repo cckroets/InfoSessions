@@ -73,7 +73,7 @@ public final class PreferenceManager {
         mSharedPreferences.edit().putStringSet(key, strings).apply();
     }
 
-    public final class Keys{
+    public final class Keys {
         public static final String INTERESTED_PROGRAMS = "programs-key";
         public static final String SHOW_COOP = "show-coop-tab-key";
         public static final String SHOW_GRADUATE = "show-grad-tab-key";

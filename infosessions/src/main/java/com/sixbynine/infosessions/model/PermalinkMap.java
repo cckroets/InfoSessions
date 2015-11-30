@@ -24,8 +24,8 @@ public final class PermalinkMap implements Iterable<EmployerInfo> {
     }
 
     /**
-     * Returns the EmployerInfo for the info session based off of the session id, then the employer
-     * name, returns null if it can't find anything.
+     * Returns the EmployerInfo for the info session based off of the session id, then the employer name, returns null
+     * if it can't find anything.
      */
     public EmployerInfo getEmployerInfo(WaterlooInfoSession infoSession) {
         EmployerInfo employerInfo = mIdToInfoMap.get(infoSession.getId());

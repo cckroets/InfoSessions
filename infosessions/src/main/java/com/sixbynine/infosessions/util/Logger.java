@@ -12,42 +12,42 @@ public class Logger {
 
     private static final String TAG = "InfoSessions";
 
-    public static void d(String message, Object... formatArgs){
-        if(BuildConfig.DEBUG){
+    public static void d(String message, Object... formatArgs) {
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, String.format(message, formatArgs));
         }
     }
 
-    public static void i(String message, Object... formatArgs){
-        if(BuildConfig.DEBUG){
+    public static void i(String message, Object... formatArgs) {
+        if (BuildConfig.DEBUG) {
             Log.i(TAG, String.format(message, formatArgs));
         }
     }
 
-    public static void v(String message, Object... formatArgs){
-        if(BuildConfig.DEBUG){
+    public static void v(String message, Object... formatArgs) {
+        if (BuildConfig.DEBUG) {
             Log.v(TAG, String.format(message, formatArgs));
         }
     }
 
-    public static void w(String message, Object... formatArgs){
-        if(BuildConfig.DEBUG){
+    public static void w(String message, Object... formatArgs) {
+        if (BuildConfig.DEBUG) {
             Log.w(TAG, String.format(message, formatArgs));
         }
     }
 
-    public static void e(String message, Object... formatArgs){
-        if(BuildConfig.DEBUG){
+    public static void e(String message, Object... formatArgs) {
+        if (BuildConfig.DEBUG) {
             Log.e(TAG, String.format(message, formatArgs));
         }
     }
 
-    public static void leaveBreadcrumb(String message){
+    public static void leaveBreadcrumb(String message) {
         Logger.d(message);
         Crittercism.leaveBreadcrumb(message);
     }
 
-    public static void logHandledException(Throwable e){
+    public static void logHandledException(Throwable e) {
         Logger.e(e.getMessage());
         Crittercism.logHandledException(e);
     }

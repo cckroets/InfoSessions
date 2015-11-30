@@ -17,7 +17,7 @@ public final class WaterlooInfoSessionCollection {
 
     }
 
-    public void sort(){
+    public void sort() {
         Collections.sort(mInfoSessions);
     }
 

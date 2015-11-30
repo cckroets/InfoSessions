@@ -18,7 +18,7 @@ public enum Faculty {
     int id;
     int nameRes;
 
-    Faculty(int id, int nameRes){
+    Faculty(int id, int nameRes) {
         this.id = id;
         this.nameRes = nameRes;
     }
@@ -31,9 +31,9 @@ public enum Faculty {
         return nameRes;
     }
 
-    public static Faculty fromName(String name){
-        for(Faculty f : values()){
-            if(f.name().equals(name)){
+    public static Faculty fromName(String name) {
+        for (Faculty f : values()) {
+            if (f.name().equals(name)) {
                 return f;
             }
         }

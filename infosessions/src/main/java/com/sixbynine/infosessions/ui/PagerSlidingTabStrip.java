@@ -53,7 +53,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     }
 
     // @formatter:off
-    private static final int[] ATTRS = new int[] {
+    private static final int[] ATTRS = new int[]{
             android.R.attr.textSize,
             android.R.attr.textColor
     };
@@ -223,11 +223,11 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
                 currentPosition = pager.getCurrentItem();
                 scrollToChild(currentPosition, 0);
-                for(int i = 0; i < tabCount; i ++){
+                for (int i = 0; i < tabCount; i++) {
                     View v = tabsContainer.getChildAt(i);
-                    if(i == currentPosition){
+                    if (i == currentPosition) {
                         v.setAlpha(1f);
-                    }else{
+                    } else {
                         v.setAlpha(0.6f);
                     }
                 }
@@ -370,15 +370,15 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             currentPosition = position;
             currentPositionOffset = positionOffset;
 
-            for(int i = 0; i < tabCount; i ++){
+            for (int i = 0; i < tabCount; i++) {
                 View v = tabsContainer.getChildAt(i);
-                if(i == currentPosition){
+                if (i == currentPosition) {
                     float diff = 1f - MIN_ALPHA;
                     v.setAlpha(MIN_ALPHA + (1 - positionOffset) * diff);
-                }else if(i == currentPosition + 1){
+                } else if (i == currentPosition + 1) {
                     float diff = 1f - MIN_ALPHA;
                     v.setAlpha(MIN_ALPHA + positionOffset * diff);
-                }else{
+                } else {
                     v.setAlpha(MIN_ALPHA);
                 }
             }

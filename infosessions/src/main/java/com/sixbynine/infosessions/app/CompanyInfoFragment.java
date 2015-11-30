@@ -1,5 +1,8 @@
 package com.sixbynine.infosessions.app;
 
+import com.google.gson.Gson;
+import com.google.inject.Inject;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,8 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.inject.Inject;
 import com.sixbynine.infosessions.BuildConfig;
 import com.sixbynine.infosessions.R;
 import com.sixbynine.infosessions.data.InfoSessionManager;
@@ -33,10 +34,7 @@ import java.text.SimpleDateFormat;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 
-/**
- * Created by stevenkideckel on 2014-06-12.
- */
-public class CompanyInfoFragment extends RoboFragment {
+public final class CompanyInfoFragment extends RoboFragment {
 
     private static final String KEY_SESSION = "session";
 
@@ -45,37 +43,27 @@ public class CompanyInfoFragment extends RoboFragment {
     private static SimpleDateFormat sDateFormat = new SimpleDateFormat("MMMM dd, yyyy");
 
     @InjectView(R.id.company_name)
-    TextView mCompanyName;
-
+    private TextView mCompanyName;
     @InjectView(R.id.company_hq)
-    TextView mCompanyHq;
-
+    private TextView mCompanyHq;
     @InjectView(R.id.company_desc)
-    TextView mCompanyDescription;
-
+    private TextView mCompanyDescription;
     @InjectView(R.id.company_social_media)
-    LinearLayout mSocialMedia;
-
+    private LinearLayout mSocialMedia;
     @InjectView(R.id.session_date)
-    TextView mSessionDate;
-
+    private TextView mSessionDate;
     @InjectView(R.id.session_location)
-    TextView mSessionLocation;
-
+    private TextView mSessionLocation;
     @InjectView(R.id.session_time)
-    TextView mSessionTime;
-
+    private TextView mSessionTime;
     @InjectView(R.id.session_coop)
-    CheckBox mSessionCoop;
-
+    private CheckBox mSessionCoop;
     @InjectView(R.id.session_graduate)
-    CheckBox mSessionGraduate;
-
+    private CheckBox mSessionGraduate;
     @InjectView(R.id.session_desc)
-    TextView mSessionDescription;
-
+    private TextView mSessionDescription;
     @InjectView(R.id.company_row_hq)
-    TableRow mTableRowHq;
+    private TableRow mTableRowHq;
 
     @Inject
     InfoSessionManager mInfoSessionManager;
@@ -127,11 +115,7 @@ public class CompanyInfoFragment extends RoboFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_favourite) {
-            //onFavouritePress();
-            return true;
-        }
-        return false;
+        return item.getItemId() == R.id.action_favourite;
     }
 
     @Override

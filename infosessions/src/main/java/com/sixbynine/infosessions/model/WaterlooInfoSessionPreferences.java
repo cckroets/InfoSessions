@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by stevenkideckel on 14-12-29.
  */
-public class WaterlooInfoSessionPreferences implements Parcelable{
+public class WaterlooInfoSessionPreferences implements Parcelable {
 
     private String mId;
     private boolean mDismissed;
@@ -17,27 +17,25 @@ public class WaterlooInfoSessionPreferences implements Parcelable{
     private int mAlarm; //minutes preceding the event the alarm is set to, or 0 if no alarm set
 
     /**
-     *
-     * @param session the {@link com.sixbynine.infosessions.model.WaterlooInfoSession} that this
-     *           preferences object corresponds to
+     * @param session the {@link com.sixbynine.infosessions.model.WaterlooInfoSession} that this preferences object
+     *                corresponds to
      */
-    public WaterlooInfoSessionPreferences(WaterlooInfoSession session){
+    public WaterlooInfoSessionPreferences(WaterlooInfoSession session) {
         this(session.getId());
     }
 
     /**
-     *
-     * @param id the id of the {@link com.sixbynine.infosessions.model.WaterlooInfoSession} that this
-     *           preferences object corresponds to
+     * @param id the id of the {@link com.sixbynine.infosessions.model.WaterlooInfoSession} that this preferences object
+     *           corresponds to
      */
-    public WaterlooInfoSessionPreferences(String id){
+    public WaterlooInfoSessionPreferences(String id) {
         mId = id;
         mDismissed = false;
         mFavorited = false;
         mAlarm = 0;
     }
 
-    private WaterlooInfoSessionPreferences(Parcel in){
+    private WaterlooInfoSessionPreferences(Parcel in) {
         mId = in.readString();
         mDismissed = in.readInt() == 1;
         mFavorited = in.readInt() == 1;
@@ -56,11 +54,11 @@ public class WaterlooInfoSessionPreferences implements Parcelable{
         return mFavorited;
     }
 
-    public int getAlarm(){
+    public int getAlarm() {
         return mAlarm;
     }
 
-    public boolean hasAlarm(){
+    public boolean hasAlarm() {
         return mAlarm != 0;
     }
 
@@ -72,11 +70,11 @@ public class WaterlooInfoSessionPreferences implements Parcelable{
         this.mFavorited = mFavorited;
     }
 
-    public void setAlarm(int minutes){
+    public void setAlarm(int minutes) {
         mAlarm = minutes;
     }
 
-    public void removeAlarm(){
+    public void removeAlarm() {
         mAlarm = 0;
     }
 
@@ -88,8 +86,8 @@ public class WaterlooInfoSessionPreferences implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mId);
-        dest.writeInt(mDismissed? 1: 0);
-        dest.writeInt(mFavorited? 1 : 0);
+        dest.writeInt(mDismissed ? 1 : 0);
+        dest.writeInt(mFavorited ? 1 : 0);
         dest.writeInt(mAlarm);
     }
 

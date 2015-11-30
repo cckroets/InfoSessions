@@ -1,17 +1,13 @@
 package com.sixbynine.infosessions.app;
 
-import android.content.Intent;
-import android.net.Uri;
+import com.google.inject.Inject;
+
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.flurry.android.FlurryAgent;
-import com.google.inject.Inject;
 import com.sixbynine.infosessions.R;
-import com.sixbynine.infosessions.alarm.AlarmManager;
-import com.sixbynine.infosessions.data.InfoSessionManager;
 import com.sixbynine.infosessions.data.InfoSessionPreferenceManager;
 import com.sixbynine.infosessions.model.WaterlooInfoSession;
 import com.sixbynine.infosessions.model.WaterlooInfoSessionPreferences;
@@ -21,11 +17,10 @@ import com.sixbynine.infosessions.util.CompatUtil;
 import java.util.HashMap;
 import java.util.Map;
 
-import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
 
 @ContentView(R.layout.activity_company_info)
-public class CompanyInfoActivity extends BaseActivity {
+public final class CompanyInfoActivity extends BaseActivity {
 
     public static final String INFO_SESSION_KEY = "key-info-session";
 
@@ -36,15 +31,14 @@ public class CompanyInfoActivity extends BaseActivity {
     InfoSessionPreferenceManager mPreferencesManager;
 
     private WaterlooInfoSession mInfoSession;
-    private CompanyInfoFragment mInfoFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             mInfoSession = getIntent().getParcelableExtra(INFO_SESSION_KEY);
-        }else{
+        } else {
             mInfoSession = savedInstanceState.getParcelable(INFO_SESSION_KEY);
         }
 
@@ -53,10 +47,10 @@ public class CompanyInfoActivity extends BaseActivity {
         params.put("company", mInfoSession.getCompanyName());
         FlurryAgent.logEvent("Info Session viewed", params);
 
-        mInfoFragment = CompanyInfoFragment.createInstance(mInfoSession);
+        CompanyInfoFragment infoFragment = CompanyInfoFragment.createInstance(mInfoSession);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, mInfoFragment)
+                .replace(R.id.fragment_container, infoFragment)
                 .commit();
     }
 
@@ -70,13 +64,13 @@ public class CompanyInfoActivity extends BaseActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         WaterlooInfoSessionPreferences prefs = mPreferencesManager.getPreferences(mInfoSession);
-        menu.findItem(R.id.action_alarm).setTitle(prefs.hasAlarm()? R.string.remove_reminder : R.string.add_reminder);
-        if(prefs.isFavorited()){
+        menu.findItem(R.id.action_alarm).setTitle(prefs.hasAlarm() ? R.string.remove_reminder : R.string.add_reminder);
+        if (prefs.isFavorited()) {
             menu.findItem(R.id.action_favourite).setTitle(R.string.remove_favorite);
-        }else{
+        } else {
             menu.findItem(R.id.action_favourite).setTitle(R.string.add_favorite);
         }
-        if(!CompatUtil.canHandleCalendarIntent(this)){
+        if (!CompatUtil.canHandleCalendarIntent(this)) {
             menu.findItem(R.id.action_calendar).setVisible(false);
         }
         return true;
@@ -84,7 +78,7 @@ public class CompanyInfoActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 setResult(RESULT_OK);
                 finish();
